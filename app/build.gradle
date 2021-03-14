@@ -1,0 +1,74 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        applicationId "com.revolhope.grosery"
+        minSdkVersion 26
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    // Arch layers
+    implementation project(":presentation")
+    implementation project(":domain")
+    implementation project(":data")
+
+    // Analytics
+    implementation "com.google.firebase:firebase-analytics:$firebase_analytics"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_android"
+    kapt "androidx.hilt:hilt-compiler:$hilt_compiler"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_android_compiler"
+
+    // Android
+    implementation "androidx.core:core-ktx:$core_ktx"
+    implementation "androidx.appcompat:appcompat:$app_compat"
+    implementation "com.google.android.material:material:$material_components"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout"
+
+    // Testing
+    testImplementation "junit:junit:$unit_junit"
+    androidTestImplementation "androidx.test.ext:$instrumental_junit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$instrumental_espresso_core"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_gradle"
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.navigation:navigation-fragment:2.3.3'
+    implementation 'androidx.navigation:navigation-ui:2.3.3'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
+}
