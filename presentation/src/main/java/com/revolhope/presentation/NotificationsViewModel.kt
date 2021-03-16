@@ -1,4 +1,4 @@
-package com.revolhope.grosery.ui.notifications
+package com.revolhope.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

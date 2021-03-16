@@ -1,4 +1,4 @@
-package com.revolhope.grosery
+package com.revolhope.presentation
 
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
