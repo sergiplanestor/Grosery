@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "745321421970",
+    "project_id": "grocery-5f14c",
+    "storage_bucket": "grocery-5f14c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745321421970:android:17f5e818856c14b8b25a4b",
+        "android_client_info": {
+          "package_name": "com.revolhope.grocery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745321421970-i3prfig5k3phg3nvelf5s69ikcncvdd8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVuLIHwWBpT-vLm4jbtqHhYfbUFlI28cs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745321421970-i3prfig5k3phg3nvelf5s69ikcncvdd8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

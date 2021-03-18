@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -54,6 +55,10 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$app_compat"
     implementation "com.google.android.material:material:$material_components"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout"
+
+    // TODO: CHECK if should be in this MODULE
+    implementation platform('com.google.firebase:firebase-bom:26.7.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     // Testing
     testImplementation "junit:junit:$unit_junit"
