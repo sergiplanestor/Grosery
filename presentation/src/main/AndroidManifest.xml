@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name="com.revolhope.presentation.MainActivity"
+            android:name="com.revolhope.presentation.feature.splash.SplashActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
