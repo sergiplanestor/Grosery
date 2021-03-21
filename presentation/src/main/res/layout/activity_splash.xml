@@ -6,32 +6,29 @@
 
     <TextView
         android:id="@+id/splash_text_view"
-        style="@style/Text.Headline1"
+        style="@style/Text.Headline2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_big"
+        android:alpha="0"
         android:gravity="center"
-        android:text="@string/app_name"
-        android:textSize="30sp"
+        android:text="@string/my_grocery"
+        android:textColor="@color/primaryDarkColor"
         app:layout_constraintBottom_toTopOf="@id/lottie_animation_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".3"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottie_animation_view"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginTop="@dimen/margin_big"
+        android:alpha="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/splash_text_view"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
+        app:layout_constraintTop_toTopOf="parent"
         app:lottie_rawRes="@raw/splash_anim"
         app:lottie_renderMode="hardware" />
 

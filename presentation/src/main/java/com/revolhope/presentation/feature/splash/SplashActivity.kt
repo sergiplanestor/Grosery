@@ -1,22 +1,19 @@
 package com.revolhope.presentation.feature.splash
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.os.Handler
-import android.os.Looper
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.core.view.isVisible
 import com.revolhope.presentation.databinding.ActivitySplashBinding
 import com.revolhope.presentation.library.base.BaseActivity
-import androidx.core.animation.addListener
+import com.revolhope.presentation.library.extensions.alphaAnimation
+import com.revolhope.presentation.library.extensions.animationListener
 
 class SplashActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySplashBinding
 
     companion object {
-        const val ALPHA_ANIMATION_DURATION = 500L
-        const val SPLASH_DURATION = 1500L
+        const val ALPHA_ANIM = 700L
+        const val SPLASH_DURATION = 1000L
     }
 
     override fun inflateView(): View =
@@ -27,25 +24,28 @@ class SplashActivity : BaseActivity() {
 
     override fun bindViews() {
         super.bindViews()
-        AnimatorSet().apply {
-            playTogether(
-                //ObjectAnimator.ofFloat(binding.splashTextView, "alpha", 0f, 1f),
-                ObjectAnimator.ofFloat(binding.lottieAnimationView, "alpha", 0f, 1f)
-            )
-            duration = ALPHA_ANIMATION_DURATION
-            interpolator = AccelerateDecelerateInterpolator()
-            addListener(
-                onEnd = {
-                    Handler(Looper.getMainLooper()).postDelayed(
-                        {
+
+        alphaAnimation(
+            view = binding.splashTextView,
+            isShowing = true,
+            duration = ALPHA_ANIM,
+            onEnd = {
+                binding.lottieAnimationView.addAnimatorListener(
+                    animationListener(
+                        onStart = {
+                            alphaAnimation(
+                                view = binding.lottieAnimationView,
+                                isShowing = true
+                            ).start()
+                        },
+                        onEnd = {
                             //DashboardActivity.start(baseActivity = this@SplashActivity)
                             //finish()
-                        },
-                        SPLASH_DURATION
+                        }
                     )
-                }
-            )
-            start()
-        }
+                )
+                binding.lottieAnimationView.playAnimation()
+            }
+        ).start()
     }
 }
