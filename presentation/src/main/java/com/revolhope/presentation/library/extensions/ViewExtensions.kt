@@ -30,7 +30,7 @@ inline var View.isVisibleAnimated: Boolean
             view = this,
             isShowing = value,
             onStart = {
-                if (value && visibility != View.VISIBLE) {
+                if (value && (visibility != View.VISIBLE || alpha == 0f)) {
                     alpha = 0f
                     visibility = View.VISIBLE
                 }

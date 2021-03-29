@@ -11,6 +11,7 @@
     <color name="red_light">#F05545</color>
     <color name="red_dark">#7F0000</color>
     <color name="red_error_200">#EF9A9A</color>
+    <color name="red_error_600">#E53935</color>
 
     <color name="gray_800">#424242</color>
     <color name="gray_700">#616161</color>

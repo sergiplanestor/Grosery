@@ -1,19 +1,24 @@
 package com.revolhope.presentation.feature.splash
 
 import android.view.View
-import androidx.core.view.isVisible
+import androidx.activity.viewModels
 import com.revolhope.presentation.databinding.ActivitySplashBinding
+import com.revolhope.presentation.feature.register.RegisterActivity
 import com.revolhope.presentation.library.base.BaseActivity
 import com.revolhope.presentation.library.extensions.alphaAnimation
 import com.revolhope.presentation.library.extensions.animationListener
+import com.revolhope.presentation.library.extensions.isVisibleAnimated
+import com.revolhope.presentation.library.extensions.observe
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SplashActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySplashBinding
+    private val viewModel: SplashViewModel by viewModels()
 
     companion object {
         const val ALPHA_ANIM = 700L
-        const val SPLASH_DURATION = 1000L
     }
 
     override fun inflateView(): View =
@@ -32,20 +37,27 @@ class SplashActivity : BaseActivity() {
             onEnd = {
                 binding.lottieAnimationView.addAnimatorListener(
                     animationListener(
-                        onStart = {
-                            alphaAnimation(
-                                view = binding.lottieAnimationView,
-                                isShowing = true
-                            ).start()
-                        },
-                        onEnd = {
-                            //DashboardActivity.start(baseActivity = this@SplashActivity)
-                            //finish()
-                        }
+                        onStart = { binding.lottieAnimationView.isVisibleAnimated = true },
+                        onEnd = { viewModel.navigate() }
                     )
                 )
                 binding.lottieAnimationView.playAnimation()
             }
         ).start()
+    }
+
+    override fun initObservers() {
+        super.initObservers()
+
+        observe(viewModel.onNavigateLiveData) { nav ->
+            when (nav) {
+                SplashViewModel.Nav.LOGIN -> TODO()
+                SplashViewModel.Nav.REGISTER -> {
+                    RegisterActivity.start(this)
+                    finish()
+                }
+                SplashViewModel.Nav.DASHBOARD -> TODO()
+            }
+        }
     }
 }

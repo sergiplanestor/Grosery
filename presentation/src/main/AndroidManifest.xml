@@ -13,5 +13,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".feature.register.RegisterActivity"
+            android:theme="@style/Theme.Grocery.NoActionBar" />
     </application>
 </manifest>

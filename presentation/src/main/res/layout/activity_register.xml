@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title_text_view"
+            style="@style/Text.Headline4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_big"
+            android:gravity="center"
+            android:text="@string/register"
+            android:textColor="@color/primaryDarkColor"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.revolhope.presentation.library.component.form.view.FormInputView
+            android:id="@+id/username_form_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_big"
+            app:startIcon="@drawable/ic_user_account"
+            app:layout_constraintTop_toBottomOf="@id/title_text_view"/>
+
+        <com.revolhope.presentation.library.component.form.view.FormInputView
+            android:id="@+id/email_form_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            app:startIcon="@drawable/ic_email_address"
+            app:layout_constraintTop_toBottomOf="@id/username_form_input"/>
+
+        <com.revolhope.presentation.library.component.form.view.FormInputView
+            android:id="@+id/pwd_form_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            app:startIcon="@drawable/ic_password"
+            app:layout_constraintTop_toBottomOf="@id/email_form_input"/>
+
+        <com.revolhope.presentation.library.component.form.view.FormSubmitButton
+            android:id="@+id/form_button_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
