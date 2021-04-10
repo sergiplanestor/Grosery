@@ -7,7 +7,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="45dp"
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_medium"
         app:cardBackgroundColor="@color/red_error_200"
@@ -35,7 +35,7 @@
             <!-- TODO: REVIEW MARGINS -->
             <TextView
                 android:id="@+id/message"
-                style="@style/Text.Headline6"
+                style="@style/Text.Subtitle1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"

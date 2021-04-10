@@ -2,6 +2,8 @@ package com.revolhope.presentation.feature.splash
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.revolhope.domain.feature.user.model.UserModel
+import com.revolhope.domain.feature.user.usecase.DoLoginUseCase
 import com.revolhope.domain.feature.user.usecase.FetchUserUseCase
 import com.revolhope.presentation.library.base.BaseViewModel
 import com.revolhope.presentation.library.extensions.launchAsync
@@ -10,17 +12,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val fetchUserUseCase: FetchUserUseCase
+    private val fetchUserUseCase: FetchUserUseCase,
+    private val doLoginUseCase: DoLoginUseCase
 ) : BaseViewModel() {
 
-    enum class Nav {
-        LOGIN,
-        REGISTER,
-        DASHBOARD
-    }
+    val redirectToLoginLiveData: LiveData<UserModel?> get() = _redirectToLoginLiveData
+    private val _redirectToLoginLiveData = MutableLiveData<UserModel?>()
 
-    val onNavigateLiveData: LiveData<Nav> get() = _onNavigateLiveData
-    private val _onNavigateLiveData = MutableLiveData<Nav>()
+    val onLoginResponseLiveData: LiveData<Boolean> get() = _onLoginResponseLiveData
+    private val _onLoginResponseLiveData = MutableLiveData<Boolean>()
 
     fun navigate() {
         launchAsync(
@@ -29,10 +29,11 @@ class SplashViewModel @Inject constructor(
                 handleState(
                     state = state,
                     onSuccess = { user ->
-                        _onNavigateLiveData.value = when {
-                            user == null -> Nav.REGISTER
-                            user.isRememberMe -> Nav.DASHBOARD
-                            else /* user != null && !user.isRememberMe */ -> Nav.LOGIN
+                        when {
+                            user == null || !user.isRememberMe -> {
+                                _redirectToLoginLiveData.value = user
+                            }
+                            user.isRememberMe -> doLogin(user)
                         }
                     }
                 )
@@ -40,4 +41,15 @@ class SplashViewModel @Inject constructor(
         )
     }
 
+    private fun doLogin(user: UserModel) {
+        launchAsync(
+            asyncTask = { doLoginUseCase.invoke(DoLoginUseCase.Params(user = user)) },
+            onCompleteTask = { state ->
+                handleState(
+                    state = state,
+                    onSuccess = _onLoginResponseLiveData::setValue
+                )
+            }
+        )
+    }
 }

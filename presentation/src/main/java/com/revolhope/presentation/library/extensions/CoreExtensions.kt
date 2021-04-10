@@ -8,6 +8,9 @@ import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
 import android.view.LayoutInflater
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -27,19 +30,27 @@ inline fun <T> LifecycleOwner.observe(data: LiveData<T>, crossinline action: (T)
     data.observe(this, { action.invoke(it) })
 
 
-
 inline val Int.dp: Int
     get() = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), Resources.getSystem().displayMetrics
     ).toInt()
 
+fun String?.toBooleanOrNull(): Boolean? =
+    when {
+        this != null && equals("true", ignoreCase = true) -> true
+        this != null && equals("false", ignoreCase = true) -> false
+        else -> null
+    }
+
 inline val Context.inflater: LayoutInflater get() = LayoutInflater.from(this)
 
-fun Context.drawableOf(drawableId: Int): Drawable? = ContextCompat.getDrawable(this, drawableId)
+fun Context.drawableFrom(@DrawableRes drawableId: Int): Drawable? =
+    ContextCompat.getDrawable(this, drawableId)
 
-fun Context.colorOf(colorId: Int): Int = ContextCompat.getColor(this, colorId)
+fun Context.colorFrom(@ColorRes colorId: Int): Int = ContextCompat.getColor(this, colorId)
 
-fun Drawable?.applyTint(colorInt: Int) = this?.setTintList(ColorStateList.valueOf(colorInt))
+fun Drawable?.applyTint(@ColorInt colorInt: Int) =
+    this?.setTintList(ColorStateList.valueOf(colorInt))
 
 inline fun <T> CoroutineScope.launchAsync(
     dispatcher: CoroutineContext = Dispatchers.IO,

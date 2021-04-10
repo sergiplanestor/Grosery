@@ -1,8 +1,10 @@
 package com.revolhope.presentation.library.component.form.model
 
 import android.graphics.drawable.Drawable
+import android.nfc.FormatException
 import android.text.InputType
 import com.revolhope.presentation.R
+import com.revolhope.presentation.library.extensions.toBooleanOrNull
 
 sealed class FormModel(
     open var value: String? = null,
@@ -81,5 +83,37 @@ sealed class FormModel(
         startDrawable = startDrawable,
         isFieldValid = isFieldValid
     )
+
+    data class Checkbox(
+        var isChecked: Boolean = false,
+        val isTextJustified: Boolean = true,
+        override val hint: String,
+        override val helperText: String? = null,
+        override val inputType: Int = Int.MIN_VALUE,
+        override val isRequired: Boolean = true,
+        override val validators: List<FormValidator> = if (isRequired) {
+            listOf(FormValidator.Required())
+        } else {
+            emptyList()
+        },
+        override val startDrawable: Drawable? = null,
+        override var isFieldValid: Boolean = false
+    ) : FormModel(
+        hint = hint,
+        helperText = helperText,
+        inputType = inputType,
+        validators = validators,
+        startDrawable = startDrawable,
+        isFieldValid = isFieldValid
+    ) {
+        override var value: String? = isChecked.toString()
+            get() = isChecked.toString()
+            set(value) {
+                value.toBooleanOrNull()?.let {
+                    field = it.toString()
+                    isChecked = it
+                } ?: (throw FormatException("Class/FormModel: Only boolean values allowed"))
+            }
+    }
 
 }

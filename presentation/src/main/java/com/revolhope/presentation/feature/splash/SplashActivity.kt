@@ -2,7 +2,10 @@ package com.revolhope.presentation.feature.splash
 
 import android.view.View
 import androidx.activity.viewModels
+import com.revolhope.domain.feature.user.model.UserModel
 import com.revolhope.presentation.databinding.ActivitySplashBinding
+import com.revolhope.presentation.feature.dashboard.DashboardActivity
+import com.revolhope.presentation.feature.login.LoginActivity
 import com.revolhope.presentation.feature.register.RegisterActivity
 import com.revolhope.presentation.library.base.BaseActivity
 import com.revolhope.presentation.library.extensions.alphaAnimation
@@ -29,7 +32,6 @@ class SplashActivity : BaseActivity() {
 
     override fun bindViews() {
         super.bindViews()
-
         alphaAnimation(
             view = binding.splashTextView,
             isShowing = true,
@@ -48,16 +50,22 @@ class SplashActivity : BaseActivity() {
 
     override fun initObservers() {
         super.initObservers()
+        observe(viewModel.redirectToLoginLiveData, ::navigateToLogin)
+        observe(viewModel.onLoginResponseLiveData, ::onLoginResponse)
+    }
 
-        observe(viewModel.onNavigateLiveData) { nav ->
-            when (nav) {
-                SplashViewModel.Nav.LOGIN -> TODO()
-                SplashViewModel.Nav.REGISTER -> {
-                    RegisterActivity.start(this)
-                    finish()
-                }
-                SplashViewModel.Nav.DASHBOARD -> TODO()
-            }
+    private fun navigateToLogin(user: UserModel?) {
+        LoginActivity.start(this, user)
+        finish()
+    }
+
+    private fun onLoginResponse(isSuccess: Boolean) {
+        if (isSuccess) {
+            DashboardActivity.start(this)
+            finish()
+        } else {
+            onErrorReceived("T_FIXME: DEFAULT ERROR")
         }
     }
+
 }

@@ -48,21 +48,19 @@ class FormSubmitButton @JvmOverloads constructor(
     private fun changeState(state: State) {
         when (state) {
             State.IDLE -> {
+                binding.progressBar.isVisible = false
                 binding.formSubmitButton.text = text
+                setupListeners()
             }
             State.LOADING -> {
-                text = binding.formSubmitButton.text
+                text = binding.formSubmitButton.text.toString()
                 binding.formSubmitButton.text = ""
-                with(binding.formButtonsLoader) {
-                    playAnimation()
-                    this.isVisible = true
-                    runOnUI(MAX_LOADING_TIME) {
-                        if (state == State.LOADING) {
-                            this.isVisible = false
-                            cancelAnimation()
-                            binding.formSubmitButton.text = text
-                            onTimeoutReached?.invoke()
-                        }
+                binding.formSubmitButton.setOnClickListener(null)
+                binding.progressBar.isVisible = true
+                runOnUI(MAX_LOADING_TIME) {
+                    if (state == State.LOADING) {
+                        onTimeoutReached?.invoke()
+                        changeState(State.IDLE)
                     }
                 }
             }

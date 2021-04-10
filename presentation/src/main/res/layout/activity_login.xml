@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_big"
                 android:gravity="center"
-                android:text="@string/register"
+                android:text="@string/login"
                 android:textColor="@color/primaryDarkColor"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
-                app:layout_constraintTop_toBottomOf="@id/username_form_input"
+                app:layout_constraintTop_toBottomOf="@id/title_text_view"
                 app:startIcon="@drawable/ic_email_address" />
 
             <com.revolhope.presentation.library.component.form.view.FormInputView
@@ -51,14 +51,6 @@
                 android:layout_marginTop="@dimen/margin_small"
                 app:layout_constraintTop_toBottomOf="@id/email_form_input"
                 app:startIcon="@drawable/ic_password" />
-
-            <com.revolhope.presentation.library.component.form.view.FormInputView
-                android:id="@+id/username_form_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_big"
-                app:layout_constraintTop_toBottomOf="@id/title_text_view"
-                app:startIcon="@drawable/ic_user_account" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

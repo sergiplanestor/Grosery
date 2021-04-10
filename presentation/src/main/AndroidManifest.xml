@@ -16,5 +16,12 @@
 
         <activity android:name=".feature.register.RegisterActivity"
             android:theme="@style/Theme.Grocery.NoActionBar" />
+
+        <activity android:name=".feature.login.LoginActivity"
+            android:theme="@style/Theme.Grocery.NoActionBar" />
+
+        <activity android:name=".feature.dashboard.DashboardActivity"
+            android:theme="@style/Theme.Grocery" />
+
     </application>
 </manifest>
