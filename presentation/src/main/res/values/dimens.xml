@@ -3,6 +3,7 @@
     <!-- Margins -->
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_standard">8dp</dimen>
+    <dimen name="margin_standard_large">12dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_big">24dp</dimen>
 
