@@ -67,7 +67,7 @@ class LoginActivity : BaseActivity() {
                 isFieldValid = true
             )
         )
-        binding.buttonRegister.setOnClickListener { navigateToRegister() }
+        binding.buttonRegister.setOnClickListener { RegisterActivity.start(this) }
         with(binding.formButtonSubmit) {
             text = getString(R.string.login)
             onSubmit = ::onSubmitForm
@@ -77,10 +77,6 @@ class LoginActivity : BaseActivity() {
 
     override fun initObservers() {
         observe(viewModel.loginResponseLiveData, ::onLoginResult)
-    }
-
-    private fun navigateToRegister() {
-        RegisterActivity.start(this)
     }
 
     private fun onSubmitForm() {

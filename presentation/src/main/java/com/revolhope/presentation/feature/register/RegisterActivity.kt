@@ -2,7 +2,6 @@ package com.revolhope.presentation.feature.register
 
 import android.content.Intent
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
 import com.revolhope.presentation.R
@@ -69,6 +68,7 @@ class RegisterActivity : BaseActivity() {
             onSubmit = ::onSubmitForm
             onTimeoutReached = { onErrorReceived("T_FIXME: DEFAULT ERROR") }
         }
+        binding.buttonLogin.setOnClickListener { onBackPressed() }
     }
 
     override fun initObservers() {
