@@ -23,10 +23,6 @@ class FormInputView<T : FormModel> @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FormView<T>(context, attrs, defStyleAttr) {
 
-    companion object {
-        private const val EMPTY_ERROR = " "
-    }
-
     private val binding = ComponentFormInputViewBinding.inflate(context.inflater, this, true)
 
     val text: String? get() = model?.value

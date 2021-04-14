@@ -66,7 +66,7 @@ sealed class FormModel(
         override var value: String? = null,
         override val hint: String,
         override val helperText: String? = null,
-        override val inputType: Int = InputType.TYPE_TEXT_VARIATION_PASSWORD,
+        override val inputType: Int = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
         override val isRequired: Boolean = true,
         override val validators: List<FormValidator> = mutableListOf<FormValidator>().apply {
             add(FormValidator.Password())
