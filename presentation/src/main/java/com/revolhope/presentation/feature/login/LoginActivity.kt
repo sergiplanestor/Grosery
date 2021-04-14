@@ -8,6 +8,7 @@ import com.revolhope.domain.feature.user.model.UserModel
 import com.revolhope.presentation.R
 import com.revolhope.presentation.databinding.ActivityLoginBinding
 import com.revolhope.presentation.feature.dashboard.DashboardActivity
+import com.revolhope.presentation.feature.register.RegisterActivity
 import com.revolhope.presentation.library.base.BaseActivity
 import com.revolhope.presentation.library.component.form.model.FormModel
 import com.revolhope.presentation.library.component.form.view.FormSubmitButton
@@ -66,8 +67,9 @@ class LoginActivity : BaseActivity() {
                 isFieldValid = true
             )
         )
+        binding.buttonRegister.setOnClickListener { navigateToRegister() }
         with(binding.formButtonSubmit) {
-            text = getString(R.string.register)
+            text = getString(R.string.login)
             onSubmit = ::onSubmitForm
             onTimeoutReached = { onErrorReceived("T_FIXME: DEFAULT ERROR") }
         }
@@ -75,6 +77,10 @@ class LoginActivity : BaseActivity() {
 
     override fun initObservers() {
         observe(viewModel.loginResponseLiveData, ::onLoginResult)
+    }
+
+    private fun navigateToRegister() {
+        RegisterActivity.start(this)
     }
 
     private fun onSubmitForm() {

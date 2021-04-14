@@ -40,7 +40,7 @@
                 android:id="@+id/email_form_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_big"
                 app:layout_constraintTop_toBottomOf="@id/title_text_view"
                 app:startIcon="@drawable/ic_email_address" />
 
@@ -56,11 +56,25 @@
 
     </ScrollView>
 
+    <TextView
+        android:id="@+id/button_register"
+        style="@style/Text.Subtitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_big"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:layout_marginBottom="@dimen/margin_big"
+        android:gravity="center"
+        android:text="@string/no_account_yet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.revolhope.presentation.library.component.form.view.FormSubmitButton
         android:id="@+id/form_button_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/button_register" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

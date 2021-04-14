@@ -3,6 +3,7 @@ package com.revolhope.presentation.feature.splash
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.revolhope.domain.feature.user.model.UserModel
+import com.revolhope.domain.feature.user.request.LoginRequest
 import com.revolhope.domain.feature.user.usecase.DoLoginUseCase
 import com.revolhope.domain.feature.user.usecase.FetchUserUseCase
 import com.revolhope.presentation.library.base.BaseViewModel
@@ -43,7 +44,17 @@ class SplashViewModel @Inject constructor(
 
     private fun doLogin(user: UserModel) {
         launchAsync(
-            asyncTask = { doLoginUseCase.invoke(DoLoginUseCase.Params(user = user)) },
+            asyncTask = {
+                doLoginUseCase.invoke(
+                    DoLoginUseCase.Params(
+                        request = LoginRequest(
+                            email = user.email,
+                            pwd = user.pwd!!
+                        ),
+                        isRememberMe = true
+                    )
+                )
+            },
             onCompleteTask = { state ->
                 handleState(
                     state = state,

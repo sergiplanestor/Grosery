@@ -6,7 +6,7 @@ import com.revolhope.domain.common.extensions.generateIdentifier
 import com.revolhope.domain.common.extensions.getNewCreationLastLogin
 import com.revolhope.domain.common.extensions.getUsername
 import com.revolhope.domain.feature.user.model.UserModel
-import com.revolhope.domain.feature.user.usecase.InsertUserUseCase
+import com.revolhope.domain.feature.user.usecase.RegisterUserUseCase
 import com.revolhope.presentation.library.base.BaseViewModel
 import com.revolhope.presentation.library.extensions.launchAsync
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val insertUserUseCase: InsertUserUseCase
+    private val registerUserUseCase: RegisterUserUseCase
 ) : BaseViewModel() {
 
     private val _onRegisterResultLiveData = MutableLiveData<Boolean>()
@@ -37,7 +37,7 @@ class RegisterViewModel @Inject constructor(
                     isRememberMe = isRememberMe,
                     lastLogin = getNewCreationLastLogin()
                 )
-                insertUserUseCase.invoke(InsertUserUseCase.Params(user = model))
+                registerUserUseCase.invoke(RegisterUserUseCase.Params(user = model))
             },
             onCompleteTask = { state ->
                 handleState(

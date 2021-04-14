@@ -2,10 +2,13 @@ package com.revolhope.presentation.library.component.form.view
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.core.view.doOnPreDraw
+import androidx.core.view.marginBottom
 import com.revolhope.presentation.R
 import com.revolhope.presentation.databinding.ComponentFormCheckboxViewBinding
 import com.revolhope.presentation.library.component.form.model.FormModel
 import com.revolhope.presentation.library.extensions.colorFrom
+import com.revolhope.presentation.library.extensions.dimensionFrom
 import com.revolhope.presentation.library.extensions.inflater
 import com.revolhope.presentation.library.extensions.justify
 
@@ -23,6 +26,7 @@ class FormCheckboxView @JvmOverloads constructor(
         set(value) {
             field = value
             binding.formCheckboxText.text = value
+            textChanged()
         }
 
     override fun bind(model: FormModel.Checkbox) {
@@ -31,6 +35,7 @@ class FormCheckboxView @JvmOverloads constructor(
         binding.formCheckbox.isChecked = model.isChecked
         binding.formCheckboxText.justify(enableJustify = model.isTextJustified)
         setupListeners()
+        textChanged()
     }
 
     override fun onFieldValid() {
@@ -48,6 +53,26 @@ class FormCheckboxView @JvmOverloads constructor(
         }
         binding.formCheckboxText.setOnClickListener {
             binding.formCheckbox.isChecked = model?.isChecked?.not() ?: false
+        }
+    }
+
+    private fun textChanged() {
+        binding.formCheckboxText.doOnPreDraw {
+            binding.formCheckboxText.layoutParams =
+                (binding.formCheckboxText.layoutParams as? LayoutParams)?.apply {
+                    if (binding.formCheckboxText.lineCount > 1) {
+                        bottomToBottom = LayoutParams.UNSET
+                        setMargins(
+                            marginStart,
+                            context.dimensionFrom(R.dimen.margin_small).toInt(),
+                            marginEnd,
+                            marginBottom
+                        )
+                    } else {
+                        bottomToBottom = binding.formCheckbox.id
+                        setMargins(marginStart, 0, marginEnd, marginBottom)
+                    }
+                }
         }
     }
 

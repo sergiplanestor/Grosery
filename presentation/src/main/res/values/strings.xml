@@ -9,6 +9,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="remember_me">Remember me</string>
+    <string name="no_account_yet">You don\'t have an account yet.\n<b>Register here</b></string>
     <string name="form_help_password_pattern">Minimum 8 characters including lower case, upper case and a number</string>
     <string name="form_error_field_required">Mandatory field</string>
     <string name="form_error_field_password_pattern">Password does not accomplish security requirements</string>

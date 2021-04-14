@@ -10,6 +10,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
@@ -48,6 +49,8 @@ fun Context.drawableFrom(@DrawableRes drawableId: Int): Drawable? =
     ContextCompat.getDrawable(this, drawableId)
 
 fun Context.colorFrom(@ColorRes colorId: Int): Int = ContextCompat.getColor(this, colorId)
+
+fun Context.dimensionFrom(@DimenRes dimId: Int): Float = resources.getDimension(dimId)
 
 fun Drawable?.applyTint(@ColorInt colorInt: Int) =
     this?.setTintList(ColorStateList.valueOf(colorInt))

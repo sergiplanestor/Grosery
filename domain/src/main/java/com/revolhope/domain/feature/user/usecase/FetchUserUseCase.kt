@@ -8,5 +8,5 @@ import javax.inject.Inject
 class FetchUserUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(): State<UserModel?> = userRepository.fetchUser()
+    suspend operator fun invoke(): State<UserModel?> = userRepository.fetchLocalUser()
 }

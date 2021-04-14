@@ -2,6 +2,8 @@ package com.revolhope.data.feature.storage.local
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.revolhope.data.common.extensions.fromJSON
+import com.revolhope.data.common.extensions.toJSON
 import com.revolhope.data.feature.user.datasource.UserLocalDataSource
 import com.revolhope.data.feature.user.response.UserLocalResponse
 import javax.inject.Inject
@@ -14,13 +16,11 @@ class LocalDataSourceImpl @Inject constructor(private val sharedPreferences: Sha
     }
 
     override suspend fun fetchUser(): UserLocalResponse? =
-        sharedPreferences.getString(USER, null)?.let {
-            Gson().fromJson(it, UserLocalResponse::class.java)
-        }
+        sharedPreferences.getString(USER, null)?.fromJSON(UserLocalResponse::class)
 
     override suspend fun insertOrUpdateUser(user: UserLocalResponse) {
         sharedPreferences.edit().apply {
-            putString(USER, Gson().toJson(user))
+            putString(USER, user.toJSON)
             apply()
         }
     }
