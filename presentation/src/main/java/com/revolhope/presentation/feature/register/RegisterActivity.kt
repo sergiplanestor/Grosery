@@ -66,12 +66,13 @@ class RegisterActivity : BaseActivity() {
         with(binding.formButtonSubmit) {
             text = getString(R.string.register)
             onSubmit = ::onSubmitForm
-            onTimeoutReached = { onErrorReceived("T_FIXME: DEFAULT ERROR") }
+            onTimeoutReached = { onErrorReceived(/* default error */) }
         }
         binding.buttonLogin.setOnClickListener { onBackPressed() }
     }
 
     override fun initObservers() {
+        observe(viewModel.errorLiveData, ::onErrorReceived)
         observe(viewModel.onRegisterResultLiveData, ::onRegisterResult)
     }
 
@@ -92,8 +93,9 @@ class RegisterActivity : BaseActivity() {
         binding.formButtonSubmit.state = FormSubmitButton.State.IDLE
         if (isSuccess) {
             DashboardActivity.start(this)
+            finish()
         } else {
-            onErrorReceived("T_FIXME: DEFAULT ERROR")
+            onErrorReceived(/* default error */)
         }
     }
 }

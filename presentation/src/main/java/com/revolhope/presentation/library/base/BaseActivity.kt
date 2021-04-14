@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.revolhope.presentation.R
-import com.revolhope.presentation.library.component.loader.LoaderView
 import com.revolhope.presentation.library.component.snackbar.SnackBar
 import com.revolhope.presentation.library.component.snackbar.model.SnackBarModel
 
@@ -39,8 +38,8 @@ abstract class BaseActivity : AppCompatActivity() {
         // Nothing to do here
     }
 
-    protected fun onErrorReceived(error: String) {
-        SnackBar.show(root, SnackBarModel.Error(error))
+    protected open fun onErrorReceived(error: String? = null) {
+        SnackBar.show(root, SnackBarModel.Error(message = error ?: getString(R.string.error_default)))
     }
 
     /*protected fun onLoaderVisibilityChanges(show: Boolean) {

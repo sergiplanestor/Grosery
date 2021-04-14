@@ -11,6 +11,7 @@
     <color name="secondaryDarkColor">#7f0000</color>
     <!-- Text color -->
     <color name="primaryTextColor">@color/white</color>
+    <color name="primaryTextColorOpacity70">@color/white_opacity_70</color>
     <color name="secondaryTextColor">@color/blue_gray_200</color>
 
 </resources>

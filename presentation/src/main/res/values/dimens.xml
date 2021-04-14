@@ -7,4 +7,14 @@
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_big">24dp</dimen>
 
+    <!-- SnackBar -->
+    <dimen name="snack_bar_min_height">45dp</dimen>
+
+    <!-- CardView -->
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_corner_radius">8dp</dimen>
+
+    <!-- Icons -->
+    <dimen name="icon_size_standard">30dp</dimen>
+
 </resources>

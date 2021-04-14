@@ -1,5 +1,6 @@
 package com.revolhope.presentation.library.base
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.revolhope.domain.common.model.State
@@ -13,6 +14,10 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     private val job = Job()
 
     protected val _errorLiveData = MutableLiveData<String>()
+    val errorLiveData: LiveData<String> get() = _errorLiveData
+
+    protected val _errorResLiveData = MutableLiveData<Int>()
+    val errorResLiveData: LiveData<Int> get() = _errorResLiveData
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job

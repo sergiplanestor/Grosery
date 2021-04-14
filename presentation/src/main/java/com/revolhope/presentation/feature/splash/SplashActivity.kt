@@ -50,6 +50,7 @@ class SplashActivity : BaseActivity() {
 
     override fun initObservers() {
         super.initObservers()
+        observe(viewModel.errorLiveData, ::onErrorReceived)
         observe(viewModel.redirectToLoginLiveData, ::navigateToLogin)
         observe(viewModel.onLoginResponseLiveData, ::onLoginResponse)
     }
@@ -64,7 +65,7 @@ class SplashActivity : BaseActivity() {
             DashboardActivity.start(this)
             finish()
         } else {
-            onErrorReceived("T_FIXME: DEFAULT ERROR")
+            onErrorReceived(/* default error */)
         }
     }
 

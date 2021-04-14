@@ -26,7 +26,6 @@ class RegisterViewModel @Inject constructor(
         pwd: String,
         isRememberMe: Boolean
     ) {
-        if (email.isBlank() || pwd.isBlank()) _errorLiveData.value = "T_FIXME: DEFAULT ERROR"
         launchAsync(
             asyncTask = {
                 val model = UserModel(

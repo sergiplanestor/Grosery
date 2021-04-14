@@ -11,6 +11,12 @@
     <string name="remember_me">Remember me</string>
     <string name="no_account_yet">You don\'t have an account yet.\n<b>Register here</b></string>
     <string name="already_have_account">Do you have already an account?\n<b>Log in here</b></string>
+
+    <!-- errors -->
+    <string name="error_login"><b>There was an error while doing log in</b>. Check the given credentials please.</string>
+    <string name="error_default"><b>Ouch!</b> Seems that something went wrong.\nTry again later please.</string>
+
+    <!-- forms -->
     <string name="form_help_password_pattern">Minimum 8 characters including lower case, upper case and a number</string>
     <string name="form_error_field_required">Mandatory field</string>
     <string name="form_error_field_password_pattern">Password does not accomplish security requirements</string>

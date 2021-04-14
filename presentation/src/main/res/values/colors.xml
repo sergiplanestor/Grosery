@@ -18,7 +18,9 @@
     <color name="gray_900">#212121</color>
 
     <color name="black">#FF000000</color>
+    <color name="black_opacity_70">#B3000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_opacity_70">#B3FFFFFF</color>
 
     <!-- Default theme colors -->
     <!-- Primary -->
@@ -31,6 +33,7 @@
     <color name="secondaryDarkColor">@color/red_dark</color>
     <!-- Text color -->
     <color name="primaryTextColor">@color/black</color>
+    <color name="primaryTextColorOpacity70">@color/black_opacity_70</color>
     <color name="secondaryTextColor">@color/white</color>
 
 </resources>

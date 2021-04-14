@@ -7,11 +7,12 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/snack_bar_min_height"
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_medium"
         app:cardBackgroundColor="@color/red_error_200"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="@dimen/card_corner_radius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,26 +24,27 @@
 
             <ImageView
                 android:id="@+id/image"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/icon_size_standard"
+                android:layout_height="@dimen/icon_size_standard"
                 android:layout_marginStart="@dimen/margin_big"
                 android:src="@drawable/ic_error"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@android:color/black" />
+                app:tint="@color/primaryTextColorOpacity70" />
 
-            <!-- TODO: REVIEW MARGINS -->
             <TextView
                 android:id="@+id/message"
                 style="@style/Text.Subtitle1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_standard_large"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginEnd="50dp"
+                android:layout_marginEnd="46dp"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:maxLines="2"
+                android:maxLines="3"
+                android:textColor="@color/primaryTextColor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/image"

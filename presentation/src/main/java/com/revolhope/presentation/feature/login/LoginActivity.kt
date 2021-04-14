@@ -71,12 +71,18 @@ class LoginActivity : BaseActivity() {
         with(binding.formButtonSubmit) {
             text = getString(R.string.login)
             onSubmit = ::onSubmitForm
-            onTimeoutReached = { onErrorReceived("T_FIXME: DEFAULT ERROR") }
+            onTimeoutReached = { onErrorReceived(/* default error */) }
         }
     }
 
     override fun initObservers() {
+        observe(viewModel.errorLiveData, ::onErrorReceived)
         observe(viewModel.loginResponseLiveData, ::onLoginResult)
+    }
+
+    override fun onErrorReceived(error: String?) {
+        super.onErrorReceived(error)
+        binding.formButtonSubmit.state = FormSubmitButton.State.IDLE
     }
 
     private fun onSubmitForm() {
@@ -95,8 +101,9 @@ class LoginActivity : BaseActivity() {
         binding.formButtonSubmit.state = FormSubmitButton.State.IDLE
         if (isSuccess) {
             DashboardActivity.start(this)
+            finish()
         } else {
-            onErrorReceived("T_FIXME: DEFAULT ERROR")
+            onErrorReceived(getString(R.string.error_login))
         }
     }
 }
