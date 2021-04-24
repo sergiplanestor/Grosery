@@ -13,7 +13,4 @@ fun getUsername(username: String?, email: String) =
     }
 
 fun getNewCreationLastLogin() =
-    DateModel(
-        value = System.currentTimeMillis(),
-        formatted = ""
-    )
+    DateModel(value = System.currentTimeMillis())

@@ -6,7 +6,6 @@ import com.revolhope.domain.feature.user.model.UserModel
 import com.revolhope.presentation.databinding.ActivitySplashBinding
 import com.revolhope.presentation.feature.dashboard.DashboardActivity
 import com.revolhope.presentation.feature.login.LoginActivity
-import com.revolhope.presentation.feature.register.RegisterActivity
 import com.revolhope.presentation.library.base.BaseActivity
 import com.revolhope.presentation.library.extensions.alphaAnimation
 import com.revolhope.presentation.library.extensions.animationListener
@@ -32,8 +31,7 @@ class SplashActivity : BaseActivity() {
 
     override fun bindViews() {
         super.bindViews()
-        alphaAnimation(
-            view = binding.splashTextView,
+        binding.splashTextView.alphaAnimation(
             isShowing = true,
             duration = ALPHA_ANIM,
             onEnd = {
@@ -45,7 +43,7 @@ class SplashActivity : BaseActivity() {
                 )
                 binding.lottieAnimationView.playAnimation()
             }
-        ).start()
+        )
     }
 
     override fun initObservers() {
@@ -66,6 +64,7 @@ class SplashActivity : BaseActivity() {
             finish()
         } else {
             onErrorReceived(/* default error */)
+            navigateToLogin(viewModel.user)
         }
     }
 

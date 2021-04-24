@@ -6,12 +6,14 @@
     <color name="primaryLightColor">@color/gray_700</color>
     <color name="primaryDarkColor">@color/gray_900</color>
     <!-- Secondary -->
-    <color name="secondaryColor">#b71c1c</color>
-    <color name="secondaryLightColor">#f05545</color>
-    <color name="secondaryDarkColor">#7f0000</color>
+    <color name="secondaryColor">@color/red_900</color>
+    <color name="secondaryLightColor">@color/red_light</color>
+    <color name="secondaryDarkColor">@color/red_dark</color>
     <!-- Text color -->
     <color name="primaryTextColor">@color/white</color>
     <color name="primaryTextColorOpacity70">@color/white_opacity_70</color>
+    <color name="primaryTextColorAccent">@color/secondaryLightColor</color>
+    <color name="primaryTextColorAccentOpacity70">@color/red_light_opacity_70</color>
     <color name="secondaryTextColor">@color/blue_gray_200</color>
 
 </resources>

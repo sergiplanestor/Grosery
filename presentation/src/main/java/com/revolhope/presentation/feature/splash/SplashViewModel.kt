@@ -23,6 +23,8 @@ class SplashViewModel @Inject constructor(
     val onLoginResponseLiveData: LiveData<Boolean> get() = _onLoginResponseLiveData
     private val _onLoginResponseLiveData = MutableLiveData<Boolean>()
 
+    val user: UserModel? get() = _redirectToLoginLiveData.value
+
     fun navigate() {
         launchAsync(
             asyncTask = fetchUserUseCase::invoke,

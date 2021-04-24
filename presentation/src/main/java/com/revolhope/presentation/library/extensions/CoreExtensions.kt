@@ -3,9 +3,12 @@ package com.revolhope.presentation.library.extensions
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
+import android.util.Base64
 import android.util.TypedValue
 import android.view.LayoutInflater
 import androidx.annotation.ColorInt
@@ -29,19 +32,6 @@ inline fun runOnUI(delay: Long = 0L, crossinline action: () -> Unit) =
 
 inline fun <T> LifecycleOwner.observe(data: LiveData<T>, crossinline action: (T) -> Unit) =
     data.observe(this, { action.invoke(it) })
-
-
-inline val Int.dp: Int
-    get() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), Resources.getSystem().displayMetrics
-    ).toInt()
-
-fun String?.toBooleanOrNull(): Boolean? =
-    when {
-        this != null && equals("true", ignoreCase = true) -> true
-        this != null && equals("false", ignoreCase = true) -> false
-        else -> null
-    }
 
 inline val Context.inflater: LayoutInflater get() = LayoutInflater.from(this)
 

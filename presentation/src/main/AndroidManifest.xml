@@ -23,5 +23,8 @@
         <activity android:name=".feature.dashboard.DashboardActivity"
             android:theme="@style/Theme.Grocery" />
 
+        <activity android:name=".feature.grocerylist.GroceryListActivity"
+            android:theme="@style/Theme.Grocery" />
+
     </application>
 </manifest>

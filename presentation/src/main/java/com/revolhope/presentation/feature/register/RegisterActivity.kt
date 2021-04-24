@@ -9,7 +9,7 @@ import com.revolhope.presentation.databinding.ActivityRegisterBinding
 import com.revolhope.presentation.feature.dashboard.DashboardActivity
 import com.revolhope.presentation.library.base.BaseActivity
 import com.revolhope.presentation.library.component.form.model.FormModel
-import com.revolhope.presentation.library.component.form.view.FormSubmitButton
+import com.revolhope.presentation.library.component.form.view.FormSubmitButtonView
 import com.revolhope.presentation.library.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,7 +48,7 @@ class RegisterActivity : BaseActivity() {
         binding.usernameFormInput.bind(
             FormModel.Text(
                 hint = getString(R.string.username),
-                helperText = getString(R.string.helper_optional),
+                helperText = getString(R.string.form_helper_optional),
                 isRequired = false,
                 isFieldValid = true
             )
@@ -85,12 +85,12 @@ class RegisterActivity : BaseActivity() {
                 isRememberMe = binding.rememberFormCheckbox.isChecked
             )
         } else {
-            binding.formButtonSubmit.state = FormSubmitButton.State.IDLE
+            binding.formButtonSubmit.state = FormSubmitButtonView.State.IDLE
         }
     }
 
     private fun onRegisterResult(isSuccess: Boolean) {
-        binding.formButtonSubmit.state = FormSubmitButton.State.IDLE
+        binding.formButtonSubmit.state = FormSubmitButtonView.State.IDLE
         if (isSuccess) {
             DashboardActivity.start(this)
             finish()

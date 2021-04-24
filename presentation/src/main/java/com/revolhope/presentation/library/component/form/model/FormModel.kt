@@ -10,18 +10,28 @@ sealed class FormModel(
     open var value: String? = null,
     open val hint: String,
     open val helperText: String? = null,
-    open val inputType: Int,
+    open val keyboard: Keyboard,
     open val validators: List<FormValidator>,
     open val startDrawable: Drawable? = null,
     open val isRequired: Boolean = true,
     open var isFieldValid: Boolean = false
 ) {
 
+    val inputType: Int get() = keyboard.inputType
+
+    enum class Keyboard(val inputType: Int) {
+        TEXT(inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES),
+        EMAIL(inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS),
+        PASSWORD(inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD),
+        NUMBER(inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL),
+        NONE(inputType = Int.MIN_VALUE)
+    }
+
     data class Text(
         override var value: String? = null,
         override val hint: String,
         override val helperText: String? = null,
-        override val inputType: Int = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
+        override val keyboard: Keyboard = Keyboard.TEXT,
         override val isRequired: Boolean = true,
         override val startDrawable: Drawable? = null,
         override val validators: List<FormValidator> = if (isRequired) {
@@ -34,7 +44,7 @@ sealed class FormModel(
         value = value,
         hint = hint,
         helperText = helperText,
-        inputType = inputType,
+        keyboard = keyboard,
         validators = validators,
         startDrawable = startDrawable,
         isFieldValid = isFieldValid
@@ -44,7 +54,7 @@ sealed class FormModel(
         override var value: String? = null,
         override val hint: String,
         override val helperText: String? = null,
-        override val inputType: Int = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
+        override val keyboard: Keyboard = Keyboard.EMAIL,
         override val isRequired: Boolean = true,
         override val validators: List<FormValidator> = mutableListOf<FormValidator>().apply {
             add(FormValidator.Email())
@@ -56,7 +66,7 @@ sealed class FormModel(
         value = value,
         hint = hint,
         helperText = helperText,
-        inputType = inputType,
+        keyboard = keyboard,
         validators = validators,
         startDrawable = startDrawable,
         isFieldValid = isFieldValid
@@ -66,7 +76,7 @@ sealed class FormModel(
         override var value: String? = null,
         override val hint: String,
         override val helperText: String? = null,
-        override val inputType: Int = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD,
+        override val keyboard: Keyboard = Keyboard.PASSWORD,
         override val isRequired: Boolean = true,
         override val validators: List<FormValidator> = mutableListOf<FormValidator>().apply {
             add(FormValidator.Password())
@@ -78,7 +88,7 @@ sealed class FormModel(
         value = value,
         hint = hint,
         helperText = helperText,
-        inputType = inputType,
+        keyboard = keyboard,
         validators = validators,
         startDrawable = startDrawable,
         isFieldValid = isFieldValid
@@ -89,7 +99,7 @@ sealed class FormModel(
         val isTextJustified: Boolean = true,
         override val hint: String,
         override val helperText: String? = null,
-        override val inputType: Int = Int.MIN_VALUE,
+        override val keyboard: Keyboard = Keyboard.NONE,
         override val isRequired: Boolean = true,
         override val validators: List<FormValidator> = if (isRequired) {
             listOf(FormValidator.Required())
@@ -101,7 +111,7 @@ sealed class FormModel(
     ) : FormModel(
         hint = hint,
         helperText = helperText,
-        inputType = inputType,
+        keyboard = keyboard,
         validators = validators,
         startDrawable = startDrawable,
         isFieldValid = isFieldValid
@@ -116,4 +126,62 @@ sealed class FormModel(
             }
     }
 
+    data class AmountSelector(
+        override val hint: String,
+        override val helperText: String? = null,
+        override val keyboard: Keyboard = Keyboard.NUMBER,
+        override val isRequired: Boolean = true,
+        override val startDrawable: Drawable? = null,
+        override val validators: List<FormValidator> = mutableListOf<FormValidator>().apply {
+            add(FormValidator.Number())
+            if (isRequired) add(FormValidator.Required())
+        },
+        override var isFieldValid: Boolean = false
+    ) : FormModel(
+        hint = hint,
+        helperText = helperText,
+        keyboard = keyboard,
+        validators = validators,
+        startDrawable = startDrawable,
+        isFieldValid = isFieldValid
+    ) {
+        override var value: String? = "1"
+            set(value) {
+                field = if (value != null) {
+                    value.toFloatOrNull()?.toString() ?: (throw FormatException("Class/FormModel: Only number values allowed"))
+                } else {
+                    "0"
+                }
+            }
+
+        var amount: Float = value?.toFloatOrNull() ?: 0f
+            set(value) {
+                field = value
+                this.value = value.toString()
+            }
+    }
+
+    data class DropdownSelector<T>(
+        val items: List<T>,
+        override var value: String? = null,
+        override val hint: String,
+        override val helperText: String? = null,
+        override val keyboard: Keyboard = Keyboard.NONE,
+        override val isRequired: Boolean = true,
+        override val startDrawable: Drawable? = null,
+        override val validators: List<FormValidator> = if (isRequired) {
+            listOf(FormValidator.Required())
+        } else {
+            emptyList()
+        },
+        override var isFieldValid: Boolean = false
+    ) : FormModel(
+        value = value,
+        hint = hint,
+        helperText = helperText,
+        keyboard = keyboard,
+        validators = validators,
+        startDrawable = startDrawable,
+        isFieldValid = isFieldValid
+    )
 }

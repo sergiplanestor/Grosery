@@ -1,4 +1,4 @@
-package com.revolhope.presentation
+package com.revolhope.presentation.feature.dashboard.notifications
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.revolhope.presentation.R
 
 class NotificationsFragment : Fragment() {
 

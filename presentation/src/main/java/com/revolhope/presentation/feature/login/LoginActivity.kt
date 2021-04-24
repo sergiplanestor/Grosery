@@ -11,7 +11,7 @@ import com.revolhope.presentation.feature.dashboard.DashboardActivity
 import com.revolhope.presentation.feature.register.RegisterActivity
 import com.revolhope.presentation.library.base.BaseActivity
 import com.revolhope.presentation.library.component.form.model.FormModel
-import com.revolhope.presentation.library.component.form.view.FormSubmitButton
+import com.revolhope.presentation.library.component.form.view.FormSubmitButtonView
 import com.revolhope.presentation.library.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -82,7 +82,7 @@ class LoginActivity : BaseActivity() {
 
     override fun onErrorReceived(error: String?) {
         super.onErrorReceived(error)
-        binding.formButtonSubmit.state = FormSubmitButton.State.IDLE
+        binding.formButtonSubmit.state = FormSubmitButtonView.State.IDLE
     }
 
     private fun onSubmitForm() {
@@ -93,12 +93,12 @@ class LoginActivity : BaseActivity() {
                 isRememberMe = binding.rememberFormCheckbox.isChecked
             )
         } else {
-            binding.formButtonSubmit.state = FormSubmitButton.State.IDLE
+            binding.formButtonSubmit.state = FormSubmitButtonView.State.IDLE
         }
     }
 
     private fun onLoginResult(isSuccess: Boolean) {
-        binding.formButtonSubmit.state = FormSubmitButton.State.IDLE
+        binding.formButtonSubmit.state = FormSubmitButtonView.State.IDLE
         if (isSuccess) {
             DashboardActivity.start(this)
             finish()

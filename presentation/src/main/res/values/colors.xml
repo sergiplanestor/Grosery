@@ -9,7 +9,9 @@
 
     <color name="red_900">#B71C1C</color>
     <color name="red_light">#F05545</color>
+    <color name="red_light_opacity_70">#B3F05545</color>
     <color name="red_dark">#7F0000</color>
+    <color name="red_dark_opacity_70">#B37F0000</color>
     <color name="red_error_200">#EF9A9A</color>
     <color name="red_error_600">#E53935</color>
 
@@ -34,6 +36,8 @@
     <!-- Text color -->
     <color name="primaryTextColor">@color/black</color>
     <color name="primaryTextColorOpacity70">@color/black_opacity_70</color>
+    <color name="primaryTextColorAccent">@color/secondaryDarkColor</color>
+    <color name="primaryTextColorAccentOpacity70">@color/red_dark_opacity_70</color>
     <color name="secondaryTextColor">@color/white</color>
 
 </resources>

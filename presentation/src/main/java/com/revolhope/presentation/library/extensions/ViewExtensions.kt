@@ -1,22 +1,16 @@
 package com.revolhope.presentation.library.extensions
 
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD
 import android.graphics.text.LineBreaker.JUSTIFICATION_MODE_NONE
 import android.os.Build
-import android.text.Html
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.TextPaint
-import android.text.style.ImageSpan
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.DimenRes
+import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import java.util.concurrent.atomic.AtomicBoolean
 
 
 fun View?.findSuitableParent(): ViewGroup? {
@@ -41,7 +35,6 @@ inline var View.isVisibleAnimated: Boolean
     get() = visibility == View.VISIBLE
     set(value) {
         alphaAnimation(
-            view = this,
             isShowing = value,
             onStart = {
                 if (value && (visibility != View.VISIBLE || alpha == 0f)) {
@@ -67,3 +60,19 @@ fun TextView.justify(enableJustify: Boolean = true) {
         }
     }
 }
+
+fun View.dimensionFrom(@DimenRes dimId: Int): Float = resources.getDimension(dimId)
+
+inline fun View.doOnGlobalLayout(crossinline block: () -> Unit) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            block.invoke()
+            viewTreeObserver.removeOnGlobalLayoutListener(this)
+        }
+    })
+}
+
+fun View.getString(@StringRes stringRes: Int): String = context.getString(stringRes)
+
+fun View.getString(@StringRes stringRes: Int, vararg formatArgs: Any?): String =
+    context.getString(stringRes, formatArgs)

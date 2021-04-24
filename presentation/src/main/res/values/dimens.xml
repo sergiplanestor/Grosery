@@ -15,6 +15,7 @@
     <dimen name="card_corner_radius">8dp</dimen>
 
     <!-- Icons -->
+    <dimen name="icon_size_small">20dp</dimen>
     <dimen name="icon_size_standard">30dp</dimen>
 
 </resources>

@@ -1,8 +1,7 @@
-package com.revolhope.presentation.feature.dashboard
+package com.revolhope.presentation.feature.dashboard.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.revolhope.presentation.library.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

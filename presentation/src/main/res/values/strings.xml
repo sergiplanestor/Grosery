@@ -1,29 +1,47 @@
 <resources>
+    <!-- App -->
     <string name="app_name">Grocery</string>
     <string name="my_grocery">My Grocery</string>
 
+    <!-- Register & Login -->
     <string name="register">Register</string>
     <string name="login">Log in</string>
     <string name="username">Username</string>
-    <string name="helper_optional">Optional</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="remember_me">Remember me</string>
     <string name="no_account_yet">You don\'t have an account yet.\n<b>Register here</b></string>
     <string name="already_have_account">Do you have already an account?\n<b>Log in here</b></string>
 
-    <!-- errors -->
+    <!-- Dashboard -->
+    <string name="my_lists">My Lists</string>
+    <string name="my_templates">My Templates</string>
+
+    <!-- Grocery list view -->
+    <string name="created_on">Created on %s</string>
+    <string name="updated_on">Updated on %s</string>
+    <string name="next_purchase_on">Next purchase on: %s</string>
+    <string name="num_of_items">%d items on the list</string>
+    <string name="current_amount">Current amount: %s</string>
+    <string name="new_list">New list</string>
+    <string name="add">Add</string>
+    <string name="no_grocery_list_message">Seems that you have not created any grocery list yet. <b>Let\'s start!</b></string>
+
+    <!-- Errors -->
+    <string name="oops">Oops!</string>
     <string name="error_login"><b>There was an error while doing log in</b>. Check the given credentials please.</string>
     <string name="error_default"><b>Ouch!</b> Seems that something went wrong.\nTry again later please.</string>
 
-    <!-- forms -->
+    <!-- Forms -->
+    <string name="form_helper_optional">Optional</string>
     <string name="form_help_password_pattern">Minimum 8 characters including lower case, upper case and a number</string>
     <string name="form_error_field_required">Mandatory field</string>
     <string name="form_error_field_password_pattern">Password does not accomplish security requirements</string>
     <string name="form_error_field_email_pattern">Invalid email format</string>
+    <string name="form_error_field_number_pattern">Invalid number format</string>
 
-
-    <string name="title_home">Home</string>
+    <!-- Navigation titles -->
+    <string name="title_profile">Profile</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 </resources>

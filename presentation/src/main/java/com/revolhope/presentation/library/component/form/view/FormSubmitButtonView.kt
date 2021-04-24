@@ -7,10 +7,10 @@ import android.os.Message
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import com.revolhope.presentation.databinding.ComponentFormSubmitButtonBinding
+import com.revolhope.presentation.databinding.ComponentFormSubmitButtonViewBinding
 import com.revolhope.presentation.library.extensions.inflater
 
-class FormSubmitButton @JvmOverloads constructor(
+class FormSubmitButtonView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -25,7 +25,7 @@ class FormSubmitButton @JvmOverloads constructor(
         LOADING(2)
     }
 
-    private val binding = ComponentFormSubmitButtonBinding.inflate(context.inflater, this, true)
+    private val binding = ComponentFormSubmitButtonViewBinding.inflate(context.inflater, this, true)
 
     private val timeoutHandler = Handler(Looper.getMainLooper(), ::onTimeoutReached)
 

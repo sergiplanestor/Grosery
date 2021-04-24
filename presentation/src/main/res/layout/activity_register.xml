@@ -78,7 +78,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.revolhope.presentation.library.component.form.view.FormSubmitButton
+    <com.revolhope.presentation.library.component.form.view.FormSubmitButtonView
         android:id="@+id/form_button_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

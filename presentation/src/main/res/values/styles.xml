@@ -82,6 +82,18 @@
         <item name="textAllCaps">true</item>
     </style>
 
+    <!-- Separator -->
+    <style name="Separator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/primaryTextColorOpacity70</item>
+        <item name="android:alpha">.5</item>
+    </style>
+
+    <style name="Separator.Accent">
+        <item name="android:background">@color/primaryTextColorAccentOpacity70</item>
+    </style>
+
     <!-- Inputs -->
     <style name="Input" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="fontFamily">@font/montserrat_regular</item>
@@ -103,6 +115,15 @@
     <style name="Button.Submit">
         <item name="android:layout_marginHorizontal">@dimen/margin_medium</item>
         <item name="android:minHeight">56dp</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textAppearance">@style/Text.Button</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_medium</item>
+        <item name="strokeColor">@color/primaryTextColorOpacity70</item>
+        <item name="rippleColor">@color/primaryTextColorAccentOpacity70</item>
         <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:gravity">center</item>
     </style>

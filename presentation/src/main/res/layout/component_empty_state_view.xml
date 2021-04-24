@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/margin_standard_large"
+    android:paddingBottom="@dimen/margin_medium">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_animation_view"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_gravity="center_horizontal"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/empty_anim"
+        app:lottie_renderMode="hardware" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/Text.Headline5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_big"
+        android:layout_marginTop="@dimen/margin_standard_large"
+        android:gravity="center"
+        android:textColor="@color/primaryTextColorAccent"
+        android:textStyle="bold"
+        tools:text="@string/oops" />
+
+    <TextView
+        android:id="@+id/message"
+        style="@style/Text.Body2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_big"
+        android:layout_marginTop="@dimen/margin_standard_large"
+        android:layout_marginBottom="@dimen/margin_big"
+        android:gravity="center"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="@string/no_grocery_list_message" />
+
+    <Button
+        android:id="@+id/action"
+        style="@style/Button.Outlined"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginHorizontal="@dimen/margin_big"
+        android:visibility="gone"
+        tools:text="@string/new_list"
+        tools:visibility="visible" />
+
+</LinearLayout>
