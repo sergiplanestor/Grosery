@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Errors -->
+    <string name="error_default">
+        <b>Ouch!</b> Seems that something went wrong.\nTry again later please.
+    </string>
+    <string name="error_auth_user_not_found">
+        <b>OMG!</b> Device stored user has not been found on the network\'s database…Do login with another user or register again please :(.
+    </string>
+    <string name="error_firebase_timeout">
+        <b>Ouch!</b> Timeout reached… The server may be sleeping :(\nPlease try again or wait a few minutes.
+    </string>
+
+</resources>

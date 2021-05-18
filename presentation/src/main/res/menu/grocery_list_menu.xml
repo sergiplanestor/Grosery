@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/grocery_menu_share"
+        android:icon="@drawable/ic_share"
+        android:iconTint="@color/primaryTextColor"
+        android:title="@string/grocery_list_menu_share"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/grocery_menu_save"
+        android:icon="@drawable/ic_tick"
+        android:iconTint="@color/primaryTextColor"
+        android:title="@string/grocery_list_menu_save"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/grocery_menu_template"
+        android:icon="@drawable/ic_bookmark_tick"
+        android:title="@string/grocery_list_menu_save_template"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/grocery_menu_delete"
+        android:icon="@drawable/ic_add_circle"
+        android:title="@string/grocery_list_menu_delete"
+        app:showAsAction="never" />
+
+</menu>
