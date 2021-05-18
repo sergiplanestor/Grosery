@@ -1,7 +1,6 @@
 package com.revolhope.presentation.library.extensions
 
 import android.animation.Animator
-import android.animation.ObjectAnimator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.view.View
@@ -9,14 +8,13 @@ import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
-import androidx.core.animation.addListener
 import androidx.core.view.children
 
 const val ROTATION_ANIM_DURATION = 200L
 const val ALPHA_ANIM_DURATION = 300L
 const val EXPAND_COLLAPSE_ANIM_DURATION = 500L
 
-inline fun animationListener(
+inline fun animationListenerWith(
     crossinline onStart: (animator: Animator?) -> Unit = {},
     crossinline onEnd: (animator: Animator?) -> Unit = {},
     crossinline onCancel: (animator: Animator?) -> Unit = {},
@@ -39,27 +37,47 @@ inline fun animationListener(
     }
 }
 
-inline fun View.alphaAnimation(
+inline fun <reified T> valueAnimatorListenerWith(
+    onStartValue: T? = null,
+    onEndValue: T? = null,
+    crossinline onStart: (value: T) -> Unit = { _ -> },
+    crossinline onUpdate: (value: T) -> Unit = { _ -> },
+    crossinline onEnd: (value: T) -> Unit = { _ -> },
+) = ValueAnimator.AnimatorUpdateListener {
+    (it.animatedValue as? T)?.let { value ->
+        onUpdate.invoke(value)
+        when (value) {
+            onStartValue -> onStart.invoke(value)
+            onEndValue -> onEnd.invoke(value)
+        }
+    }
+}
+
+inline fun View.alphaAnimator(
     isShowing: Boolean,
     duration: Long = ALPHA_ANIM_DURATION,
     interpolator: TimeInterpolator = AccelerateInterpolator(),
-    startImmediately: Boolean = true,
-    crossinline onStart: (animator: Animator?) -> Unit = {},
-    crossinline onEnd: (animator: Animator?) -> Unit = {}
-): ObjectAnimator = ObjectAnimator.ofFloat(
-    this,
-    "alpha",
-    if (isShowing) 0f else 1f,
-    if (isShowing) 1f else 0f
-).apply {
-    this@alphaAnimation.visibility
-    this.duration = duration
-    this.interpolator = interpolator
-    this.addListener(
-        onStart = onStart,
-        onEnd = onEnd
-    )
-    if (startImmediately) start()
+    autoStart: Boolean = true,
+    crossinline onStart: (value: Float) -> Unit = { _ -> },
+    crossinline onEnd: (value: Float) -> Unit = { _ -> }
+): ViewPropertyAnimator {
+    val alphaOnStart = (if (isShowing) 0f else 1f).also { this.alpha = it }
+    val alphaOnEnd = if (isShowing) 1f else 0f
+    return animate().apply {
+        this.duration = duration
+        this.interpolator = interpolator
+        this.setUpdateListener(
+            valueAnimatorListenerWith(
+                onStartValue = alphaOnStart,
+                onEndValue = alphaOnEnd,
+                onStart = onStart,
+                onEnd = onEnd,
+                onUpdate = this@alphaAnimator::setAlpha
+            )
+        )
+    }.also {
+        if (autoStart) it.start()
+    }
 }
 
 inline fun View.expandCollapseAnimation(
@@ -82,7 +100,7 @@ inline fun View.expandCollapseAnimation(
                 childrenIdsToAnimate.forEach { childId ->
                     children.find { child ->
                         child.id == childId
-                    }?.alphaAnimation(isShowing = isExpanding)
+                    }?.alphaAnimator(isShowing = isExpanding)
                 }
             }
             onEnd.invoke()

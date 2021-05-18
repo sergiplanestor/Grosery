@@ -3,12 +3,19 @@ package com.revolhope.presentation.library.component.form.view
 import android.content.Context
 import android.text.Editable
 import android.util.AttributeSet
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.children
+import androidx.core.view.doOnPreDraw
 import androidx.core.widget.addTextChangedListener
 import com.revolhope.presentation.R
 import com.revolhope.presentation.databinding.ComponentFormAmountSelectorViewBinding
 import com.revolhope.presentation.library.component.form.model.FormModel
+import com.revolhope.presentation.library.extensions.errorLayoutContainer
 import com.revolhope.presentation.library.extensions.getString
 import com.revolhope.presentation.library.extensions.inflater
+import com.revolhope.presentation.library.extensions.invalidUI
+import com.revolhope.presentation.library.extensions.validUI
 
 class FormAmountSelectorView @JvmOverloads constructor(
     context: Context,
@@ -33,16 +40,17 @@ class FormAmountSelectorView @JvmOverloads constructor(
         model.value?.let { binding.formEditText.setText(it) }
         model.helperText?.let { binding.formInputLayout.helperText = it }
         setupListeners()
+        adjustBottomMargin()
     }
 
     private fun setupListeners() {
-        binding.formInputLayout.setStartIconOnClickListener {
-            binding.formEditText.text?.operate(increase = false)?.let {
+        binding.formAddButton.setOnClickListener {
+            binding.formEditText.text?.operate(increase = true)?.let {
                 binding.formEditText.setText(it.toString())
             }
         }
-        binding.formInputLayout.setEndIconOnClickListener {
-            binding.formEditText.text?.operate(increase = true)?.let {
+        binding.formSubtractButton.setOnClickListener {
+            binding.formEditText.text?.operate(increase = false)?.let {
                 binding.formEditText.setText(it.toString())
             }
         }
@@ -55,12 +63,25 @@ class FormAmountSelectorView @JvmOverloads constructor(
         )
     }
 
+    private fun adjustBottomMargin() {
+        binding.formInputLayout.doOnPreDraw {
+            binding.formInputLayout.errorLayoutContainer?.let {
+                binding.formAddButton.layoutParams = (binding.formAddButton.layoutParams as LayoutParams).apply {
+                    bottomMargin = it.height
+                }
+                binding.formSubtractButton.layoutParams = (binding.formSubtractButton.layoutParams as LayoutParams).apply {
+                    bottomMargin = it.height
+                }
+            }
+        }
+    }
+
     override fun onFieldValid() {
-        binding.formEditText.error = null
+        binding.formInputLayout.validUI()
     }
 
     override fun onFieldInvalid(message: String) {
-        binding.formEditText.error = message
+        binding.formInputLayout.invalidUI(message)
     }
 
     private fun Editable?.operate(increase: Boolean): Number? {

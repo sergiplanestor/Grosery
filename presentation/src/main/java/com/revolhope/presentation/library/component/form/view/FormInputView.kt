@@ -1,21 +1,21 @@
 package com.revolhope.presentation.library.component.form.view
 
 import android.content.Context
-import android.graphics.ColorFilter
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.StateListDrawable
-import android.os.Build
 import android.util.AttributeSet
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputLayout
 import com.revolhope.presentation.R
 import com.revolhope.presentation.databinding.ComponentFormInputViewBinding
 import com.revolhope.presentation.library.component.form.model.FormModel
 import com.revolhope.presentation.library.extensions.applyTint
-import com.revolhope.presentation.library.extensions.colorFrom
-import com.revolhope.presentation.library.extensions.drawableFrom
+import com.revolhope.presentation.library.extensions.colorOf
+import com.revolhope.presentation.library.extensions.drawableOf
 import com.revolhope.presentation.library.extensions.inflater
+import com.revolhope.presentation.library.extensions.invalidUI
+import com.revolhope.presentation.library.extensions.isValidUI
+import com.revolhope.presentation.library.extensions.validUI
 
 class FormInputView<T : FormModel> @JvmOverloads constructor(
     context: Context,
@@ -48,9 +48,9 @@ class FormInputView<T : FormModel> @JvmOverloads constructor(
         }
         binding.formEditText.addTextChangedListener(
             afterTextChanged = { text ->
-                binding.formInputLayout.error?.let {
+                if (!binding.formInputLayout.isValidUI) {
                     if (text.isNullOrBlank()) {
-                        binding.formInputLayout.error = null
+                        binding.formInputLayout.validUI()
                     } else {
                         runValidators()
                     }
@@ -61,11 +61,11 @@ class FormInputView<T : FormModel> @JvmOverloads constructor(
     }
 
     override fun onFieldInvalid(message: String) {
-        binding.formInputLayout.error = message
+        binding.formInputLayout.invalidUI(message)
     }
 
     override fun onFieldValid() {
-        binding.formInputLayout.error = null
+        binding.formInputLayout.validUI()
     }
 
     private fun applyAttrs(attrs: AttributeSet) {
@@ -79,13 +79,13 @@ class FormInputView<T : FormModel> @JvmOverloads constructor(
             is FormModel.Text,
             is FormModel.Email -> {
                 binding.formInputLayout.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
-                binding.formInputLayout.endIconDrawable = context.drawableFrom(R.drawable.ic_clear)
+                binding.formInputLayout.endIconDrawable = context.drawableOf(R.drawable.ic_clear)
             }
             is FormModel.Password -> {
                 binding.formInputLayout.endIconMode = TextInputLayout.END_ICON_PASSWORD_TOGGLE
                 binding.formInputLayout.endIconDrawable =
-                    context.drawableFrom(R.drawable.ic_password_selector).apply {
-                        val color = context.colorFrom(R.color.gray_800)
+                    context.drawableOf(R.drawable.ic_password_selector).apply {
+                        val color = context.colorOf(R.color.gray_800)
                         (this as? StateListDrawable)?.mutate().applyTint(color)
                     }
                 binding.formInputLayout.isEndIconCheckable = true

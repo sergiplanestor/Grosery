@@ -7,8 +7,8 @@ import androidx.core.view.marginBottom
 import com.revolhope.presentation.R
 import com.revolhope.presentation.databinding.ComponentFormCheckboxViewBinding
 import com.revolhope.presentation.library.component.form.model.FormModel
-import com.revolhope.presentation.library.extensions.colorFrom
-import com.revolhope.presentation.library.extensions.dimensionFrom
+import com.revolhope.presentation.library.extensions.colorOf
+import com.revolhope.presentation.library.extensions.dimensionOf
 import com.revolhope.presentation.library.extensions.inflater
 import com.revolhope.presentation.library.extensions.justify
 
@@ -39,11 +39,11 @@ class FormCheckboxView @JvmOverloads constructor(
     }
 
     override fun onFieldValid() {
-        binding.formCheckboxText.setTextColor(context.colorFrom(R.color.primaryTextColor))
+        binding.formCheckboxText.setTextColor(context.colorOf(R.color.primaryTextColor))
     }
 
     override fun onFieldInvalid(message: String) {
-        binding.formCheckboxText.setTextColor(context.colorFrom(R.color.red_error_600))
+        binding.formCheckboxText.setTextColor(context.colorOf(R.color.red_error_600))
     }
 
     private fun setupListeners() {
@@ -64,7 +64,7 @@ class FormCheckboxView @JvmOverloads constructor(
                         bottomToBottom = LayoutParams.UNSET
                         setMargins(
                             marginStart,
-                            context.dimensionFrom(R.dimen.margin_small).toInt(),
+                            context.dimensionOf(R.dimen.margin_small).toInt(),
                             marginEnd,
                             marginBottom
                         )

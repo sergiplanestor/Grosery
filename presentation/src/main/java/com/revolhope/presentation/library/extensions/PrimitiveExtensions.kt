@@ -1,10 +1,12 @@
 package com.revolhope.presentation.library.extensions
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.TypedValue
+import androidx.annotation.StringRes
 import com.revolhope.domain.common.extensions.EMPTY_STRING
 
 // -------------------------------------------------------------------------------------------------
@@ -33,3 +35,8 @@ fun String?.toBitmap(): Bitmap? =
     }
 
 fun String.remove(toRemove: String?): String = toRemove?.let { replace(it, EMPTY_STRING) } ?: this
+
+fun String?.or(ifBlankValue: String): String = if (isNullOrBlank()) ifBlankValue else this
+
+fun String?.or(context: Context, @StringRes stringRes: Int): String =
+    this.or(ifBlankValue = context.getString(stringRes))

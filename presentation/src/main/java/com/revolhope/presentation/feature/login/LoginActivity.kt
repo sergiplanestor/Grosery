@@ -80,16 +80,16 @@ class LoginActivity : BaseActivity() {
         observe(viewModel.loginResponseLiveData, ::onLoginResult)
     }
 
-    override fun onErrorReceived(error: String?) {
-        super.onErrorReceived(error)
+    fun onErrorReceived(error: String?) {
+        super.onErrorReceived(error, onClick = null, onDismiss = null)
         binding.formButtonSubmit.state = FormSubmitButtonView.State.IDLE
     }
 
     private fun onSubmitForm() {
         if (isFormValid) {
             viewModel.doLogin(
-                email = binding.emailFormInput.text ?: "",
-                pwd = binding.pwdFormInput.text ?: "",
+                email = binding.emailFormInput.text.orEmpty(),
+                pwd = binding.pwdFormInput.text.orEmpty(),
                 isRememberMe = binding.rememberFormCheckbox.isChecked
             )
         } else {

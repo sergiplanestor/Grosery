@@ -1,39 +1,51 @@
 package com.revolhope.presentation.feature.grocerylist
 
 import android.content.Intent
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.core.os.bundleOf
-import androidx.core.view.doOnLayout
-import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
+import com.revolhope.domain.feature.grocery.model.GroceryItemModel
+import com.revolhope.domain.feature.grocery.model.GroceryListModel
+import com.revolhope.domain.feature.grocery.model.UserSharedModel
+import com.revolhope.domain.feature.user.model.UserModel
+import com.revolhope.presentation.R
 import com.revolhope.presentation.databinding.ActivityGroceryListBinding
-import com.revolhope.presentation.feature.grocerylist.form.CompleteFormAdapter
-import com.revolhope.presentation.feature.grocerylist.form.GroceryFormUiModel
 import com.revolhope.presentation.library.base.BaseActivity
 import com.revolhope.presentation.library.component.form.model.FormModel
-import com.revolhope.presentation.library.extensions.alphaAnimation
-import com.revolhope.presentation.library.extensions.expandCollapseAnimation
+import com.revolhope.presentation.library.extensions.dp
+import com.revolhope.presentation.library.extensions.or
 import com.revolhope.presentation.library.extensions.rotate
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class GroceryListActivity : BaseActivity() {
 
+    private val viewModel: GroceryListViewModel by viewModels()
+
     private lateinit var binding: ActivityGroceryListBinding
-    private lateinit var adapter: CompleteFormAdapter
-    private var isExpanding = false
-    private var expandedHeight: Int? = null
-    private var collapsedHeight: Int? = null
+    private val user: UserModel? by lazy {
+        intent.extras?.getParcelable(EXTRA_USER) as? UserModel
+    }
+    private val grocery: GroceryListModel? by lazy {
+        intent.extras?.getParcelable(EXTRA_GROCERY_LIST) as? GroceryListModel
+    }
+    private var isSimpleFormVisible = true
 
     companion object {
-        private const val EXTRA_GROCERY_LIST = "grocery.item"
-        fun start(activity: BaseActivity) {
+        private const val EXTRA_USER = "grocery.list.user"
+        private const val EXTRA_GROCERY_LIST = "grocery.list.list"
+        fun start(activity: BaseActivity, user: UserModel, list: GroceryItemModel? = null) {
             activity.startActivity(
                 Intent(activity, GroceryListActivity::class.java).apply {
                     putExtras(
                         bundleOf(
                             EXTRA_NAVIGATION_TRANSITION to NavTransition.MODAL,
-                            EXTRA_GROCERY_LIST to "" //TODO: Change
+                            EXTRA_USER to user,
+                            EXTRA_GROCERY_LIST to list
                         )
                     )
                 }
@@ -49,16 +61,26 @@ class GroceryListActivity : BaseActivity() {
 
     override fun bindViews() {
         super.bindViews()
-
+        viewModel.user = user
         bindToolbar()
+        // Bind forms  TODO: review this login
+        bindSimpleForm()
         bindCompleteForm()
-        binding.inputLayoutContainer.doOnLayout { expandedHeight = it.height }
-        binding.expandCollapseButton.setOnClickListener { onClickExpandCollapse() }
+        // Bind listeners
+        bindListeners()
     }
 
     private fun bindToolbar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "T_New Item :D"
+        supportActionBar?.title = grocery?.title.or(
+            context = this,
+            stringRes = R.string.new_list
+        )
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.grocery_list_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -69,68 +91,144 @@ class GroceryListActivity : BaseActivity() {
             super.onOptionsItemSelected(item)
         }
 
-    private fun bindCompleteForm() {
-        binding.completeFormViewPager.adapter = CompleteFormAdapter(
-            mutableListOf(
-                GroceryFormUiModel(formModels = listOf(
-                    FormModel.Text(hint = "Name"),
-                    FormModel.AmountSelector(hint = "Amount")
-                )),
-                GroceryFormUiModel(formModels = listOf(
-                    FormModel.Text(hint = "Price"),
-                    FormModel.Text(hint = "Market")
-                ))
+    private fun bindSimpleForm() {
+        binding.simpleFormBinding.itemNameFormInput.bind(
+            FormModel.Text(
+                hint = "Name",
+                margins = emptyMap()
             )
-        ).also { adapter = it }
+        )
+        binding.simpleFormBinding.itemAmountFormInput.bind(
+            FormModel.AmountSelector(
+                hint = "Amount",
+                margins = emptyMap()
+            )
+        )
+        binding.simpleFormBinding.addItemButton.layoutParams =
+            (binding.simpleFormBinding.addItemButton.layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+                bottomMargin = 16.dp
+            }
     }
 
-    private fun onClickExpandCollapse() {
-        if (isExpanding) {
-            expandedHeight?.let {
-                binding.inputLayoutContainer.expandCollapseAnimation(
-                    targetHeight = it,
-                    isExpanding = true,
-                    onStart = {
-                        binding.simpleFormBinding.simpleFormLayoutContainer.alphaAnimation(
-                            isShowing = false,
-                            onEnd = {
-                                binding.completeFormViewPager.alphaAnimation(
-                                    isShowing = true
-                                )
-                            }
-                        )
-                    }
-                )
+    private fun bindCompleteForm() {
+        binding.completeFormBinding.itemNameFormInput.bind(
+            FormModel.Text(
+                hint = "Name",
+                margins = emptyMap()
+            )
+        )
+        binding.completeFormBinding.itemPriceFormInput.bind(
+            FormModel.Text(
+                hint = "Price",
+                margins = emptyMap()
+            )
+        )
+        binding.completeFormBinding.marketFormInput.bind(
+            FormModel.Text(
+                hint = "Market",
+                margins = emptyMap()
+            )
+        )
+        binding.completeFormBinding.itemAmountFormInput.bind(
+            FormModel.AmountSelector(
+                hint = "Amount",
+                margins = emptyMap()
+            )
+        )
+        binding.completeFormBinding.addItemButton.layoutParams =
+            (binding.simpleFormBinding.addItemButton.layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+                bottomMargin = 16.dp
             }
-        } else {
-            if (collapsedHeight != null) {
-                binding.inputLayoutContainer.expandCollapseAnimation(
-                    targetHeight = collapsedHeight!!,
-                    isExpanding = false,
-                    onStart = {
-                        binding.completeFormViewPager.alphaAnimation(
-                            isShowing = false,
-                            onEnd = {
-                                binding.simpleFormBinding.simpleFormLayoutContainer.alphaAnimation(
-                                    isShowing = true
-                                )
-                            }
-                        )
-                    }
-                )
-            } else {
-                binding.completeFormViewPager.alphaAnimation(
-                    isShowing = false,
-                    onEnd = {
-                        binding.simpleFormBinding.simpleFormLayoutContainer.alphaAnimation(
-                            isShowing = true
-                        )
-                    }
-                )
-                binding.inputLayoutContainer.doOnPreDraw { collapsedHeight = it.height }
-            }
+    }
+
+    private fun bindListeners() {
+        binding.expandCollapseButton.setOnClickListener { onExpandCollapseClick() }
+        binding.simpleFormBinding.addItemButton.setOnClickListener {
+            buildGroceryItem()?.let { viewModel.addItem(it) }
         }
-        binding.expandCollapseButton.rotate(if (isExpanding) -180f else 180f)
-        isExpanding = isExpanding.not()
+        binding.completeFormBinding.addItemButton.setOnClickListener {
+            buildGroceryItem()?.let { viewModel.addItem(it) }
+        }
+    }
+
+    private fun onExpandCollapseClick() {
+        if (isSimpleFormVisible) {
+            // TODO: Deep Review of this shit
+            binding.simpleFormBinding.simpleFormLayoutContainer.isVisible = false
+            binding.completeFormBinding.completeFormLayoutContainer.isVisible = true
+            // onExpand()
+        } else {
+            binding.simpleFormBinding.simpleFormLayoutContainer.isVisible = true
+            binding.completeFormBinding.completeFormLayoutContainer.isVisible = false
+            // onCollapse()
+        }
+        binding.expandCollapseButton.rotate(angle = if (isSimpleFormVisible) -180f else 180f)
+        isSimpleFormVisible = !isSimpleFormVisible
+    }
+
+    private val isFormValid: Boolean
+        get() = if (isSimpleFormVisible) isSimpleFormValid else isCompleteFormValid
+
+    private val isSimpleFormValid: Boolean
+        get() =
+            binding.simpleFormBinding.itemNameFormInput.runValidators() &&
+                    binding.simpleFormBinding.itemAmountFormInput.runValidators()
+
+
+    private val isCompleteFormValid: Boolean
+        get() =
+            binding.completeFormBinding.itemNameFormInput.runValidators() &&
+                    binding.completeFormBinding.itemAmountFormInput.runValidators()
+
+    private val formNameValue: String
+        get() =
+            if (isSimpleFormVisible) {
+                binding.simpleFormBinding.itemNameFormInput.value
+            } else {
+                binding.completeFormBinding.itemNameFormInput.value
+            }.orEmpty()
+
+    private val formQuantityValue: Int
+        get() =
+            if (isSimpleFormVisible) {
+                binding.simpleFormBinding.itemAmountFormInput.value
+            } else {
+                binding.completeFormBinding.itemAmountFormInput.value
+            }?.toIntOrNull() ?: 1
+
+    private val formMarketValue: String
+        get() =
+            if (isSimpleFormVisible) {
+                ""
+            } else {
+                ""
+            }
+
+    private val formUnitPriceValue: String
+        get() =
+            if (isSimpleFormVisible) {
+                ""
+            } else {
+                ""
+            }
+
+    private fun buildGroceryItem(): GroceryItemModel? =
+        if (isFormValid) {
+            GroceryItemModel.new(
+                name = formNameValue,
+                quantity = formQuantityValue,
+                market = null/*formMarketValue*/,
+                unitPrice = null/*formUnitPriceValue*/,
+                addedBy = user?.sharedModel ?: UserSharedModel.empty
+            )
+        } else {
+            // TODO: Feedback?
+            null
+        }
+
+    override fun onPause() {
+        super.onPause()
+        // Persist changes
+        viewModel.persistChanges()
     }
 }

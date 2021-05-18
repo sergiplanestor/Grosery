@@ -1,27 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="@dimen/margin_medium"
-    android:paddingVertical="@dimen/margin_standard">
+    android:layout_marginHorizontal="@dimen/margin_standard">
+
+    <ImageView
+        android:id="@+id/form_subtract_button"
+        style="@style/Icon.SemiSmall"
+        android:layout_marginTop="2dp"
+        android:contentDescription="@string/content_description_subtract_quantity"
+        android:src="@drawable/ic_subtract_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:tint="@color/black" />
+
+    <ImageView
+        android:id="@+id/form_add_button"
+        style="@style/Icon.SemiSmall"
+        android:layout_marginTop="2dp"
+        android:contentDescription="@string/content_description_add_quantity"
+        android:src="@drawable/ic_add_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:tint="@color/black" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/form_input_layout"
         style="@style/Input"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:endIconDrawable="@drawable/ic_chevron_right"
-        app:endIconTint="@color/primaryTextColor"
+        android:layout_marginHorizontal="@dimen/margin_standard_large"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:startIconDrawable="@drawable/ic_chevron_left"
-        app:startIconTint="@color/primaryTextColor">
+        app:layout_constraintEnd_toStartOf="@id/form_add_button"
+        app:layout_constraintStart_toEndOf="@id/form_subtract_button"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/form_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:textAlignment="center" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

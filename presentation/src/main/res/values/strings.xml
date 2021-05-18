@@ -26,6 +26,13 @@
     <string name="new_list">New list</string>
     <string name="add">Add</string>
     <string name="no_grocery_list_message">Seems that you have not created any grocery list yet. <b>Let\'s start!</b></string>
+    <!-- Grocery list view menu -->
+    <string name="grocery_list_menu_share">Share list</string>
+    <string name="grocery_list_menu_save">Save list</string>
+    <string name="grocery_list_menu_save_template">Add as template</string>
+    <string name="grocery_list_menu_delete">Delete list</string>
+
+
 
     <!-- Errors -->
     <string name="oops">Oops!</string>
@@ -44,4 +51,12 @@
     <string name="title_profile">Profile</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <!-- ImageView's content descriptions -->
+    <string name="content_description_list_shared">Shared list</string>
+    <string name="content_description_subtract_quantity">Subtract item quantity</string>
+    <string name="content_description_add_quantity">Add item quantity</string>
+    <string name="content_description_alert_image">Alert image</string>
+    <string name="content_description_new_items_alert">New items on list</string>
+
 </resources>

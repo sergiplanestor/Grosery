@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 const val EMPTY_STRING = ""
+const val SPACE_STRING = " "
 const val CURRENCY_SYMBOL = "€"
 const val CURRENCY_FORMAT = "#,##0.00$CURRENCY_SYMBOL"
 const val DATE_FORMAT = "dd/MM/yyyy"

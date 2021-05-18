@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.nfc.FormatException
 import android.text.InputType
 import com.revolhope.presentation.R
+import com.revolhope.presentation.library.extensions.dp
 import com.revolhope.presentation.library.extensions.toBooleanOrNull
 
 sealed class FormModel(
@@ -14,10 +15,23 @@ sealed class FormModel(
     open val validators: List<FormValidator>,
     open val startDrawable: Drawable? = null,
     open val isRequired: Boolean = true,
-    open var isFieldValid: Boolean = false
+    open var isFieldValid: Boolean = false,
+    open val margins: Map<Margin, Int> = mapOf(
+        Margin.HORIZONTAL to 16.dp,
+        Margin.VERTICAL to 8.dp
+    )
 ) {
 
     val inputType: Int get() = keyboard.inputType
+
+    enum class Margin {
+        TOP,
+        START,
+        END,
+        BOTTOM,
+        HORIZONTAL,
+        VERTICAL
+    }
 
     enum class Keyboard(val inputType: Int) {
         TEXT(inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES),
@@ -39,7 +53,11 @@ sealed class FormModel(
         } else {
             emptyList()
         },
-        override var isFieldValid: Boolean = false
+        override var isFieldValid: Boolean = false,
+        override val margins: Map<Margin, Int> = mapOf(
+            Margin.HORIZONTAL to 16.dp,
+            Margin.VERTICAL to 8.dp
+        )
     ) : FormModel(
         value = value,
         hint = hint,
@@ -47,7 +65,8 @@ sealed class FormModel(
         keyboard = keyboard,
         validators = validators,
         startDrawable = startDrawable,
-        isFieldValid = isFieldValid
+        isFieldValid = isFieldValid,
+        margins = margins
     )
 
     data class Email(
@@ -61,7 +80,11 @@ sealed class FormModel(
             if (isRequired) add(FormValidator.Required())
         },
         override val startDrawable: Drawable? = null,
-        override var isFieldValid: Boolean = false
+        override var isFieldValid: Boolean = false,
+        override val margins: Map<Margin, Int> = mapOf(
+            Margin.HORIZONTAL to 16.dp,
+            Margin.VERTICAL to 8.dp
+        )
     ) : FormModel(
         value = value,
         hint = hint,
@@ -69,7 +92,8 @@ sealed class FormModel(
         keyboard = keyboard,
         validators = validators,
         startDrawable = startDrawable,
-        isFieldValid = isFieldValid
+        isFieldValid = isFieldValid,
+        margins = margins
     )
 
     data class Password(
@@ -83,7 +107,11 @@ sealed class FormModel(
             if (isRequired) add(FormValidator.Required())
         },
         override val startDrawable: Drawable? = null,
-        override var isFieldValid: Boolean = false
+        override var isFieldValid: Boolean = false,
+        override val margins: Map<Margin, Int> = mapOf(
+            Margin.HORIZONTAL to 16.dp,
+            Margin.VERTICAL to 8.dp
+        )
     ) : FormModel(
         value = value,
         hint = hint,
@@ -91,7 +119,8 @@ sealed class FormModel(
         keyboard = keyboard,
         validators = validators,
         startDrawable = startDrawable,
-        isFieldValid = isFieldValid
+        isFieldValid = isFieldValid,
+        margins = margins
     )
 
     data class Checkbox(
@@ -107,14 +136,19 @@ sealed class FormModel(
             emptyList()
         },
         override val startDrawable: Drawable? = null,
-        override var isFieldValid: Boolean = false
+        override var isFieldValid: Boolean = false,
+        override val margins: Map<Margin, Int> = mapOf(
+            Margin.HORIZONTAL to 16.dp,
+            Margin.VERTICAL to 8.dp
+        )
     ) : FormModel(
         hint = hint,
         helperText = helperText,
         keyboard = keyboard,
         validators = validators,
         startDrawable = startDrawable,
-        isFieldValid = isFieldValid
+        isFieldValid = isFieldValid,
+        margins = margins
     ) {
         override var value: String? = isChecked.toString()
             get() = isChecked.toString()
@@ -136,19 +170,25 @@ sealed class FormModel(
             add(FormValidator.Number())
             if (isRequired) add(FormValidator.Required())
         },
-        override var isFieldValid: Boolean = false
+        override var isFieldValid: Boolean = false,
+        override val margins: Map<Margin, Int> = mapOf(
+            Margin.HORIZONTAL to 16.dp,
+            Margin.VERTICAL to 8.dp
+        )
     ) : FormModel(
         hint = hint,
         helperText = helperText,
         keyboard = keyboard,
         validators = validators,
         startDrawable = startDrawable,
-        isFieldValid = isFieldValid
+        isFieldValid = isFieldValid,
+        margins = margins
     ) {
         override var value: String? = "1"
             set(value) {
                 field = if (value != null) {
-                    value.toFloatOrNull()?.toString() ?: (throw FormatException("Class/FormModel: Only number values allowed"))
+                    value.toFloatOrNull()?.toString()
+                        ?: (throw FormatException("Class/FormModel: Only number values allowed"))
                 } else {
                     "0"
                 }
@@ -174,7 +214,11 @@ sealed class FormModel(
         } else {
             emptyList()
         },
-        override var isFieldValid: Boolean = false
+        override var isFieldValid: Boolean = false,
+        override val margins: Map<Margin, Int> = mapOf(
+            Margin.HORIZONTAL to 16.dp,
+            Margin.VERTICAL to 8.dp
+        )
     ) : FormModel(
         value = value,
         hint = hint,
@@ -182,6 +226,7 @@ sealed class FormModel(
         keyboard = keyboard,
         validators = validators,
         startDrawable = startDrawable,
-        isFieldValid = isFieldValid
+        isFieldValid = isFieldValid,
+        margins = margins
     )
 }

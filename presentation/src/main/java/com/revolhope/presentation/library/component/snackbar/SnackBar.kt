@@ -1,7 +1,5 @@
 package com.revolhope.presentation.library.component.snackbar
 
-import android.annotation.SuppressLint
-import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -10,11 +8,14 @@ import com.revolhope.presentation.library.component.snackbar.view.SnackBarErrorV
 import com.revolhope.presentation.library.component.snackbar.view.SnackBarView
 import com.revolhope.presentation.library.extensions.dp
 import com.revolhope.presentation.library.extensions.findSuitableParent
+import com.revolhope.presentation.library.extensions.runOn
 
 class SnackBar(
     parent: ViewGroup,
     content: SnackBarView<*>
 ) : BaseTransientBottomBar<SnackBar>(parent, content, content) {
+
+    private var onDismiss: (() -> Unit)? = null
 
     init {
         getView().apply {
@@ -23,20 +24,23 @@ class SnackBar(
         }
     }
 
+    override fun dismiss() {
+        super.dismiss()
+        onDismiss?.invoke()
+    }
+
     companion object {
 
         private const val PADDING_BOTTOM_DP = 20
-        private const val DURATION = 3000
+        private const val DURATION = 5000L // 5s
 
-        @SuppressLint("WrongConstant")
         fun show(view: View?, model: SnackBarModel) {
 
             val viewGroup = view.findSuitableParent() ?: return
 
             val content: SnackBarView<*> = when (model) {
                 is SnackBarModel.Success -> {
-                    // Should be implemented to give successfully feedback to user on others features.
-                    // leaved here to illustrate it :)
+                    // TODO: Change to positive view!
                     SnackBarErrorView(viewGroup.context)
                 }
                 is SnackBarModel.Error -> {
@@ -48,13 +52,17 @@ class SnackBar(
                 viewGroup,
                 content
             ).apply {
-                duration = DURATION
+                this.duration = LENGTH_INDEFINITE
+                this.onDismiss = model.onDismiss
                 content.setOnClickListener {
                     model.onClick?.invoke()
                     dismiss()
                 }
+            }.also {
+                runOn(delay = DURATION) {
+                    it.dismiss()
+                }
             }.show()
-            TransitionManager.beginDelayedTransition(viewGroup)
         }
     }
 }

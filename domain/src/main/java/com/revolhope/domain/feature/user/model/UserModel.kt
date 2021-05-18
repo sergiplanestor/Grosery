@@ -2,6 +2,7 @@ package com.revolhope.domain.feature.user.model
 
 import android.os.Parcelable
 import com.revolhope.domain.common.model.DateModel
+import com.revolhope.domain.feature.grocery.model.UserSharedModel
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -12,4 +13,12 @@ data class UserModel(
     val pwd: String?,
     val isRememberMe: Boolean,
     val lastLogin: DateModel
-) : Parcelable
+) : Parcelable {
+
+    val sharedModel: UserSharedModel get() =
+        UserSharedModel(
+            id = id,
+            username = name,
+            email = email
+        )
+}

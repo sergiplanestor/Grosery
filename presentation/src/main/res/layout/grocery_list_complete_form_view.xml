@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/complete_form_layout_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/simple_form_layout_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_standard_large">
+
+        <com.revolhope.presentation.library.component.form.view.FormInputView
+            android:id="@+id/item_name_form_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:startIcon="@drawable/ic_email_address" />
+
+        <com.revolhope.presentation.library.component.form.view.FormInputView
+            android:id="@+id/item_price_form_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard"
+            app:layout_constraintTop_toBottomOf="@id/item_name_form_input"
+            app:startIcon="@drawable/ic_email_address" />
+
+        <com.revolhope.presentation.library.component.form.view.FormInputView
+            android:id="@+id/market_form_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard_large"
+            app:layout_constraintTop_toBottomOf="@id/item_price_form_input"
+            app:startIcon="@drawable/ic_email_address" />
+
+        <com.revolhope.presentation.library.component.form.view.FormAmountSelectorView
+            android:id="@+id/item_amount_form_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/market_form_input"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".6" />
+
+        <Button
+            android:id="@+id/add_item_button"
+            style="@style/Button.Outlined.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add"
+            android:layout_marginHorizontal="@dimen/margin_medium"
+            app:layout_constraintTop_toBottomOf="@id/market_form_input"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
+

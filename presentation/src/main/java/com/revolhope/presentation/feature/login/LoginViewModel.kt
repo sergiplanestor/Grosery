@@ -2,10 +2,8 @@ package com.revolhope.presentation.feature.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.revolhope.domain.feature.user.model.UserModel
 import com.revolhope.domain.feature.user.request.LoginRequest
 import com.revolhope.domain.feature.user.usecase.DoLoginUseCase
-import com.revolhope.domain.feature.user.usecase.FetchUserUseCase
 import com.revolhope.presentation.library.base.BaseViewModel
 import com.revolhope.presentation.library.extensions.launchAsync
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,9 +33,9 @@ class LoginViewModel @Inject constructor(private val doLoginUseCase: DoLoginUseC
                     )
                 )
             },
-            onCompleteTask = {
+            onTaskCompleted = {
                 handleState(
-                    state = it,
+                    state = this,
                     onSuccess = _loginResponseLiveData::setValue
                 )
             }

@@ -1,6 +1,7 @@
 package com.revolhope.data.feature.user.repositoryimpl
 
 import com.revolhope.data.common.BaseRepositoryImpl
+import com.revolhope.data.feature.user.datasource.UserCacheDataSource
 import com.revolhope.data.feature.user.datasource.UserNetworkDataSource
 import com.revolhope.data.feature.user.datasource.UserLocalDataSource
 import com.revolhope.data.feature.user.exception.UserNullPwdException
@@ -19,7 +20,8 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun fetchLocalUser(): State<UserModel?> =
         launchStateful {
-            localDataSource.fetchUser()?.let(UserMapper::fromUserLocalResponseToModel)
+            UserCacheDataSource.user ?: localDataSource.fetchUser()
+                ?.let(UserMapper::fromUserLocalResponseToModel)
         }
 
     override suspend fun fetchRemoteUser(
@@ -43,6 +45,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun insertLocalUser(userModel: UserModel): State<Boolean> =
         launchStateful {
+            UserCacheDataSource.insert(userModel)
             localDataSource.insertOrUpdateUser(userModel.let(UserMapper::fromUserModelToLocalResponse))
             true
         }
@@ -51,19 +54,6 @@ class UserRepositoryImpl @Inject constructor(
         launchStateful {
             networkDataSource.insertUser(userModel.let(UserMapper::fromUserModelToNetResponse))
         }
-
-    /*override suspend fun insertUser(userModel: UserModel): State<Boolean> =
-        launchStateful {
-            if (userModel.pwd == null) throw UserNullPwdException()
-            networkDataSource.createUserWithEmailAndPassword(
-                email = userModel.email,
-                pwd = userModel.pwd!!
-            ).also { isSuccess ->
-                if (isSuccess) {
-                    localDataSource.insertOrUpdateUser(userModel.let(UserMapper::fromUserModelToLocalResponse))
-                }
-            }
-        }*/
 
     override suspend fun doLogin(request: LoginRequest, isRememberMe: Boolean): State<Boolean> =
         launchStateful {

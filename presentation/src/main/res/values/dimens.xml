@@ -1,5 +1,32 @@
 <resources>
 
+    <!-- Text Sizes -->
+    <dimen name="Text.Headline1">102sp</dimen>
+
+    <dimen name="Text.Headline2">64sp</dimen>
+
+    <dimen name="Text.Headline3">51sp</dimen>
+
+    <dimen name="Text.Headline4">36sp</dimen>
+
+    <dimen name="Text.Headline5">25sp</dimen>
+
+    <dimen name="Text.Headline6">21sp</dimen>
+
+    <dimen name="Text.Subtitle1">17sp</dimen>
+
+    <dimen name="Text.Subtitle2">15sp</dimen>
+
+    <dimen name="Text.Body1">16sp</dimen>
+
+    <dimen name="Text.Body2">14sp</dimen>
+
+    <dimen name="Text.Button">14sp</dimen>
+
+    <dimen name="Text.Caption">12sp</dimen>
+
+    <dimen name="Text.Overline">10sp</dimen>
+
     <!-- Margins -->
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_standard">8dp</dimen>
@@ -16,6 +43,7 @@
 
     <!-- Icons -->
     <dimen name="icon_size_small">20dp</dimen>
+    <dimen name="icon_size_semi_small">25dp</dimen>
     <dimen name="icon_size_standard">30dp</dimen>
 
 </resources>

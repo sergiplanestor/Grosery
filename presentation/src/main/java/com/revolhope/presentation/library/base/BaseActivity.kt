@@ -38,8 +38,19 @@ abstract class BaseActivity : AppCompatActivity() {
         // Nothing to do here
     }
 
-    protected open fun onErrorReceived(error: String? = null) {
-        SnackBar.show(root, SnackBarModel.Error(message = error ?: getString(R.string.error_default)))
+    protected open fun onErrorReceived(
+        error: String? = null,
+        onClick: (() -> Unit)? = null,
+        onDismiss: (() -> Unit)? = null
+    ) {
+        SnackBar.show(
+            view = root,
+            model = SnackBarModel.Error(
+                message = error ?: getString(R.string.error_default),
+                onClick = onClick,
+                onDismiss = onDismiss
+            )
+        )
     }
 
     /*protected fun onLoaderVisibilityChanges(show: Boolean) {

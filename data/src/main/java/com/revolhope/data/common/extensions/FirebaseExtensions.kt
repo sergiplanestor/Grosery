@@ -5,7 +5,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import com.google.gson.Gson
+import com.revolhope.data.common.crypto.decrypt
+import com.revolhope.data.common.crypto.encrypt
 import java.lang.RuntimeException
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -45,11 +46,11 @@ inline fun <T> DatabaseReference.addSingleEventListener(
     })
 }
 
-fun <T : Any> DataSnapshot.valueJSON(clazz: KClass<T>): T? =
-    getValue(String::class.java)?.fromJSON(clazz)
+fun <T : Any> DataSnapshot.valueJSON(clazz: KClass<T>, isEncrypted: Boolean = true): T? =
+    getValue(String::class.java)?.let { if (isEncrypted) it.decrypt(clazz) else it.fromJSON(clazz) }
 
-inline fun <reified T : Any> DatabaseReference.valueJSON(data: T): Task<Void> =
-    setValue(data.toJSON)
+inline fun <reified T : Any> DatabaseReference.valueJSON(data: T, isEncrypt: Boolean = true): Task<Void> =
+    setValue(if (isEncrypt) data.encrypt else data.json )
 
 // TODO: Remove if not using
 @Suppress("UNCHECKED_CAST")

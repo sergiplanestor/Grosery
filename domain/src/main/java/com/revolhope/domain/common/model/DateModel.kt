@@ -9,11 +9,8 @@ data class DateModel(
     val value: Long
 ) : Parcelable {
     companion object {
-        val empty: DateModel
-            get() =
-                DateModel(
-                    value = 0L,
-                )
+        val empty: DateModel get() = DateModel(value = 0L)
+        val today: DateModel get() = DateModel(value = System.currentTimeMillis())
     }
 
     val formatted: String? = value.toDateFormat()

@@ -1,4 +1,4 @@
-package com.revolhope.domain.feature.grocery
+package com.revolhope.domain.feature.grocery.model
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

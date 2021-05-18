@@ -1,7 +1,7 @@
 package com.revolhope.domain.common.extensions
 
 import com.revolhope.domain.common.model.PriceModel
-import com.revolhope.domain.feature.grocery.GroceryItemModel
+import com.revolhope.domain.feature.grocery.model.GroceryItemModel
 
 inline val List<GroceryItemModel>.sumAllTotalPrices: PriceModel? get() =
     if (all { it.totalPrice != null }) {

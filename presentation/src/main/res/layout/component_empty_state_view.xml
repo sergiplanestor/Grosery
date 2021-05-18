@@ -10,13 +10,11 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottie_animation_view"
+        style="@style/Animation"
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:layout_gravity="center_horizontal"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/empty_anim"
-        app:lottie_renderMode="hardware" />
+        app:lottie_rawRes="@raw/empty_anim" />
 
     <TextView
         android:id="@+id/title"

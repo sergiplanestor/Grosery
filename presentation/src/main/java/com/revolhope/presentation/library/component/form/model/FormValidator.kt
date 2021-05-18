@@ -12,7 +12,7 @@ sealed class FormValidator(
     companion object {
         private const val PATTERN_REQUIRED = "^(?!\\s*\$|false\$).+"
         private const val PATTERN_PASSWORD = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}\$"
-        private const val PATTERN_NUMBER = "^(?=.*\\d)\$"
+        private const val PATTERN_NUMBER = "^(.*\\d)\$"
     }
 
     fun matches(value: String?): Boolean = value?.let(regex::matches) ?: false

@@ -10,9 +10,9 @@ object UserMapper {
 
     fun fromUserLocalResponseToModel(response: UserLocalResponse): UserModel =
         UserModel(
-            id = response.id ?: "",
-            name = response.name ?: "",
-            email = response.email ?: "",
+            id = response.id.orEmpty(),
+            name = response.name.orEmpty(),
+            email = response.email.orEmpty(),
             pwd = response.pwd,
             isRememberMe = response.isRememberMe == 1,
             lastLogin = response.lastLogin?.let(DateMapper::parseToModel) ?: DateModel.empty
@@ -38,9 +38,9 @@ object UserMapper {
 
     fun fromUserNetResponseToModel(response: UserNetResponse, pwd: String, isRememberMe: Boolean): UserModel =
         UserModel(
-            id = response.id ?: "",
-            name = response.name ?: "",
-            email = response.email ?: "",
+            id = response.id.orEmpty(),
+            name = response.name.orEmpty(),
+            email = response.email.orEmpty(),
             pwd = pwd,
             isRememberMe = isRememberMe,
             lastLogin = response.lastLogin?.let(DateMapper::parseToModel) ?: DateModel.empty

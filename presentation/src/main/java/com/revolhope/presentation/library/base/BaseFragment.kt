@@ -42,11 +42,18 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
         // Nothing to do here
     }
 
-    protected open fun onErrorReceived(error: String? = null) {
+    protected open fun onErrorReceived(
+        error: String? = null,
+        onClick: (() -> Unit)? = null,
+        onDismiss: (() -> Unit)? = null
+    ) {
         SnackBar.show(
-            binding.root,
-            SnackBarModel.Error(message = error ?: getString(R.string.error_default))
+            view = binding.root,
+            model = SnackBarModel.Error(
+                message = error ?: getString(R.string.error_default),
+                onClick = onClick,
+                onDismiss = onDismiss
+            )
         )
     }
-
 }

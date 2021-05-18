@@ -5,80 +5,80 @@
     <style name="Text.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
         <item name="fontFamily">@font/abel_regular</item>
         <item name="android:fontFamily">@font/abel_regular</item>
-        <item name="android:textSize">102sp</item>
+        <item name="android:textSize">@dimen/Text.Headline1</item>
     </style>
 
     <style name="Text.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
         <item name="fontFamily">@font/abel_regular</item>
         <item name="android:fontFamily">@font/abel_regular</item>
-        <item name="android:textSize">64sp</item>
+        <item name="android:textSize">@dimen/Text.Headline2</item>
     </style>
 
     <style name="Text.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
         <item name="fontFamily">@font/abel_regular</item>
         <item name="android:fontFamily">@font/abel_regular</item>
-        <item name="android:textSize">51sp</item>
+        <item name="android:textSize">@dimen/Text.Headline3</item>
     </style>
 
     <style name="Text.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="fontFamily">@font/abel_regular</item>
         <item name="android:fontFamily">@font/abel_regular</item>
-        <item name="android:textSize">36sp</item>
+        <item name="android:textSize">@dimen/Text.Headline4</item>
     </style>
 
     <style name="Text.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
         <item name="fontFamily">@font/abel_regular</item>
         <item name="android:fontFamily">@font/abel_regular</item>
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">@dimen/Text.Headline5</item>
     </style>
 
     <style name="Text.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="fontFamily">@font/abel_regular</item>
         <item name="android:fontFamily">@font/abel_regular</item>
-        <item name="android:textSize">21sp</item>
+        <item name="android:textSize">@dimen/Text.Headline6</item>
     </style>
 
     <style name="Text.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="fontFamily">@font/abel_regular</item>
         <item name="android:fontFamily">@font/abel_regular</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">@dimen/Text.Subtitle1</item>
     </style>
 
     <style name="Text.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
         <item name="fontFamily">@font/abel_regular</item>
         <item name="android:fontFamily">@font/abel_regular</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/Text.Subtitle2</item>
     </style>
 
     <style name="Text.Body1" parent="TextAppearance.MaterialComponents.Body1">
         <item name="fontFamily">@font/montserrat_regular</item>
         <item name="android:fontFamily">@font/montserrat_regular</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/Text.Body1</item>
     </style>
 
     <style name="Text.Body2" parent="TextAppearance.MaterialComponents.Body2">
         <item name="fontFamily">@font/montserrat_regular</item>
         <item name="android:fontFamily">@font/montserrat_regular</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/Text.Body2</item>
     </style>
 
     <style name="Text.Button" parent="TextAppearance.MaterialComponents.Button">
         <item name="fontFamily">@font/montserrat_medium</item>
         <item name="android:fontFamily">@font/montserrat_medium</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/Text.Button</item>
         <item name="textAllCaps">true</item>
     </style>
 
     <style name="Text.Caption" parent="TextAppearance.MaterialComponents.Caption">
         <item name="fontFamily">@font/montserrat_regular</item>
         <item name="android:fontFamily">@font/montserrat_regular</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/Text.Caption</item>
     </style>
 
     <style name="Text.Overline" parent="TextAppearance.MaterialComponents.Overline">
         <item name="fontFamily">@font/montserrat_regular</item>
         <item name="android:fontFamily">@font/montserrat_regular</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">@dimen/Text.Overline</item>
         <item name="textAllCaps">true</item>
     </style>
 
@@ -99,10 +99,15 @@
         <item name="fontFamily">@font/montserrat_regular</item>
         <item name="errorEnabled">true</item>
         <item name="errorIconDrawable">@null</item>
-        <item name="errorIconTint">@color/red_error_600</item>
+        <item name="errorTextColor">@color/red_dark_opacity_70</item>
+        <item name="errorTextAppearance">@style/Text.Subtitle2</item>
         <item name="helperTextEnabled">true</item>
         <item name="helperTextTextColor">@color/primaryDarkColor</item>
-        <item name="android:layout_marginHorizontal">@dimen/margin_medium</item>
+        <item name="helperTextTextAppearance">@style/Text.Subtitle2</item>
+        <item name="hintEnabled">true</item>
+        <item name="hintAnimationEnabled">true</item>
+        <item name="hintTextAppearance">@style/Text.Subtitle2</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_standard</item>
         <item name="startIconTint">@color/gray_800</item>
         <item name="endIconTint">@color/gray_800</item>
     </style>
@@ -113,7 +118,7 @@
     </style>
 
     <style name="Button.Submit">
-        <item name="android:layout_marginHorizontal">@dimen/margin_medium</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_standard</item>
         <item name="android:minHeight">56dp</item>
         <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:gravity">center</item>
@@ -121,11 +126,59 @@
 
     <style name="Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:textAppearance">@style/Text.Button</item>
-        <item name="android:layout_marginHorizontal">@dimen/margin_medium</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_standard</item>
         <item name="strokeColor">@color/primaryTextColorOpacity70</item>
         <item name="rippleColor">@color/primaryTextColorAccentOpacity70</item>
         <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Button.Outlined.Small" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textAppearance">@style/Text.Button</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_standard</item>
+        <item name="strokeColor">@color/primaryTextColorOpacity70</item>
+        <item name="rippleColor">@color/primaryTextColorAccentOpacity70</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:textSize">@dimen/Text.Overline</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- Icons -->
+    <style name="Icon">
+        <item name="android:layout_width">@dimen/icon_size_standard</item>
+        <item name="android:layout_height">@dimen/icon_size_standard</item>
+        <item name="tint">@color/primaryTextColorOpacity70</item>
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="background">?android:attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="Icon.Accent">
+        <item name="tint">@color/primaryTextColorAccentOpacity70</item>
+    </style>
+
+    <style name="Icon.Small">
+        <item name="android:layout_width">@dimen/icon_size_small</item>
+        <item name="android:layout_height">@dimen/icon_size_small</item>
+    </style>
+
+    <style name="Icon.Small.Accent">
+        <item name="tint">@color/primaryTextColorAccentOpacity70</item>
+    </style>
+
+    <style name="Icon.SemiSmall">
+        <item name="android:layout_width">@dimen/icon_size_semi_small</item>
+        <item name="android:layout_height">@dimen/icon_size_semi_small</item>
+    </style>
+
+    <style name="Icon.SemiSmall.Accent">
+        <item name="tint">@color/primaryTextColorAccentOpacity70</item>
+    </style>
+
+    <!-- Lottie Animations -->
+    <style name="Animation">
+        <item name="lottie_renderMode">hardware</item>
+        <item name="lottie_autoPlay">true</item>
+        <item name="lottie_loop">true</item>
     </style>
 
 </resources>

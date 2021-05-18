@@ -24,10 +24,10 @@
 
             <ImageView
                 android:id="@+id/is_shared_icon"
-                android:layout_width="@dimen/icon_size_small"
-                android:layout_height="@dimen/icon_size_small"
+                style="@style/Icon.Small"
                 android:layout_marginTop="@dimen/margin_standard"
                 android:layout_marginEnd="@dimen/margin_standard"
+                android:contentDescription="@string/content_description_list_shared"
                 android:src="@drawable/ic_share"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -38,11 +38,11 @@
 
             <ImageView
                 android:id="@+id/new_items_icon"
-                android:layout_width="@dimen/icon_size_standard"
-                android:layout_height="@dimen/icon_size_standard"
+                style="@style/Icon"
                 android:layout_marginStart="@dimen/margin_standard_large"
                 android:src="@drawable/ic_new"
                 android:visibility="gone"
+                android:contentDescription="@string/content_description_new_items_alert"
                 app:layout_constraintBottom_toBottomOf="@id/num_items_text_view"
                 app:layout_constraintStart_toEndOf="@id/num_items_text_view"
                 app:layout_constraintTop_toTopOf="@id/num_items_text_view"

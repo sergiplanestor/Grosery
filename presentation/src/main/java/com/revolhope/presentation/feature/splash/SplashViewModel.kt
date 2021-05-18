@@ -28,9 +28,9 @@ class SplashViewModel @Inject constructor(
     fun navigate() {
         launchAsync(
             asyncTask = fetchUserUseCase::invoke,
-            onCompleteTask = { state ->
+            onTaskCompleted = {
                 handleState(
-                    state = state,
+                    state = this,
                     onSuccess = { user ->
                         when {
                             user == null || !user.isRememberMe -> {
@@ -57,9 +57,9 @@ class SplashViewModel @Inject constructor(
                     )
                 )
             },
-            onCompleteTask = { state ->
+            onTaskCompleted = {
                 handleState(
-                    state = state,
+                    state = this,
                     onSuccess = _onLoginResponseLiveData::setValue
                 )
             }

@@ -80,8 +80,8 @@ class RegisterActivity : BaseActivity() {
         if (isFormValid) {
             viewModel.doRegister(
                 username = binding.usernameFormInput.text,
-                email = binding.emailFormInput.text ?: "",
-                pwd = binding.pwdFormInput.text ?: "",
+                email = binding.emailFormInput.text.orEmpty(),
+                pwd = binding.pwdFormInput.text.orEmpty(),
                 isRememberMe = binding.rememberFormCheckbox.isChecked
             )
         } else {

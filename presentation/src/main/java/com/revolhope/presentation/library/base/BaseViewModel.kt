@@ -30,12 +30,22 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     protected fun <T> handleState(
         state: State<T>,
         onSuccess: (data: T) -> Unit,
-        onError: ((message: String?) -> Unit)? = null
+        onError: ((isResource: Boolean, message: String?) -> Unit)? = null
     ) {
         when (state) {
             is State.Success -> onSuccess.invoke(state.data)
             is State.Error -> {
-                onError?.invoke(state.message) ?: state.message?.let(_errorLiveData::setValue)
+                when {
+                    onError != null -> {
+                        onError.invoke(state.isErrorMessageResource, state.errorMessageOrEmpty)
+                    }
+                    state.isErrorMessageResource -> {
+                        state.errorMessageOrEmpty.toIntOrNull()?.let(_errorResLiveData::setValue)
+                    }
+                    else /* onError == null && !isErrorMessageResource */ -> {
+                        _errorLiveData.value = state.errorMessageOrEmpty
+                    }
+                }
             }
         }
     }

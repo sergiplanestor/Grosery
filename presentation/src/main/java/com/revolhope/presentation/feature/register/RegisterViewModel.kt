@@ -2,7 +2,7 @@ package com.revolhope.presentation.feature.register
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.revolhope.domain.common.extensions.generateIdentifier
+import com.revolhope.domain.common.extensions.generateID
 import com.revolhope.domain.common.extensions.getNewCreationLastLogin
 import com.revolhope.domain.common.extensions.getUsername
 import com.revolhope.domain.feature.user.model.UserModel
@@ -29,7 +29,7 @@ class RegisterViewModel @Inject constructor(
         launchAsync(
             asyncTask = {
                 val model = UserModel(
-                    id = generateIdentifier(),
+                    id = generateID(),
                     name = getUsername(username, email),
                     email = email,
                     pwd = pwd,
@@ -38,9 +38,9 @@ class RegisterViewModel @Inject constructor(
                 )
                 registerUserUseCase.invoke(RegisterUserUseCase.Params(user = model))
             },
-            onCompleteTask = { state ->
+            onTaskCompleted = {
                 handleState(
-                    state = state,
+                    state = this,
                     onSuccess = _onRegisterResultLiveData::setValue
                 )
             }
