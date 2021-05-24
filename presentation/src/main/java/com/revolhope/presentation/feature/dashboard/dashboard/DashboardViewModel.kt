@@ -2,8 +2,8 @@ package com.revolhope.presentation.feature.dashboard.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.revolhope.domain.feature.user.model.UserModel
-import com.revolhope.domain.feature.user.usecase.FetchUserUseCase
+import com.revolhope.domain.feature.authentication.model.UserModel
+import com.revolhope.domain.feature.authentication.usecase.FetchUserUseCase
 import com.revolhope.presentation.library.base.BaseViewModel
 import com.revolhope.presentation.library.extensions.launchAsync
 import dagger.hilt.android.lifecycle.HiltViewModel

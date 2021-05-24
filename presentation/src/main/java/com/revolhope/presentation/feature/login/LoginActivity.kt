@@ -4,7 +4,7 @@ import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
-import com.revolhope.domain.feature.user.model.UserModel
+import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.presentation.R
 import com.revolhope.presentation.databinding.ActivityLoginBinding
 import com.revolhope.presentation.feature.dashboard.DashboardActivity
@@ -29,7 +29,7 @@ class LoginActivity : BaseActivity() {
 
     companion object {
 
-        private const val EXTRA_USER = "LOGIN_EXTRA_USER"
+        private const val EXTRA_USER = "login.user"
 
         fun start(baseActivity: BaseActivity, userModel: UserModel? = null) {
             baseActivity.startActivity(

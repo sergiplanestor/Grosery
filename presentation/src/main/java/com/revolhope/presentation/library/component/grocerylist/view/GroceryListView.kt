@@ -24,10 +24,11 @@ class GroceryListView @JvmOverloads constructor(
     defStyleAttr
 ) {
 
-    val binding = ComponentGroceryListViewBinding.inflate(context.inflater, this, true)
+    override val binding = ComponentGroceryListViewBinding.inflate(context.inflater, this, true)
     private lateinit var adapter: GroceryListViewAdapter
 
     override fun bind(model: GroceryListViewUiModel) {
+        super.bind(model)
         model.items.isEmpty().let {
             binding.recyclerView.isVisible = it.not()
             binding.cardEmptyStateContainer.isVisible = it
@@ -60,5 +61,7 @@ class GroceryListView @JvmOverloads constructor(
         )
     }
 
-    fun update(items: List<GroceryListUiModel>) { adapter.update(items) }
+    fun update(items: List<GroceryListUiModel>) {
+        adapter.update(items)
+    }
 }

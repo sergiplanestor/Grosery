@@ -1,4 +1,4 @@
-package com.revolhope.domain.feature.user.model
+package com.revolhope.domain.feature.authentication.model
 
 import android.os.Parcelable
 import com.revolhope.domain.common.model.DateModel

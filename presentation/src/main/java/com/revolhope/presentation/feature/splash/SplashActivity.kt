@@ -2,7 +2,7 @@ package com.revolhope.presentation.feature.splash
 
 import android.view.View
 import androidx.activity.viewModels
-import com.revolhope.domain.feature.user.model.UserModel
+import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.presentation.databinding.ActivitySplashBinding
 import com.revolhope.presentation.feature.dashboard.DashboardActivity
 import com.revolhope.presentation.feature.login.LoginActivity

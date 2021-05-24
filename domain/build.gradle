@@ -41,11 +41,6 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:$hilt_compiler"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_android_compiler"
 
-    // Android
+    // KTX Core
     implementation "androidx.core:core-ktx:$core_ktx"
-
-    // Testing
-    testImplementation "junit:junit:$unit_junit"
-    androidTestImplementation "androidx.test.ext:$instrumental_junit"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$instrumental_espresso_core"
 }

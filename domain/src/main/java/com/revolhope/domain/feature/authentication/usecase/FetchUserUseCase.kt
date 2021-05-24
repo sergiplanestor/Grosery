@@ -1,8 +1,8 @@
-package com.revolhope.domain.feature.user.usecase
+package com.revolhope.domain.feature.authentication.usecase
 
 import com.revolhope.domain.common.model.State
-import com.revolhope.domain.feature.user.model.UserModel
-import com.revolhope.domain.feature.user.repository.UserRepository
+import com.revolhope.domain.feature.authentication.model.UserModel
+import com.revolhope.domain.feature.authentication.repository.UserRepository
 import javax.inject.Inject
 
 class FetchUserUseCase @Inject constructor(

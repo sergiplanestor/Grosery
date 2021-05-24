@@ -15,3 +15,5 @@ data class DateModel(
 
     val formatted: String? = value.toDateFormat()
 }
+
+fun DateModel?.orToday(): DateModel = this ?: DateModel.today

@@ -3,7 +3,7 @@ package com.revolhope.presentation.feature.dashboard.dashboard
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.revolhope.domain.feature.user.model.UserModel
+import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.presentation.databinding.FragmentDashboardBinding
 import com.revolhope.presentation.feature.grocerylist.GroceryListActivity
 import com.revolhope.presentation.library.base.BaseActivity

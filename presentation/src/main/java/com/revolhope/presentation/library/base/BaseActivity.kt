@@ -4,19 +4,41 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import com.revolhope.presentation.R
 import com.revolhope.presentation.library.component.snackbar.SnackBar
 import com.revolhope.presentation.library.component.snackbar.model.SnackBarModel
 
 abstract class BaseActivity : AppCompatActivity() {
 
-    protected enum class NavTransition {
+    enum class NavTransition {
         LATERAL,
         MODAL
     }
 
     companion object {
         const val EXTRA_NAVIGATION_TRANSITION = "nav.transition"
+
+        inline fun <reified T : BaseActivity> start(
+            baseActivity: BaseActivity,
+            transition: NavTransition = NavTransition.LATERAL,
+            extras: Bundle? = null,
+            forResultRequestCode: Int? = null
+        ) {
+            Intent(
+                baseActivity,
+                T::class.java
+            ).apply {
+                putExtras(bundleOf(EXTRA_NAVIGATION_TRANSITION to transition))
+                extras?.let(::putExtras)
+            }.run {
+                if (forResultRequestCode != null) {
+                    baseActivity.startActivityForResult(this, forResultRequestCode)
+                } else {
+                    baseActivity.startActivity(this)
+                }
+            }
+        }
     }
 
     private lateinit var root: View
@@ -70,6 +92,12 @@ abstract class BaseActivity : AppCompatActivity() {
         overridePendingTransition(anim.first, anim.second)
     }
 
+    protected fun applyExitNavAnimation(navTransition: NavTransition) {
+        intent = intent?.apply {
+            putExtras(bundleOf(EXTRA_NAVIGATION_TRANSITION to navTransition))
+        }
+    }
+
     /**
      * Private util method to obtain animation to perform when changing between activities.
      * @param intent [Intent] object to obtain extra param and know which [NavTransition] should be executed.
@@ -105,6 +133,8 @@ abstract class BaseActivity : AppCompatActivity() {
      */
     private fun overrideTransition() {
         val anim = getNavAnimations(intent, isStart = false)
-        overridePendingTransition(anim.first, anim.second)
+        if (anim.first != 0 && anim.second != 0) {
+            overridePendingTransition(anim.first, anim.second)
+        }
     }
 }

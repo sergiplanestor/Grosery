@@ -9,11 +9,13 @@ import com.revolhope.presentation.library.component.grocerylist.model.GroceryLis
 import com.revolhope.presentation.library.extensions.getString
 import com.revolhope.presentation.library.extensions.inflater
 
-class GroceryListItemView(context: Context) : BaseView<GroceryListUiModel, GroceryListItemViewBinding>(context) {
+class GroceryListItemView(context: Context) :
+    BaseView<GroceryListUiModel, GroceryListItemViewBinding>(context) {
 
-    val binding = GroceryListItemViewBinding.inflate(context.inflater, this, true)
+    override val binding = GroceryListItemViewBinding.inflate(context.inflater, this, true)
 
     override fun bind(model: GroceryListUiModel) {
+        super.bind(model)
         binding.listNameTextView.text = model.name
         binding.numItemsTextView.text = getString(R.string.num_of_items, model.itemNumber)
         binding.updatedOnTextView.text = if (model.updateOn != null) {

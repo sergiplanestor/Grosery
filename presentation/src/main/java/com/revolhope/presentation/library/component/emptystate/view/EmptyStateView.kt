@@ -14,17 +14,16 @@ class EmptyStateView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : BaseView<EmptyStateUiModel, ComponentEmptyStateViewBinding>(context, attrs, defStyleAttr) {
 
-    val binding  = ComponentEmptyStateViewBinding.inflate(context.inflater, this, true)
+    override val binding = ComponentEmptyStateViewBinding.inflate(context.inflater, this, true)
 
     override fun bind(model: EmptyStateUiModel) {
+        super.bind(model)
         binding.title.text = model.titleOrDefault(context)
-        model.message?.let { binding.message.text = it } ?: binding.message.gone()
-        model.actionName?.let {
-            with(binding.action) {
-                text = it
-                setOnClickListener { model.action?.invoke() }
-                isVisible = true
-            }
-        } ?: binding.action.gone()
+        binding.message.setTextOrGone(value = model.message)
+        model.actionName.doOrGone(receiver = binding.action) {
+            text = it
+            setOnClickListener { model.action?.invoke() }
+            isVisible = true
+        }
     }
 }

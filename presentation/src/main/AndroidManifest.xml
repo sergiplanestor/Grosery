@@ -14,16 +14,23 @@
             </intent-filter>
         </activity>
 
+        <!-- Login & Register -->
         <activity android:name=".feature.register.RegisterActivity"
             android:theme="@style/Theme.Grocery.NoActionBar" />
 
         <activity android:name=".feature.login.LoginActivity"
             android:theme="@style/Theme.Grocery.NoActionBar" />
 
+        <!-- Dashboard -->
         <activity android:name=".feature.dashboard.DashboardActivity"
             android:theme="@style/Theme.Grocery" />
 
+        <!-- Grocery -->
         <activity android:name=".feature.grocerylist.GroceryListActivity"
+            android:theme="@style/Theme.Grocery" />
+
+        <!-- Profile -->
+        <activity android:name=".feature.dashboard.profile.edit.EditProfileActivity"
             android:theme="@style/Theme.Grocery" />
 
     </application>

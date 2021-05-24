@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_standard">
+
+    <TextView
+        android:id="@+id/dialog_title_text_view"
+        style="@style/Text.Headline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_standard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Dialog title" />
+
+    <TextView
+        android:id="@+id/dialog_done_button"
+        style="@style/Text.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="@dimen/margin_small"
+        android:gravity="center_vertical"
+        android:layout_marginEnd="@dimen/margin_standard"
+        app:drawableEndCompat="@drawable/ic_tick"
+        app:drawableTint="@color/successColor"
+        app:layout_constraintBottom_toBottomOf="@id/dialog_title_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/dialog_title_text_view"
+        tools:drawableEnd="@drawable/ic_tick"
+        tools:drawableTint="@color/successColor"
+        tools:text="Done" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/separator_size_standard"
+        android:background="@color/primaryTextColorAccent"
+        android:layout_marginTop="@dimen/margin_small"
+        app:layout_constraintStart_toStartOf="@id/dialog_title_text_view"
+        app:layout_constraintEnd_toEndOf="@id/dialog_done_button"
+        app:layout_constraintTop_toBottomOf="@id/dialog_title_text_view" />
+
+    <FrameLayout
+        android:id="@+id/dialog_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        app:layout_constraintTop_toBottomOf="@id/separator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_height="200dp"
+        tools:background="@color/blue_gray_200" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

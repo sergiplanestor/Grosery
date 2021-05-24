@@ -14,6 +14,10 @@
     <color name="primaryTextColorOpacity70">@color/white_opacity_70</color>
     <color name="primaryTextColorAccent">@color/secondaryLightColor</color>
     <color name="primaryTextColorAccentOpacity70">@color/red_light_opacity_70</color>
-    <color name="secondaryTextColor">@color/blue_gray_200</color>
-
+    <color name="primaryTextColorAccentOpacity50">@color/red_light_opacity_50</color>
+    <color name="secondaryTextColor">@color/blue_gray_dark</color>
+    <!-- Success color -->
+    <color name="successLightColor">@color/teal_200</color>
+    <color name="successColor">@color/teal_400</color>
+    <color name="successDarkColor">@color/teal_600</color>
 </resources>

@@ -6,7 +6,7 @@ import com.revolhope.domain.common.extensions.sumAllTotalPrices
 import com.revolhope.domain.common.extensions.sumExistingTotalPrices
 import com.revolhope.domain.common.model.DateModel
 import com.revolhope.domain.common.model.PriceModel
-import com.revolhope.domain.feature.user.model.UserModel
+import com.revolhope.domain.feature.authentication.model.UserModel
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

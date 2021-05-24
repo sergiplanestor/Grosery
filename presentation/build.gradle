@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -57,8 +58,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ktx"
 
     // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_ktx"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigation_ktx"
+    api "androidx.navigation:navigation-fragment-ktx:$navigation_ktx"
+    api "androidx.navigation:navigation-ui-ktx:$navigation_ktx"
 
     // Appcompat
     implementation "androidx.appcompat:appcompat:$app_compat"
@@ -71,9 +72,4 @@ dependencies {
 
     // Lottie
     implementation "com.airbnb.android:lottie:$lottie"
-
-    // Testing
-    testImplementation "junit:junit:$unit_junit"
-    androidTestImplementation "androidx.test.ext:$instrumental_junit"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$instrumental_espresso_core"
 }

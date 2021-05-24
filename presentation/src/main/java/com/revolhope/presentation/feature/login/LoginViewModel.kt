@@ -2,8 +2,8 @@ package com.revolhope.presentation.feature.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.revolhope.domain.feature.user.request.LoginRequest
-import com.revolhope.domain.feature.user.usecase.DoLoginUseCase
+import com.revolhope.domain.feature.authentication.request.LoginRequest
+import com.revolhope.domain.feature.authentication.usecase.DoLoginUseCase
 import com.revolhope.presentation.library.base.BaseViewModel
 import com.revolhope.presentation.library.extensions.launchAsync
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -2,12 +2,30 @@ package com.revolhope.presentation.feature.dashboard.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.revolhope.domain.feature.authentication.model.UserModel
+import com.revolhope.domain.feature.authentication.usecase.FetchUserUseCase
+import com.revolhope.presentation.library.base.BaseViewModel
+import com.revolhope.presentation.library.extensions.launchAsync
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ProfileViewModel : ViewModel() {
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
+    private val fetchUserUseCase: FetchUserUseCase
+) : BaseViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    private val _userLiveData = MutableLiveData<UserModel>()
+    val userLiveData: LiveData<UserModel> get() = _userLiveData
+
+    fun fetchUser() {
+        launchAsync(
+            asyncTask = fetchUserUseCase::invoke,
+            onTaskCompleted = {
+                handleState(
+                    state = this,
+                    onSuccess = _userLiveData::setValue
+                )
+            }
+        )
     }
-    val text: LiveData<String> = _text
 }

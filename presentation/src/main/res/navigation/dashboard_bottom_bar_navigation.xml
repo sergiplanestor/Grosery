@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_dashboard">
+
+    <activity
+        android:id="@+id/navigation_edit_profile"
+        android:name="com.revolhope.presentation.feature.dashboard.profile.edit.EditProfileActivity"
+        android:label="T_Edit profile"
+        tools:layout="@layout/activity_edit_profile">
+
+        <argument
+            android:name="profileModel"
+            app:argType="com.revolhope.domain.feature.profile.model.ProfileModel"
+            app:nullable="false" />
+
+        <argument
+            android:name="navTransition"
+            app:argType="com.revolhope.presentation.library.base.BaseActivity$NavTransition"
+            app:nullable="false" />
+
+    </activity>
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.revolhope.presentation.feature.dashboard.dashboard.DashboardFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.revolhope.presentation.feature.dashboard.notifications.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.revolhope.presentation.feature.dashboard.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile">
+
+        <action android:id="@+id/action_to_edit_profile"
+            app:destination="@id/navigation_edit_profile"
+            app:enterAnim="@anim/slide_down"
+            app:exitAnim="@anim/hold" />
+
+    </fragment>
+
+</navigation>

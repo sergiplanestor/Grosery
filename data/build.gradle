@@ -49,16 +49,11 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:$hilt_compiler"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_android_compiler"
 
-    // Android
+    // KTX Core
     implementation "androidx.core:core-ktx:$core_ktx"
 
     // Firebase
-    api platform('com.google.firebase:firebase-bom:26.7.0')
-    implementation 'com.google.firebase:firebase-auth:20.0.3'
-    implementation 'com.google.firebase:firebase-database-ktx:19.7.0'
-
-    // Testing
-    testImplementation "junit:junit:$unit_junit"
-    androidTestImplementation "androidx.test.ext:$instrumental_junit"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$instrumental_espresso_core"
+    api platform("com.google.firebase:firebase-bom:$firebase_bom")
+    implementation "com.google.firebase:firebase-auth:$firebase_auth"
+    implementation "com.google.firebase:firebase-database-ktx:$firebase_database"
 }

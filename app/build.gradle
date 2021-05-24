@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -53,9 +54,4 @@ dependencies {
 
     // TODO: CHECK if should be in this MODULE
     implementation 'com.google.firebase:firebase-analytics-ktx'
-
-    // Testing
-    testImplementation "junit:junit:$unit_junit"
-    androidTestImplementation "androidx.test.ext:$instrumental_junit"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$instrumental_espresso_core"
 }

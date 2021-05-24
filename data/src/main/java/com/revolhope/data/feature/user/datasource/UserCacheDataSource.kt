@@ -1,6 +1,6 @@
 package com.revolhope.data.feature.user.datasource
 
-import com.revolhope.domain.feature.user.model.UserModel
+import com.revolhope.domain.feature.authentication.model.UserModel
 
 object UserCacheDataSource {
 

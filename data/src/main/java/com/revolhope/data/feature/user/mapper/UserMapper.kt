@@ -4,7 +4,7 @@ import com.revolhope.data.common.date.DateMapper
 import com.revolhope.data.feature.user.response.UserLocalResponse
 import com.revolhope.data.feature.user.response.UserNetResponse
 import com.revolhope.domain.common.model.DateModel
-import com.revolhope.domain.feature.user.model.UserModel
+import com.revolhope.domain.feature.authentication.model.UserModel
 
 object UserMapper {
 

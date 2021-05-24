@@ -1,8 +1,8 @@
-package com.revolhope.domain.feature.user.repository
+package com.revolhope.domain.feature.authentication.repository
 
 import com.revolhope.domain.common.model.State
-import com.revolhope.domain.feature.user.model.UserModel
-import com.revolhope.domain.feature.user.request.LoginRequest
+import com.revolhope.domain.feature.authentication.model.UserModel
+import com.revolhope.domain.feature.authentication.request.LoginRequest
 
 interface UserRepository {
 

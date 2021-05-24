@@ -11,7 +11,7 @@ import androidx.core.view.isVisible
 import com.revolhope.domain.feature.grocery.model.GroceryItemModel
 import com.revolhope.domain.feature.grocery.model.GroceryListModel
 import com.revolhope.domain.feature.grocery.model.UserSharedModel
-import com.revolhope.domain.feature.user.model.UserModel
+import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.presentation.R
 import com.revolhope.presentation.databinding.ActivityGroceryListBinding
 import com.revolhope.presentation.library.base.BaseActivity

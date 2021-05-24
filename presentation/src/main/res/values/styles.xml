@@ -174,11 +174,40 @@
         <item name="tint">@color/primaryTextColorAccentOpacity70</item>
     </style>
 
+    <!-- CardView -->
+    <style name="Card">
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardUseCompatPadding">true</item>
+    </style>
+
+    <!-- Avatar -->
+    <style name="Avatar">
+        <item name="android:layout_width">@dimen/avatar_size_standard</item>
+        <item name="android:layout_height">@dimen/avatar_size_standard</item>
+        <item name="android:background">@drawable/shape_avatar_background</item>
+        <item name="android:padding">@dimen/margin_medium</item>
+    </style>
+
+    <style name="Avatar.Big">
+        <item name="android:layout_width">@dimen/avatar_size_big</item>
+        <item name="android:layout_height">@dimen/avatar_size_big</item>
+    </style>
+
     <!-- Lottie Animations -->
     <style name="Animation">
         <item name="lottie_renderMode">hardware</item>
         <item name="lottie_autoPlay">true</item>
         <item name="lottie_loop">true</item>
+    </style>
+
+    <!-- Bottom Sheet Dialogs -->
+    <style name="BottomSheetDialogTheme" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetModalStyle</item>
+    </style>
+
+    <style name="BottomSheetModalStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:background">@drawable/shape_card_top_corners_rounded</item>
     </style>
 
 </resources>

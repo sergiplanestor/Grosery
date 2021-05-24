@@ -3,6 +3,9 @@
     <string name="app_name">Grocery</string>
     <string name="my_grocery">My Grocery</string>
 
+    <!-- Common -->
+    <string name="done">Done</string>
+
     <!-- Register & Login -->
     <string name="register">Register</string>
     <string name="login">Log in</string>
@@ -32,6 +35,11 @@
     <string name="grocery_list_menu_save_template">Add as template</string>
     <string name="grocery_list_menu_delete">Delete list</string>
 
+    <!-- Profile -->
+    <string name="profile_num_of_lists">Num. of grocery lists: %d</string>
+    <string name="profile_last_connection">Last connection - %s</string>
+    <string name="profile_edit_avatar">Edit your avatar</string>
+    <string name="change">Change</string>
 
 
     <!-- Errors -->
@@ -58,5 +66,7 @@
     <string name="content_description_add_quantity">Add item quantity</string>
     <string name="content_description_alert_image">Alert image</string>
     <string name="content_description_new_items_alert">New items on list</string>
+    <string name="content_description_avatar">User avatar</string>
+    <string name="content_description_edit_profile_info">Edit profile information</string>
 
 </resources>

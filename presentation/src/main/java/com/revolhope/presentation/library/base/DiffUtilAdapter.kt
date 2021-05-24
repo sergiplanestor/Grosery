@@ -12,15 +12,19 @@ import kotlinx.coroutines.withContext
 abstract class DiffUtilAdapter<T, V : View>(open val items: MutableList<T>) :
     RecyclerView.Adapter<AdapterViewWrapper<V>>() {
 
-    // Abstract methods
+    // Abstract methods and util methods
 
     abstract fun onCreateItemView(parent: ViewGroup, viewType: Int): V
 
-    abstract fun onBindView(view: V, position: Int)
+    abstract fun onBindView(view: V, item: T)
 
     abstract fun areItemsTheSame(oldItem: T, newItem: T): Boolean
 
     abstract fun areContentsTheSame(oldItem: T, newItem: T): Boolean
+
+    protected fun indexOf(item: T): Int? = items.indexOf(item).takeUnless { it == -1 }
+
+    protected fun itemAt(position: Int): T? = items.getOrNull(position)
 
     // RecyclerView.Adapter methods
 
@@ -30,7 +34,7 @@ abstract class DiffUtilAdapter<T, V : View>(open val items: MutableList<T>) :
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: AdapterViewWrapper<V>, position: Int) =
-        onBindView(holder.view, position)
+        onBindView(holder.view, items[position])
 
     // DiffUtil methods
 

@@ -12,6 +12,7 @@ import com.revolhope.presentation.library.component.snackbar.model.SnackBarModel
 
 abstract class BaseFragment<T : ViewBinding> : Fragment() {
 
+    protected val baseActivity: BaseActivity? get() = (activity as? BaseActivity)
     private var _binding: T? = null
     protected val binding get() = _binding!!
 
@@ -29,6 +30,16 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
         initObservers()
     }
 
+    override fun onStart() {
+        super.onStart()
+        onLoadData()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        onSaveData()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
@@ -39,6 +50,14 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     }
 
     open fun initObservers() {
+        // Nothing to do here
+    }
+
+    open fun onLoadData() {
+        // Nothing to do here
+    }
+
+    open fun onSaveData() {
         // Nothing to do here
     }
 

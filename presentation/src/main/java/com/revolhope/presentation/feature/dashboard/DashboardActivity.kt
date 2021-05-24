@@ -1,8 +1,6 @@
 package com.revolhope.presentation.feature.dashboard
 
-import android.content.Intent
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -19,15 +17,7 @@ class DashboardActivity : BaseActivity() {
 
     companion object {
         fun start(baseActivity: BaseActivity) {
-            baseActivity.startActivity(
-                Intent(baseActivity, DashboardActivity::class.java).apply {
-                    putExtras(
-                        bundleOf(
-                            EXTRA_NAVIGATION_TRANSITION to NavTransition.MODAL
-                        )
-                    )
-                }
-            )
+            start<DashboardActivity>(baseActivity, NavTransition.MODAL)
         }
     }
 

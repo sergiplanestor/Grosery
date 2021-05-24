@@ -13,11 +13,9 @@ class GroceryListViewAdapter(
     override fun onCreateItemView(parent: ViewGroup, viewType: Int): GroceryListItemView =
         GroceryListItemView(parent.context)
 
-    override fun onBindView(view: GroceryListItemView, position: Int) {
-        with(items[position]) {
-            view.bind(model = this)
-            view.setOnClickListener { onListClick?.invoke(this) }
-        }
+    override fun onBindView(view: GroceryListItemView, item: GroceryListUiModel) {
+        view.bind(model = item)
+        view.setOnClickListener { onListClick?.invoke(item) }
     }
 
     override fun areItemsTheSame(

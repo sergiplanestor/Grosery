@@ -1,0 +1,29 @@
+<resources>
+
+    <!-- Text Sizes -->
+    <dimen name="Text.Headline1">80sp</dimen>
+
+    <dimen name="Text.Headline2">54sp</dimen>
+
+    <dimen name="Text.Headline3">41sp</dimen>
+
+    <dimen name="Text.Headline4">30sp</dimen>
+
+    <dimen name="Text.Headline5">21sp</dimen>
+
+    <dimen name="Text.Headline6">18sp</dimen>
+
+    <!-- SnackBar -->
+    <dimen name="snack_bar_min_height">38dp</dimen>
+
+    <!-- Icons -->
+    <dimen name="icon_size_small">20dp</dimen>
+    <dimen name="icon_size_semi_small">25dp</dimen>
+    <dimen name="icon_size_standard">30dp</dimen>
+
+    <!-- Avatars -->
+    <dimen name="avatar_size_small">30dp</dimen>
+    <dimen name="avatar_size_semi_small">50dp</dimen>
+    <dimen name="avatar_size_standard">65dp</dimen>
+
+</resources>

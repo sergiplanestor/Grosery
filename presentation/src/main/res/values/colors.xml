@@ -10,8 +10,10 @@
     <color name="red_900">#B71C1C</color>
     <color name="red_light">#F05545</color>
     <color name="red_light_opacity_70">#B3F05545</color>
+    <color name="red_light_opacity_50">#80F05545</color>
     <color name="red_dark">#7F0000</color>
     <color name="red_dark_opacity_70">#B37F0000</color>
+    <color name="red_dark_opacity_50">#807F0000</color>
     <color name="red_error_200">#EF9A9A</color>
     <color name="red_error_600">#E53935</color>
 
@@ -19,12 +21,20 @@
     <color name="gray_700">#616161</color>
     <color name="gray_900">#212121</color>
 
+    <color name="teal_200">#80CBC4</color>
+    <color name="teal_400">#26A69A</color>
+    <color name="teal_600">#00897B</color>
+
+    <color name="light_green_300">#AED581</color>
+    <color name="light_green_600">#7CB342</color>
+    <color name="light_green_700">#689F38</color>
+
     <color name="black">#FF000000</color>
     <color name="black_opacity_70">#B3000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_opacity_70">#B3FFFFFF</color>
 
-    <!-- Default theme colors -->
+    <!-- Default theme colors (Day theme) -->
     <!-- Primary -->
     <color name="primaryColor">@color/blue_gray_500</color>
     <color name="primaryLightColor">@color/blue_gray_light</color>
@@ -38,6 +48,11 @@
     <color name="primaryTextColorOpacity70">@color/black_opacity_70</color>
     <color name="primaryTextColorAccent">@color/secondaryDarkColor</color>
     <color name="primaryTextColorAccentOpacity70">@color/red_dark_opacity_70</color>
+    <color name="primaryTextColorAccentOpacity50">@color/red_dark_opacity_50</color>
     <color name="secondaryTextColor">@color/white</color>
+    <!-- Success color -->
+    <color name="successLightColor">@color/light_green_300</color>
+    <color name="successColor">@color/light_green_600</color>
+    <color name="successDarkColor">@color/light_green_700</color>
 
 </resources>

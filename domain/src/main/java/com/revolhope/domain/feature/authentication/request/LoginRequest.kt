@@ -1,4 +1,4 @@
-package com.revolhope.domain.feature.user.request
+package com.revolhope.domain.feature.authentication.request
 
 data class LoginRequest(
     val email: String,

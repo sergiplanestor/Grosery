@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.revolhope.domain.feature.grocery.model.GroceryItemModel
 import com.revolhope.domain.feature.grocery.model.GroceryListModel
 import com.revolhope.domain.feature.grocery.usecase.CreateGroceryListUseCase
-import com.revolhope.domain.feature.user.model.UserModel
+import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.presentation.library.base.BaseViewModel
 import com.revolhope.presentation.library.extensions.launchAsync
 import dagger.hilt.android.lifecycle.HiltViewModel

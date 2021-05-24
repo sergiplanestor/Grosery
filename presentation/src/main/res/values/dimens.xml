@@ -46,4 +46,15 @@
     <dimen name="icon_size_semi_small">25dp</dimen>
     <dimen name="icon_size_standard">30dp</dimen>
 
+    <!-- Avatars -->
+    <dimen name="avatar_size_small">30dp</dimen>
+    <dimen name="avatar_size_semi_small">50dp</dimen>
+    <dimen name="avatar_size_standard">90dp</dimen>
+    <dimen name="avatar_size_big">110dp</dimen>
+
+    <!-- Separators -->
+    <dimen name="separator_size_small">0.5dp</dimen>
+    <dimen name="separator_size_standard">0.7dp</dimen>
+    <dimen name="separator_size_big">1px</dimen>
+
 </resources>

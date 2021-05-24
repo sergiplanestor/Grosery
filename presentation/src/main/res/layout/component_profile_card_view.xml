@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_layout"
+        style="@style/Card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/card_content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_standard">
+
+            <ImageView
+                android:id="@+id/avatar_image_view"
+                style="@style/Avatar"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:contentDescription="@string/content_description_avatar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/img_avatar_cat" />
+
+            <ImageView
+                android:id="@+id/edit_button"
+                style="@style/Icon.SemiSmall"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:contentDescription="@string/content_description_edit_profile_info"
+                android:padding="@dimen/margin_small"
+                android:src="@drawable/ic_edit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/email_text_view"
+                style="@style/Text.Subtitle2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_big"
+                android:layout_marginEnd="@dimen/margin_standard_large"
+                android:textColor="@color/primaryTextColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/avatar_image_view"
+                app:layout_constraintTop_toBottomOf="@id/username_text_view"
+                tools:text="user@gmail.com" />
+
+            <TextView
+                android:id="@+id/num_of_lists_text_view"
+                style="@style/Text.Subtitle2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_big"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_standard_large"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="@dimen/Text.Body2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/avatar_image_view"
+                app:layout_constraintTop_toBottomOf="@id/avatar_image_view"
+                tools:text="Num. of grocery lists: 5" />
+
+            <TextView
+                android:id="@+id/last_connection_text_view"
+                style="@style/Text.Caption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_big"
+                android:layout_marginTop="@dimen/margin_big"
+                android:layout_marginEnd="@dimen/margin_standard_large"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:gravity="end"
+                android:textAlignment="textEnd"
+                android:textColor="@color/primaryTextColorOpacity70"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/avatar_image_view"
+                app:layout_constraintTop_toBottomOf="@id/num_of_lists_text_view"
+                tools:text="Last edition on 05/05/21" />
+
+            <TextView
+                android:id="@+id/username_text_view"
+                style="@style/Text.Headline4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_big"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:textColor="@color/primaryTextColorAccent"
+                app:layout_constraintEnd_toStartOf="@id/edit_button"
+                app:layout_constraintStart_toEndOf="@id/avatar_image_view"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Username" />
+
+            <View
+                android:id="@+id/separator"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:background="@color/primaryTextColorAccentOpacity50"
+                app:layout_constraintEnd_toStartOf="@id/edit_button"
+                app:layout_constraintStart_toStartOf="@id/email_text_view"
+                app:layout_constraintTop_toBottomOf="@id/email_text_view" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
