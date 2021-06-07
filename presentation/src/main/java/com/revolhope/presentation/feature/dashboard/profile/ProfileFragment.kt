@@ -69,8 +69,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     private fun onEditProfile() {
         findNavController().navigate(
             ProfileFragmentDirections.actionToEditProfile(
+                // TODO: Remove, test purposes
                 ProfileModel(
-                    ProfileAvatar.CAT
+                    userId = "",
+                    email = "",
+                    username = "",
+                    avatar = ProfileAvatar.CAT,
+                    lastContributionOn = DateModel.today,
+                    lastConnectionOn = DateModel.today
                 ),
                 BaseActivity.NavTransition.MODAL
             )

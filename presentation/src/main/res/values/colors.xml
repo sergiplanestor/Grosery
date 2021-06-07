@@ -18,6 +18,8 @@
     <color name="red_error_600">#E53935</color>
 
     <color name="gray_800">#424242</color>
+    <color name="gray_hint">#636363</color>
+    <color name="gray_hint_opacity_70">#B3636363</color>
     <color name="gray_700">#616161</color>
     <color name="gray_900">#212121</color>
 
@@ -50,6 +52,7 @@
     <color name="primaryTextColorAccentOpacity70">@color/red_dark_opacity_70</color>
     <color name="primaryTextColorAccentOpacity50">@color/red_dark_opacity_50</color>
     <color name="secondaryTextColor">@color/white</color>
+    <color name="hintTextColor">@color/gray_hint</color>
     <!-- Success color -->
     <color name="successLightColor">@color/light_green_300</color>
     <color name="successColor">@color/light_green_600</color>

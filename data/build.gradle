@@ -42,18 +42,18 @@ dependencies {
     implementation project(":domain")
 
     // Gson
-    implementation "com.google.code.gson:gson:$gson"
+    implementation "com.google.code.gson:gson:${lib.gson}"
 
     // Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_android"
-    kapt "androidx.hilt:hilt-compiler:$hilt_compiler"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_android_compiler"
+    implementation "com.google.dagger:hilt-android:${lib.hiltAndroid}"
+    kapt "androidx.hilt:hilt-compiler:${lib.hiltCompiler}"
+    kapt "com.google.dagger:hilt-android-compiler:${lib.hiltAndroidCompiler}"
 
     // KTX Core
-    implementation "androidx.core:core-ktx:$core_ktx"
+    implementation "androidx.core:core-ktx:${lib.coreKTX}"
 
     // Firebase
-    api platform("com.google.firebase:firebase-bom:$firebase_bom")
-    implementation "com.google.firebase:firebase-auth:$firebase_auth"
-    implementation "com.google.firebase:firebase-database-ktx:$firebase_database"
+    api platform("com.google.firebase:firebase-bom:${lib.firebaseBOM}")
+    implementation "com.google.firebase:firebase-auth:${lib.firebaseAuth}"
+    implementation "com.google.firebase:firebase-database-ktx:${lib.firebaseDatabase}"
 }

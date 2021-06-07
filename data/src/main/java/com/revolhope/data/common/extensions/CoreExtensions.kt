@@ -11,11 +11,20 @@ inline val String.sha1: String
         Base64.DEFAULT
     ).replace(Regex("[\\[\\]\\.#\\\$\\/\\u0000-\\u001F\\u007F]"), "")
 
-inline val <reified T> T.json: String
-    get() =
-        Gson().toJson(this, T::class.java)
+inline fun <reified T> T.asJson(): String = Gson().toJson(this)
 
-fun <T : Any> String.fromJSON(clazz: KClass<T>): T = Gson().fromJson(this, clazz.java)
+fun <T : Any> String.fromJsonTo(clazz: KClass<T>): T = Gson().fromJson(this, clazz.java)
+
+fun <T : Any> String?.fromJsonToSafe(
+    clazz: KClass<T>,
+    fallbackOnNull: T,
+    fallbackOnParseError: T = fallbackOnNull
+): T =
+    try {
+        this?.fromJsonTo(clazz) ?: fallbackOnNull
+    } catch (t: Throwable) {
+        fallbackOnParseError
+    }
 
 inline fun <T, R> Iterable<T>.mapToMutable(transform: (T) -> R): MutableList<R> =
     map(transform).toMutableList()

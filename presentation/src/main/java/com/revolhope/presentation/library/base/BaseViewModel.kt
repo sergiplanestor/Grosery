@@ -19,6 +19,9 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     protected val _errorResLiveData = MutableLiveData<Int>()
     val errorResLiveData: LiveData<Int> get() = _errorResLiveData
 
+    protected val _loadingLiveData = MutableLiveData<String?>()
+    val loadingLiveData: LiveData<String?> get() = _loadingLiveData
+
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
@@ -27,13 +30,22 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
         job.cancel()
     }
 
-    protected fun <T> handleState(
+    fun <T> handleState(
         state: State<T>,
         onSuccess: (data: T) -> Unit,
+        onLoading: (() -> Unit)? = null,
+        onLoadingFeedbackMessage: String? = null,
         onError: ((isResource: Boolean, message: String?) -> Unit)? = null
     ) {
         when (state) {
             is State.Success -> onSuccess.invoke(state.data)
+            is State.Loading -> {
+                if (onLoading != null) {
+                    onLoading.invoke()
+                } else {
+                    _loadingLiveData.value = onLoadingFeedbackMessage
+                }
+            }
             is State.Error -> {
                 when {
                     onError != null -> {

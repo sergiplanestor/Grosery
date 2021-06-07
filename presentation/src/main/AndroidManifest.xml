@@ -19,6 +19,7 @@
             android:theme="@style/Theme.Grocery.NoActionBar" />
 
         <activity android:name=".feature.login.LoginActivity"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/Theme.Grocery.NoActionBar" />
 
         <!-- Dashboard -->

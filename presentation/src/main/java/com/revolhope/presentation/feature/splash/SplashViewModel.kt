@@ -7,7 +7,7 @@ import com.revolhope.domain.feature.authentication.request.LoginRequest
 import com.revolhope.domain.feature.authentication.usecase.DoLoginUseCase
 import com.revolhope.domain.feature.authentication.usecase.FetchUserUseCase
 import com.revolhope.presentation.library.base.BaseViewModel
-import com.revolhope.presentation.library.extensions.launchAsync
+import com.revolhope.presentation.library.extensions.flowOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -26,27 +26,22 @@ class SplashViewModel @Inject constructor(
     val user: UserModel? get() = _redirectToLoginLiveData.value
 
     fun navigate() {
-        launchAsync(
-            asyncTask = fetchUserUseCase::invoke,
-            onTaskCompleted = {
-                handleState(
-                    state = this,
-                    onSuccess = { user ->
-                        when {
-                            user == null || !user.isRememberMe -> {
-                                _redirectToLoginLiveData.value = user
-                            }
-                            user.isRememberMe -> doLogin(user)
-                        }
+        flowOf(
+            task = fetchUserUseCase::invoke,
+            onTaskSuccess = { user ->
+                when {
+                    user == null || !user.isRememberMe -> {
+                        _redirectToLoginLiveData.value = user
                     }
-                )
+                    user.isRememberMe -> doLogin(user)
+                }
             }
         )
     }
 
     private fun doLogin(user: UserModel) {
-        launchAsync(
-            asyncTask = {
+        flowOf(
+            task = {
                 doLoginUseCase.invoke(
                     DoLoginUseCase.Params(
                         request = LoginRequest(
@@ -57,12 +52,7 @@ class SplashViewModel @Inject constructor(
                     )
                 )
             },
-            onTaskCompleted = {
-                handleState(
-                    state = this,
-                    onSuccess = _onLoginResponseLiveData::setValue
-                )
-            }
+            onTaskSuccess = _onLoginResponseLiveData::setValue
         )
     }
 }

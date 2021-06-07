@@ -143,6 +143,15 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="Button.Outlined.Icon" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+        <item name="android:textAppearance">@style/Text.Button</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_standard</item>
+        <item name="strokeColor">@color/primaryTextColorOpacity70</item>
+        <item name="rippleColor">@color/primaryTextColorAccentOpacity70</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <!-- Icons -->
     <style name="Icon">
         <item name="android:layout_width">@dimen/icon_size_standard</item>
@@ -202,12 +211,13 @@
     </style>
 
     <!-- Bottom Sheet Dialogs -->
-    <style name="BottomSheetDialogTheme" parent="Theme.MaterialComponents.BottomSheetDialog">
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomSheetModalStyle</item>
     </style>
 
-    <style name="BottomSheetModalStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+    <style name="BottomSheetModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/shape_card_top_corners_rounded</item>
+        <item name="background">@drawable/shape_card_top_corners_rounded</item>
     </style>
 
 </resources>

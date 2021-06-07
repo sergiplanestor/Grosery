@@ -18,6 +18,8 @@ inline val Int.dp: Int
         TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), Resources.getSystem().displayMetrics
     ).toInt()
 
+fun Int.percent(value: Int): Int = (this * value) / 100
+
 // -------------------------------------------------------------------------------------------------
 // String
 // -------------------------------------------------------------------------------------------------

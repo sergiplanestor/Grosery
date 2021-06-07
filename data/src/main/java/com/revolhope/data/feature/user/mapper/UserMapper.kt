@@ -1,9 +1,9 @@
 package com.revolhope.data.feature.user.mapper
 
-import com.revolhope.data.common.date.DateMapper
 import com.revolhope.data.feature.user.response.UserLocalResponse
 import com.revolhope.data.feature.user.response.UserNetResponse
 import com.revolhope.domain.common.model.DateModel
+import com.revolhope.domain.common.model.asDateModelOrEmpty
 import com.revolhope.domain.feature.authentication.model.UserModel
 
 object UserMapper {
@@ -15,7 +15,7 @@ object UserMapper {
             email = response.email.orEmpty(),
             pwd = response.pwd,
             isRememberMe = response.isRememberMe == 1,
-            lastLogin = response.lastLogin?.let(DateMapper::parseToModel) ?: DateModel.empty
+            lastLogin = response.lastLogin.asDateModelOrEmpty()
         )
 
     fun fromUserModelToLocalResponse(model: UserModel): UserLocalResponse =
@@ -43,6 +43,6 @@ object UserMapper {
             email = response.email.orEmpty(),
             pwd = pwd,
             isRememberMe = isRememberMe,
-            lastLogin = response.lastLogin?.let(DateMapper::parseToModel) ?: DateModel.empty
+            lastLogin = response.lastLogin.asDateModelOrEmpty()
         )
 }

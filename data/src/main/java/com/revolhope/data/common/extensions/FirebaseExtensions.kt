@@ -7,19 +7,98 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.revolhope.data.common.crypto.decrypt
 import com.revolhope.data.common.crypto.encrypt
-import java.lang.RuntimeException
+import com.revolhope.data.common.exceptions.FirebaseInnerException
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlin.reflect.KClass
 
+enum class ContinuationBehavior {
+    RESUME_ON_SUCCESS,
+    RESUME_WITH_EXCEPTION_ON_ERROR,
+    RESUME_ON_SUCCESS_AND_ERROR,
+    RESUME_WITH_EXCEPTION_ON_CANCELLED,
+    RESUME_ON_SUCCESS_AND_CANCELLED,
+    RESUME_WITH_EXCEPTION_ANY_CASE,
+    RESUME_ALL,
+    RESUME_NEVER;
 
-suspend inline fun <T> launchFirebaseCall(crossinline firebaseAction: (Continuation<T>) -> Unit): T =
-    suspendCoroutine { continuation -> firebaseAction.invoke(continuation) }
+    val isContinueOnSuccess: Boolean
+        get() = this != RESUME_NEVER &&
+                this == RESUME_ALL ||
+                this == RESUME_ON_SUCCESS_AND_ERROR ||
+                this == RESUME_ON_SUCCESS_AND_CANCELLED ||
+                this == RESUME_ON_SUCCESS
 
+    val isContinueOnError: Boolean
+        get() = this != RESUME_NEVER &&
+                this == RESUME_ALL ||
+                this == RESUME_ON_SUCCESS_AND_ERROR ||
+                this == RESUME_WITH_EXCEPTION_ANY_CASE ||
+                this == RESUME_WITH_EXCEPTION_ON_ERROR
 
-fun Task<*>.addIsSuccessListener(continuation: Continuation<Boolean>) {
+    val isContinueOnCancelled: Boolean
+        get() = this != RESUME_NEVER &&
+                this == RESUME_ALL ||
+                this == RESUME_ON_SUCCESS_AND_CANCELLED ||
+                this == RESUME_WITH_EXCEPTION_ANY_CASE ||
+                this == RESUME_WITH_EXCEPTION_ON_CANCELLED
+}
+
+suspend inline fun <T> runOnSuspended(crossinline block: Continuation<T>.() -> Unit): T =
+    suspendCoroutine { block.invoke(it) }
+
+suspend inline fun <T> DatabaseReference.fetchOnSuspended(
+    behavior: ContinuationBehavior = ContinuationBehavior.RESUME_ALL,
+    crossinline onReceivedBlock: (DataSnapshot) -> T?
+): T = fetchOnSuspended(behavior, onReceivedBlock, { false })
+
+suspend inline fun <T> DatabaseReference.fetchOnSuspended(
+    behavior: ContinuationBehavior = ContinuationBehavior.RESUME_ALL,
+    crossinline onReceivedBlock: (DataSnapshot) -> T?,
+    crossinline onErrorBlock: (DatabaseError) -> Boolean = { _ -> false }
+): T =
+    runOnSuspended {
+        addOnSingleEventListener(
+            continuation = this,
+            behavior = behavior,
+            onReceivedBlock = onReceivedBlock,
+            onErrorBlock = onErrorBlock
+        )
+    }
+
+inline fun <T> DatabaseReference.addOnSingleEventListener(
+    continuation: Continuation<T>,
+    behavior: ContinuationBehavior,
+    crossinline onReceivedBlock: (DataSnapshot) -> T?,
+    crossinline onErrorBlock: (DatabaseError) -> Boolean = { _ -> false }
+) {
+    addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            try {
+                val data = onReceivedBlock.invoke(snapshot)
+                if (data != null && behavior.isContinueOnSuccess) {
+                    continuation.resume(data)
+                } else if (data == null && behavior.isContinueOnError) {
+                    continuation.resumeWithException(
+                        FirebaseInnerException.NullDataReceived.default.toThrowable()
+                    )
+                }
+            } catch (t: Throwable) {
+                if (behavior.isContinueOnError) continuation.resumeWithException(t)
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            if (!onErrorBlock.invoke(error) && behavior.isContinueOnCancelled) {
+                continuation.resumeWithException(error.toException())
+            }
+        }
+    })
+}
+
+fun Task<*>.addResumeOnCompleteListener(continuation: Continuation<Boolean>) {
     addOnCompleteListener {
         if (!it.isSuccessful && it.exception != null) {
             continuation.resumeWithException(it.exception!!)
@@ -29,28 +108,15 @@ fun Task<*>.addIsSuccessListener(continuation: Continuation<Boolean>) {
     }
 }
 
-inline fun <T> DatabaseReference.addSingleEventListener(
-    continuation: Continuation<T>,
-    crossinline onReceived: (DataSnapshot) -> T?,
-    crossinline onError: (DatabaseError) -> Boolean = { _ -> false }
-) {
-    addListenerForSingleValueEvent(object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            onReceived.invoke(snapshot)?.let(continuation::resume)
-                ?: continuation.resumeWithException(RuntimeException("FirebaseDataSourceImpl: Unable to cast firebase data"))
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            if (!onError.invoke(error)) continuation.resumeWithException(error.toException())
-        }
-    })
-}
 
 fun <T : Any> DataSnapshot.valueJSON(clazz: KClass<T>, isEncrypted: Boolean = true): T? =
-    getValue(String::class.java)?.let { if (isEncrypted) it.decrypt(clazz) else it.fromJSON(clazz) }
+    getValue(String::class.java)?.let { if (isEncrypted) it.decrypt(clazz) else it.fromJsonTo(clazz) }
 
-inline fun <reified T : Any> DatabaseReference.valueJSON(data: T, isEncrypt: Boolean = true): Task<Void> =
-    setValue(if (isEncrypt) data.encrypt else data.json )
+inline fun <reified T : Any> DatabaseReference.valueJSON(
+    data: T,
+    isEncrypt: Boolean = true
+): Task<Void> =
+    setValue(if (isEncrypt) data.encrypt else data.asJson())
 
 // TODO: Remove if not using
 @Suppress("UNCHECKED_CAST")

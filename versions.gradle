@@ -1,0 +1,46 @@
+ext {
+    config = [
+            applicationId    : "com.raul.coroutines",
+            buildToolsVersion: "29.0.2",
+            compileSdkVersion: 29,
+            minSdkVersion    : 23,
+            targetSdkVersion : 29,
+            versionMajor     : "0",
+            versionMinor     : "0",
+            versionPatch     : "1"
+    ]
+
+    classpath = [
+            gradle        : "4.1.2",
+            kotlinGradle  : "1.4.31",
+            hiltGradle    : "2.28-alpha",
+            googleServices: "4.3.5",
+            navigationKTX : "2.3.5"
+    ]
+
+    lib = [
+            materialComponents  : "1.3.0",
+            constraintLayout    : "2.0.4",
+            appCompat           : "1.3.0",
+            coreKTX             : "1.5.0",
+            hiltAndroid         : "2.31-alpha",
+            hiltCompiler        : "1.0.0-alpha03",
+            hiltAndroidCompiler : "2.31.2-alpha",
+            hiltViewModelAndroid: "1.0.0-alpha03",
+            lifecycleKTX        : "2.3.1",
+            navigationKTX       : "2.3.5",
+            gson                : "2.8.6",
+            lottie              : "3.4.0",
+            firebaseBOM         : "26.7.0",
+            firebaseAuth        : "21.0.1",
+            firebaseDatabase    : "20.0.0",
+            coroutines          : "1.4.1"
+    ]
+
+    testing = [
+            unitJUnit               : "4.13.2",
+            instrumentalJUnit       : "1.1.2",
+            instrumentalEspressoCore: "3.3.0",
+            coreTesting             : "2.0.1"
+    ]
+}

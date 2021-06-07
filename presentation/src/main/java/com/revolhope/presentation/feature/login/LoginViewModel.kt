@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.revolhope.domain.feature.authentication.request.LoginRequest
 import com.revolhope.domain.feature.authentication.usecase.DoLoginUseCase
 import com.revolhope.presentation.library.base.BaseViewModel
-import com.revolhope.presentation.library.extensions.launchAsync
+import com.revolhope.presentation.library.extensions.flowOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -21,8 +21,8 @@ class LoginViewModel @Inject constructor(private val doLoginUseCase: DoLoginUseC
         pwd: String,
         isRememberMe: Boolean
     ) {
-        launchAsync(
-            asyncTask = {
+        flowOf(
+            task = {
                 doLoginUseCase.invoke(
                     DoLoginUseCase.Params(
                         request = LoginRequest(
@@ -33,12 +33,7 @@ class LoginViewModel @Inject constructor(private val doLoginUseCase: DoLoginUseC
                     )
                 )
             },
-            onTaskCompleted = {
-                handleState(
-                    state = this,
-                    onSuccess = _loginResponseLiveData::setValue
-                )
-            }
+            onTaskSuccess = _loginResponseLiveData::setValue
         )
     }
 

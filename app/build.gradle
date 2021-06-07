@@ -44,13 +44,13 @@ dependencies {
     implementation project(":presentation")
 
     // Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_android"
-    kapt "androidx.hilt:hilt-compiler:$hilt_compiler"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_android_compiler"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_viewmodel_android"
+    implementation "com.google.dagger:hilt-android:${lib.hiltAndroid}"
+    kapt "androidx.hilt:hilt-compiler:${lib.hiltCompiler}"
+    kapt "com.google.dagger:hilt-android-compiler:${lib.hiltAndroidCompiler}"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:${lib.hiltViewModelAndroid}"
 
     // App compat
-    implementation "androidx.appcompat:appcompat:$app_compat"
+    implementation "androidx.appcompat:appcompat:${lib.appCompat}"
 
     // TODO: CHECK if should be in this MODULE
     implementation 'com.google.firebase:firebase-analytics-ktx'

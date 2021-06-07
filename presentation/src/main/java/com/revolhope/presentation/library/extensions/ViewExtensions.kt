@@ -21,6 +21,7 @@ import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.children
 import androidx.core.widget.TextViewCompat
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.revolhope.domain.common.extensions.SPACE_STRING
@@ -36,21 +37,29 @@ import com.revolhope.presentation.R
 inline var View.isVisibleAnimated: Boolean
     get() = visibility == View.VISIBLE && alpha != 0f
     set(value) {
-        alphaAnimator(
-            isShowing = value,
-            onStart = {
-                if (value && (visibility != View.VISIBLE || alpha == 0f)) {
-                    alpha = 0f
-                    visibility = View.VISIBLE
+        val isNoAnimationNeeded =
+            // value = true and view is already visible
+            (value && visibility == View.VISIBLE && alpha == 1f) ||
+                    // value = false and view is already invisible or gone
+                    (!value && visibility != View.VISIBLE)
+
+        if (isNoAnimationNeeded.not()) {
+            alphaAnimator(
+                isShowing = value,
+                onStart = {
+                    if (value && (visibility != View.VISIBLE || alpha == 0f)) {
+                        alpha = 0f
+                        visibility = View.VISIBLE
+                    }
+                },
+                onEnd = {
+                    if (!value) {
+                        visibility = View.GONE
+                        alpha = 1f
+                    }
                 }
-            },
-            onEnd = {
-                if (!value) {
-                    visibility = View.GONE
-                    alpha = 1f
-                }
-            }
-        )
+            )
+        }
     }
 
 // Functions ---------------------------------------------------------------------------------------
@@ -99,12 +108,17 @@ enum class DrawablePosition {
     START,
     END,
     TOP,
-    BOTTOM
+    BOTTOM,
+    TEXT_START,
+    TEXT_END,
+    TEXT_TOP,
+
 }
 
 data class TextDrawableUiModel(
     val drawable: Drawable? = null,
     @DrawableRes val drawableRes: Int? = null,
+    @Dimension val sizeDps: Int? = 30.dp,
     @Dimension val paddingDps: Int? = 8.dp,
     @ColorInt val tintColorInt: Int? = null,
     val position: DrawablePosition = DrawablePosition.START
@@ -140,13 +154,16 @@ fun TextView.justify(enableJustify: Boolean = true) {
 fun TextView.drawable(model: TextDrawableUiModel) {
     model.getDrawable(context)?.let { drawable ->
         when (model.position) {
-            DrawablePosition.START -> this.setCompoundDrawables(
+            DrawablePosition.START,
+            DrawablePosition.TEXT_START -> this.setCompoundDrawables(
                 drawable, null, null, null
             )
-            DrawablePosition.END -> this.setCompoundDrawables(
+            DrawablePosition.END,
+            DrawablePosition.TEXT_END -> this.setCompoundDrawables(
                 null, null, drawable, null
             )
-            DrawablePosition.TOP -> this.setCompoundDrawables(
+            DrawablePosition.TOP,
+            DrawablePosition.TEXT_TOP -> this.setCompoundDrawables(
                 null, drawable, null, null
             )
             DrawablePosition.BOTTOM -> this.setCompoundDrawables(
@@ -167,6 +184,35 @@ fun TextView.bindClickableModel(model: ClickableViewUiModel) {
     text = model.text
     drawable(model.drawableUiModel)
     setOnClickListener { model.onClick.invoke() }
+}
+
+// =================================================================================================
+// Button && Material Button
+// =================================================================================================
+
+// Functions ---------------------------------------------------------------------------------------
+
+fun MaterialButton.bindClickableModel(model: ClickableViewUiModel) {
+    text = model.text
+    drawable(model.drawableUiModel)
+    setOnClickListener { model.onClick.invoke() }
+}
+
+fun MaterialButton.drawable(model: TextDrawableUiModel) {
+    model.getDrawable(context)?.let(::setIcon).also {
+        when (model.position) {
+            DrawablePosition.START -> MaterialButton.ICON_GRAVITY_START
+            DrawablePosition.END -> MaterialButton.ICON_GRAVITY_END
+            DrawablePosition.TOP -> MaterialButton.ICON_GRAVITY_TOP
+            DrawablePosition.TEXT_START -> MaterialButton.ICON_GRAVITY_TEXT_START
+            DrawablePosition.TEXT_END -> MaterialButton.ICON_GRAVITY_TEXT_END
+            DrawablePosition.TEXT_TOP -> MaterialButton.ICON_GRAVITY_TEXT_TOP
+            else -> null
+        }?.let(::setIconGravity)
+        model.tintColorInt?.let { iconTint = ColorStateList.valueOf(it) }
+        model.paddingDps?.let(::setIconPadding)
+        model.sizeDps?.let(::setIconSize)
+    }
 }
 
 // =================================================================================================

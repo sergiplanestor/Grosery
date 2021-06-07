@@ -16,4 +16,16 @@ data class DateModel(
     val formatted: String? = value.toDateFormat()
 }
 
+// DateModel extensions
+
+fun Long.asDateModel(): DateModel = DateModel(value = this)
+
+fun Long?.asDateModelOrEmpty() = asDateModelSafe(DateModel.empty)
+
+fun Long?.asDateModelOrToday() = asDateModelSafe(DateModel.today)
+
+fun Long?.asDateModelSafe(fallback: DateModel) = this?.asDateModel() ?: fallback
+
 fun DateModel?.orToday(): DateModel = this ?: DateModel.today
+
+fun DateModel?.orEmpty(): DateModel = this ?: DateModel.empty

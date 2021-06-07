@@ -1,9 +1,9 @@
 package com.revolhope.domain.common.model
 
-import android.content.Context
 import com.revolhope.domain.common.extensions.EMPTY_STRING
 
 sealed class State<out T> {
+    object Loading : State<Nothing>()
     data class Success<out T>(val data: T) : State<T>()
     data class Error(
         val message: String? = null,
@@ -14,7 +14,8 @@ sealed class State<out T> {
 
         val isErrorMessageResource: Boolean get() = messageRes != null
 
-        val errorMessageOrEmpty: String get() =
-            messageRes?.toString() ?: message ?: throwable?.message ?: EMPTY_STRING
+        val errorMessageOrEmpty: String
+            get() =
+                messageRes?.toString() ?: message ?: throwable?.message ?: EMPTY_STRING
     }
 }

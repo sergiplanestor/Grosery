@@ -1,6 +1,8 @@
 package com.revolhope.data.injection
 
 import com.revolhope.data.feature.grocery.datasource.GroceryNetworkDataSource
+import com.revolhope.data.feature.profile.datasource.ProfileLocalDataSource
+import com.revolhope.data.feature.profile.datasource.ProfileNetworkDataSource
 import com.revolhope.data.feature.storage.local.LocalDataSourceImpl
 import com.revolhope.data.feature.storage.network.FirebaseDataSourceImpl
 import com.revolhope.data.feature.user.datasource.UserNetworkDataSource
@@ -16,7 +18,7 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindUserLocalDataSource(
-        userLocalDataSourceImpl: LocalDataSourceImpl
+        localDataSourceImpl: LocalDataSourceImpl
     ): UserLocalDataSource
 
     @Binds
@@ -29,4 +31,13 @@ abstract class DataSourceModule {
         firebaseDataSourceImpl: FirebaseDataSourceImpl
     ): GroceryNetworkDataSource
 
+    @Binds
+    abstract fun bindProfileNetworkDataSource(
+        firebaseDataSourceImpl: FirebaseDataSourceImpl
+    ): ProfileNetworkDataSource
+
+    @Binds
+    abstract fun bindProfileLocalDataSource(
+        localDataSourceImpl: LocalDataSourceImpl
+    ): ProfileLocalDataSource
 }

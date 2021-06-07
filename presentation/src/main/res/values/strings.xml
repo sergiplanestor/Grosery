@@ -38,7 +38,8 @@
     <!-- Profile -->
     <string name="profile_num_of_lists">Num. of grocery lists: %d</string>
     <string name="profile_last_connection">Last connection - %s</string>
-    <string name="profile_edit_avatar">Edit your avatar</string>
+    <string name="profile_edit_avatar">Choose your avatar</string>
+    <string name="profile_edit_avatar_hold_to_full">Hold touched on the avatar to zoom in</string>
     <string name="change">Change</string>
 
 
@@ -68,5 +69,6 @@
     <string name="content_description_new_items_alert">New items on list</string>
     <string name="content_description_avatar">User avatar</string>
     <string name="content_description_edit_profile_info">Edit profile information</string>
+    <string name="content_description_close_screen">Close screen</string>
 
 </resources>

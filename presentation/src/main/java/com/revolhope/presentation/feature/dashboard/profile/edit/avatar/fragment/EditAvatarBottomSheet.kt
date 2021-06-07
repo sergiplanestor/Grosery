@@ -2,12 +2,14 @@ package com.revolhope.presentation.feature.dashboard.profile.edit.avatar.fragmen
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.revolhope.domain.feature.profile.model.ProfileAvatar
 import com.revolhope.domain.feature.profile.model.ProfileModel
 import com.revolhope.presentation.R
 import com.revolhope.presentation.databinding.FragmentEditAvatatBottomSheetBinding
+import com.revolhope.presentation.feature.dashboard.profile.edit.avatar.adapter.AvatarItemDecorator
 import com.revolhope.presentation.feature.dashboard.profile.edit.avatar.adapter.AvatarsAdapter
 import com.revolhope.presentation.library.base.BaseActivity
 import com.revolhope.presentation.library.base.BaseBottomSheetFragment
@@ -43,9 +45,10 @@ class EditAvatarBottomSheet : BaseBottomSheetFragment<FragmentEditAvatatBottomSh
             text = getString(R.string.done),
             drawableUiModel = TextDrawableUiModel(
                 drawableRes = R.drawable.ic_tick,
-                tintColorInt = context?.colorOf(R.color.successColor),
-                paddingDps = context?.dimensionOf(R.dimen.margin_small)?.toInt(),
-                position = DrawablePosition.END
+                sizeDps = context?.dimensionOf(R.dimen.icon_size_small)?.toInt(),
+                tintColorInt = context?.colorOf(R.color.successDarkColor),
+                paddingDps = 0,
+                position = DrawablePosition.TEXT_END
             ),
             ::onSaveData
         )
@@ -55,6 +58,15 @@ class EditAvatarBottomSheet : BaseBottomSheetFragment<FragmentEditAvatatBottomSh
         container: ViewGroup?
     ): FragmentEditAvatatBottomSheetBinding =
         FragmentEditAvatatBottomSheetBinding.inflate(inflater, container, false)
+
+    override fun configureRootLayoutParams(params: FrameLayout.LayoutParams) {
+        params.setMargins(
+            params.marginStart,
+            context?.dimensionOf(R.dimen.margin_standard_large)?.toInt() ?: params.topMargin,
+            params.marginEnd,
+            context?.dimensionOf(R.dimen.margin_standard_large)?.toInt() ?: params.bottomMargin
+        )
+    }
 
     override fun bindViews() {
         super.bindViews()
@@ -67,19 +79,24 @@ class EditAvatarBottomSheet : BaseBottomSheetFragment<FragmentEditAvatatBottomSh
 
     override fun onLoadData() {
         super.onLoadData()
+        viewModel.fetchAvatars()
     }
 
-    override fun onSaveData() {
-        super.onSaveData()
-        // Store changes
-
+    private fun persistChanges() {
+        if (profile != null && adapter?.selected != null && profile?.avatar?.id != adapter?.selected?.id) {
+            viewModel.saveChanges(profile!!, adapter?.selected!!)
+        }
         if (isVisible && !isRemoving) dismiss()
     }
 
     private fun onAvatarsReceived(avatars: List<ProfileAvatar>) {
-        binding.avatarsRecyclerView.adapter = AvatarsAdapter(
-            items = avatars.toMutableList(),
-            selected = profile?.avatar
-        ).also { adapter = it }
+        with(binding.avatarsRecyclerView) {
+            adapter = AvatarsAdapter(
+                items = avatars,
+                selected = profile?.avatar,
+                activity as? BaseActivity
+            ).also { adapter = it }
+            if (itemDecorationCount == 0) addItemDecoration(AvatarItemDecorator())
+        }
     }
 }

@@ -37,10 +37,14 @@ android {
 
 dependencies {
     // Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_android"
-    kapt "androidx.hilt:hilt-compiler:$hilt_compiler"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_android_compiler"
+    implementation "com.google.dagger:hilt-android:${lib.hiltAndroid}"
+    kapt "androidx.hilt:hilt-compiler:${lib.hiltCompiler}"
+    kapt "com.google.dagger:hilt-android-compiler:${lib.hiltAndroidCompiler}"
 
     // KTX Core
-    implementation "androidx.core:core-ktx:$core_ktx"
+    implementation "androidx.core:core-ktx:${lib.coreKTX}"
+
+    // Coroutines
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:${lib.coroutines}"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:${lib.coroutines}"
 }

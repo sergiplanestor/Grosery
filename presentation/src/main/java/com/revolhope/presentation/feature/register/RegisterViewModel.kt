@@ -8,7 +8,7 @@ import com.revolhope.domain.common.extensions.getUsername
 import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.domain.feature.authentication.usecase.RegisterUserUseCase
 import com.revolhope.presentation.library.base.BaseViewModel
-import com.revolhope.presentation.library.extensions.launchAsync
+import com.revolhope.presentation.library.extensions.flowOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -26,8 +26,8 @@ class RegisterViewModel @Inject constructor(
         pwd: String,
         isRememberMe: Boolean
     ) {
-        launchAsync(
-            asyncTask = {
+        flowOf(
+            task = {
                 val model = UserModel(
                     id = generateID(),
                     name = getUsername(username, email),
@@ -38,12 +38,7 @@ class RegisterViewModel @Inject constructor(
                 )
                 registerUserUseCase.invoke(RegisterUserUseCase.Params(user = model))
             },
-            onTaskCompleted = {
-                handleState(
-                    state = this,
-                    onSuccess = _onRegisterResultLiveData::setValue
-                )
-            }
+            onTaskSuccess = _onRegisterResultLiveData::setValue
         )
     }
 }

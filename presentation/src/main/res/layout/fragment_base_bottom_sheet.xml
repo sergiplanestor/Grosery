@@ -9,45 +9,43 @@
     <TextView
         android:id="@+id/dialog_title_text_view"
         style="@style/Text.Headline5"
+        android:textColor="@color/primaryTextColorAccent"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_standard"
         android:layout_marginStart="@dimen/margin_standard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Dialog title" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/dialog_done_button"
-        style="@style/Text.Button"
+        style="@style/Button.Outlined.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawablePadding="@dimen/margin_small"
-        android:gravity="center_vertical"
         android:layout_marginEnd="@dimen/margin_standard"
-        app:drawableEndCompat="@drawable/ic_tick"
-        app:drawableTint="@color/successColor"
         app:layout_constraintBottom_toBottomOf="@id/dialog_title_text_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/dialog_title_text_view"
-        tools:drawableEnd="@drawable/ic_tick"
-        tools:drawableTint="@color/successColor"
-        tools:text="Done" />
+        app:strokeColor="@color/secondaryDarkColor"
+        tools:text="Done"/>
 
     <View
         android:id="@+id/separator"
         android:layout_width="0dp"
         android:layout_height="@dimen/separator_size_standard"
-        android:background="@color/primaryTextColorAccent"
-        android:layout_marginTop="@dimen/margin_small"
+        android:background="@color/primaryTextColor"
+        android:layout_marginTop="@dimen/margin_standard"
         app:layout_constraintStart_toStartOf="@id/dialog_title_text_view"
         app:layout_constraintEnd_toEndOf="@id/dialog_done_button"
-        app:layout_constraintTop_toBottomOf="@id/dialog_title_text_view" />
+        app:layout_constraintTop_toBottomOf="@id/dialog_done_button" />
 
     <FrameLayout
         android:id="@+id/dialog_content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_standard"
         app:layout_constraintTop_toBottomOf="@id/separator"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

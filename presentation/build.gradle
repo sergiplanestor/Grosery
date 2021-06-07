@@ -45,31 +45,33 @@ dependencies {
     implementation project(":domain")
 
     // KTX Core
-    implementation "androidx.core:core-ktx:$core_ktx"
+    implementation "androidx.core:core-ktx:${lib.coreKTX}"
 
     // Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_android"
-    kapt "androidx.hilt:hilt-compiler:$hilt_compiler"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_android_compiler"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_viewmodel_android"
+    implementation "com.google.dagger:hilt-android:${lib.hiltAndroid}"
+    kapt "androidx.hilt:hilt-compiler:${lib.hiltCompiler}"
+    kapt "com.google.dagger:hilt-android-compiler:${lib.hiltAndroidCompiler}"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:${lib.hiltViewModelAndroid}"
 
-    // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_ktx"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ktx"
+    // Lifecycle (live data, runtime, viewModel, viewModelSavedState
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${lib.lifecycleKTX}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${lib.lifecycleKTX}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${lib.lifecycleKTX}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:${lib.lifecycleKTX}"
 
     // Navigation
-    api "androidx.navigation:navigation-fragment-ktx:$navigation_ktx"
-    api "androidx.navigation:navigation-ui-ktx:$navigation_ktx"
+    api "androidx.navigation:navigation-fragment-ktx:${lib.navigationKTX}"
+    api "androidx.navigation:navigation-ui-ktx:${lib.navigationKTX}"
 
     // Appcompat
-    implementation "androidx.appcompat:appcompat:$app_compat"
+    implementation "androidx.appcompat:appcompat:${lib.appCompat}"
 
     // Material
-    implementation "com.google.android.material:material:$material_components"
+    implementation "com.google.android.material:material:${lib.materialComponents}"
 
     // Constraint Layout
-    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout"
+    implementation "androidx.constraintlayout:constraintlayout:${lib.constraintLayout}"
 
     // Lottie
-    implementation "com.airbnb.android:lottie:$lottie"
+    implementation "com.airbnb.android:lottie:${lib.lottie}"
 }

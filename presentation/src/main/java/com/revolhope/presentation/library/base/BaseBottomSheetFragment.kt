@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import androidx.viewbinding.ViewBinding
@@ -61,7 +62,14 @@ abstract class BaseBottomSheetFragment<T : ViewBinding> : BottomSheetDialogFragm
     open fun bindViews() {
         context?.inflater?.let { inflater ->
             innerBinding.dialogContent.addView(
-                inflateView(inflater, innerBinding.dialogContent).also { _binding = it }.root
+                inflateView(inflater, innerBinding.dialogContent).also {
+                    _binding = it
+                }.root.apply {
+                    layoutParams = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT
+                    ).apply(::configureRootLayoutParams)
+                }
             )
         } ?: dismiss().also { return }
         innerBinding.dialogTitleTextView.text = title
@@ -109,6 +117,10 @@ abstract class BaseBottomSheetFragment<T : ViewBinding> : BottomSheetDialogFragm
                 onDismiss = onDismiss
             )
         )
+    }
+
+    protected open fun configureRootLayoutParams(params: FrameLayout.LayoutParams) {
+        // Nothing to do here
     }
 
     fun show(manager: FragmentManager) {

@@ -17,7 +17,7 @@ class EditAvatarViewModel @Inject constructor() : BaseViewModel() {
     val avatarsLiveData: LiveData<List<ProfileAvatar>> get() = _avatarsLiveData
 
     fun fetchAvatars() {
-        _avatarsLiveData.value = ProfileAvatar.values().toList()
+        _avatarsLiveData.value = ProfileAvatar.values().filter { it != ProfileAvatar.NONE }.toList()
     }
 
     fun saveChanges(profileModel: ProfileModel, avatar: ProfileAvatar) {

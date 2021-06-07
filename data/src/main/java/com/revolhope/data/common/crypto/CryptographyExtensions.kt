@@ -3,8 +3,8 @@ package com.revolhope.data.common.crypto
 import android.security.keystore.KeyProperties
 import android.util.Base64
 import com.revolhope.data.BuildConfig
-import com.revolhope.data.common.extensions.fromJSON
-import com.revolhope.data.common.extensions.json
+import com.revolhope.data.common.extensions.asJson
+import com.revolhope.data.common.extensions.fromJsonTo
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -28,12 +28,12 @@ private const val TRANSFORMATION = KeyProperties.KEY_ALGORITHM_AES + "/" +
 inline val <reified T> T.encrypt: String?
     get() =
         cipher(Cipher.ENCRYPT_MODE)?.let {
-            it.doFinal(json.toByteArray())?.encode()
+            it.doFinal(asJson().toByteArray())?.encode()
         }
 
 fun <T : Any> String?.decrypt(clazz: KClass<T>): T? =
     this?.decode()?.let {
-        cipher(Cipher.DECRYPT_MODE)?.doFinal(it)?.let { data -> String(data).fromJSON(clazz) }
+        cipher(Cipher.DECRYPT_MODE)?.doFinal(it)?.let { data -> String(data).fromJsonTo(clazz) }
     }
 
 fun cipher(mode: Int): Cipher? =

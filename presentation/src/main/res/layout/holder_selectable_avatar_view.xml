@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_small"
-    android:animateLayoutChanges="true"
-    android:background="?android:attr/selectableItemBackgroundBorderless">
+    android:layout_margin="@dimen/margin_small">
 
     <ImageView
         android:id="@+id/avatar_selectable_indicator"
@@ -23,7 +21,7 @@
 
     <ImageView
         android:id="@+id/avatar_image_view"
-        style="@style/Avatar.Big"
+        style="@style/Avatar"
         android:layout_margin="@dimen/margin_standard"
         android:contentDescription="@string/content_description_avatar"
         app:layout_constraintBottom_toBottomOf="parent"
