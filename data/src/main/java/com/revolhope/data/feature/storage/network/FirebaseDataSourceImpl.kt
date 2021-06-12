@@ -2,24 +2,24 @@ package com.revolhope.data.feature.storage.network
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.revolhope.data.common.base.BaseDataSourceImpl
 import com.revolhope.data.common.exceptions.NoEmailException
-import com.revolhope.data.common.extensions.ContinuationBehavior
-import com.revolhope.data.common.extensions.addOnSingleEventListener
-import com.revolhope.data.common.extensions.addResumeOnCompleteListener
-import com.revolhope.data.common.extensions.fetchOnSuspended
-import com.revolhope.data.common.extensions.runOnSuspended
-import com.revolhope.data.common.extensions.sha1
-import com.revolhope.data.common.extensions.valueJSON
+import com.revolhope.data.common.extensions.*
 import com.revolhope.data.feature.grocery.datasource.GroceryNetworkDataSource
 import com.revolhope.data.feature.grocery.response.GroceryListResponse
 import com.revolhope.data.feature.profile.datasource.ProfileNetworkDataSource
 import com.revolhope.data.feature.profile.response.ProfileResponse
 import com.revolhope.data.feature.user.datasource.UserNetworkDataSource
 import com.revolhope.data.feature.user.response.UserNetResponse
+import com.revolhope.domain.common.extensions.FlowEmissionBehavior
+import com.revolhope.domain.common.extensions.letOrThrow
+import com.revolhope.domain.common.extensions.runOnCallbackFlow
+import com.revolhope.domain.common.extensions.runOnSuspendedOrFalse
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import kotlin.coroutines.resumeWithException
 
-class FirebaseDataSourceImpl @Inject constructor() : UserNetworkDataSource,
+class FirebaseDataSourceImpl @Inject constructor() : BaseDataSourceImpl(), UserNetworkDataSource,
     GroceryNetworkDataSource, ProfileNetworkDataSource {
 
     companion object {
@@ -30,7 +30,7 @@ class FirebaseDataSourceImpl @Inject constructor() : UserNetworkDataSource,
         const val REF_NOTIFICATIONS = "${REF_DB}notify/"
     }
 
-    /*TODO set private and remove override */ override val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val database: FirebaseDatabase by lazy { FirebaseDatabase.getInstance() }
 
     private val userRef get() = database.getReference(REF_USR)
@@ -41,36 +41,44 @@ class FirebaseDataSourceImpl @Inject constructor() : UserNetworkDataSource,
     private fun profileRef(userId: String) =
         database.getReference("${REF_DB}${userId}/${PATH_PROFILE}")
 
-    // UserNetworkDataSource -----------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+// UserNetworkDataSource
+// -------------------------------------------------------------------------------------------------
 
-    override suspend fun createUserWithEmailAndPassword(email: String, pwd: String): Boolean =
-        runOnSuspended {
-            auth.createUserWithEmailAndPassword(email, pwd).addResumeOnCompleteListener(this)
+    override suspend fun createUserWithEmailAndPassword(email: String, pwd: String): Flow<Boolean> =
+        runOnCallbackFlow {
+            auth.createUserWithEmailAndPassword(email, pwd).offerOnCompletedOrThrow(this)
         }
 
-    override suspend fun signInWithEmailAndPassword(email: String, pwd: String): Boolean =
-        runOnSuspended {
-            auth.signInWithEmailAndPassword(email, pwd).addResumeOnCompleteListener(this)
+    override suspend fun signInWithEmailAndPassword(email: String, pwd: String): Flow<Boolean> =
+        runOnCallbackFlow {
+            auth.signInWithEmailAndPassword(email, pwd).offerOnCompletedOrThrow(this)
         }
 
-    override suspend fun fetchUserDataByEmail(email: String): UserNetResponse? =
-        userRef.child(email.sha1).fetchOnSuspended<UserNetResponse?> { data ->
-            data.valueJSON(UserNetResponse::class)
+    override suspend fun fetchUserDataByEmail(email: String): Flow<UserNetResponse?> =
+        runOnCallbackFlow {
+            userRef.child(email.sha1).offerOnSingleValue(producerScope = this) { data ->
+                data.fetchJsonTo(UserNetResponse::class)
+            }
         }
 
-    override suspend fun insertUser(userNetResponse: UserNetResponse): Boolean =
-        runOnSuspended {
-            userNetResponse.email?.let {
-                userRef.child(it.sha1).valueJSON(userNetResponse).addResumeOnCompleteListener(this)
-            } ?: resumeWithException(NoEmailException())
+    override suspend fun insertUser(userNetResponse: UserNetResponse): Flow<Boolean> =
+        runOnCallbackFlow {
+            userNetResponse.email.letOrThrow(NoEmailException()) {
+                userRef.child(it.sha1)
+                    .insertAsJson(userNetResponse)
+                    .offerOnCompletedOrThrow(this)
+            }
         }
 
-    // GroceryNetworkDataSource --------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+// GroceryNetworkDataSource
+// -------------------------------------------------------------------------------------------------
 
     override suspend fun fetchGroceryLists(userId: String): List<GroceryListResponse> =
-        listRef(userId).fetchOnSuspended { data ->
+        listRef(userId).fetchOnSuspendedOrDefault(default = emptyList()) { data ->
             data.children.mapNotNull {
-                it.valueJSON(GroceryListResponse::class)
+                it.fetchJsonTo(GroceryListResponse::class)
             }
         }
 
@@ -78,32 +86,34 @@ class FirebaseDataSourceImpl @Inject constructor() : UserNetworkDataSource,
         userId: String,
         list: GroceryListResponse
     ): Boolean =
-        runOnSuspended {
-            listRef(userId).push().valueJSON(list).addResumeOnCompleteListener(this)
+        runOnSuspendedOrFalse { cont ->
+            listRef(userId).push().insertAsJson(list).addResumeOnCompleteListener(cont)
         }
 
-    // ProfileNetworkDataSource --------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+// ProfileNetworkDataSource
+// -------------------------------------------------------------------------------------------------
 
     override suspend fun fetchProfile(userId: String): ProfileResponse? =
-        profileRef(userId).fetchOnSuspended<ProfileResponse?>(behavior = ContinuationBehavior.RESUME_WITH_EXCEPTION_ON_CANCELLED) { data ->
-            data.valueJSON(ProfileResponse::class)
-        }
+        profileRef(userId).fetchOnSuspendedOrNull(
+            behavior = FlowEmissionBehavior.EMIT_WITH_EXCEPTION_ON_CANCELLED
+        ) { data -> data.fetchJsonTo(ProfileResponse::class) }
 
     override suspend fun insertOrUpdateProfile(userId: String, profile: ProfileResponse): Boolean =
-        runOnSuspended {
+        runOnSuspendedOrFalse { cont ->
             profileRef(userId).addOnSingleEventListener(
-                continuation = this,
-                behavior = ContinuationBehavior.RESUME_WITH_EXCEPTION_ANY_CASE,
+                continuation = cont,
+                behavior = FlowEmissionBehavior.EMIT_WITH_EXCEPTION_ANY_CASE,
                 onReceivedBlock = { data ->
                     val addProfileMethod = {
-                        profileRef(userId).valueJSON(profile).addResumeOnCompleteListener(this)
+                        profileRef(userId).insertAsJson(profile).addResumeOnCompleteListener(cont)
                     }
                     if (data.children.count() != 0) {
                         profileRef(userId).removeValue { error, _ ->
                             if (error == null) {
                                 addProfileMethod.invoke()
                             } else {
-                                resumeWithException(error.toException())
+                                cont.resumeWithException(error.toException())
                             }
                         }
                     } else {

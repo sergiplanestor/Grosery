@@ -35,16 +35,25 @@ android {
     }
 }
 
+// This is for hilt-testing @see: https://dagger.dev/hilt/gradle-setup
+kapt {
+    correctErrorTypes true
+}
+
 dependencies {
-    // Hilt
+    // Libs
+    // - Hilt
     implementation "com.google.dagger:hilt-android:${lib.hiltAndroid}"
     kapt "androidx.hilt:hilt-compiler:${lib.hiltCompiler}"
     kapt "com.google.dagger:hilt-android-compiler:${lib.hiltAndroidCompiler}"
-
-    // KTX Core
+    // - KTX Core
     implementation "androidx.core:core-ktx:${lib.coreKTX}"
-
-    // Coroutines
+    // - Coroutines
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:${lib.coroutines}"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:${lib.coroutines}"
+
+    // Testing TODO: Check if 'api' is needed
+    // - Hilt
+    testApi "com.google.dagger:hilt-android-testing:${testing.hiltTest}"
+    androidTestApi "com.google.dagger:hilt-android-testing:${testing.hiltTest}"
+    kaptAndroidTest "com.google.dagger:hilt-compiler:${testing.hiltTest}"
 }

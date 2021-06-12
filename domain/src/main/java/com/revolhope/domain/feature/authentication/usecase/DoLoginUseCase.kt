@@ -10,8 +10,9 @@ class DoLoginUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
     suspend operator fun invoke(params: Params): Flow<State<Boolean>> {
-        val loginState = userRepository.doLogin(params.request, params.isRememberMe)
-        return loginState
+        return userRepository.doLogin(params.request, params.isRememberMe).let { networkFlow ->
+            networkFlow
+        }
         /*var result: Flow<State<Boolean>>
         loginState.onCollectState(
             onSuccess = {

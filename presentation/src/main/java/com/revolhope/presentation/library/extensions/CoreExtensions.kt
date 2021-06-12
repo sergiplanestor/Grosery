@@ -10,15 +10,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.revolhope.domain.common.model.State
 import com.revolhope.presentation.library.base.BaseViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
 inline fun runOn(delay: Long = 0L, isMainThread: Boolean = true, crossinline action: () -> Unit) =
@@ -69,7 +63,7 @@ fun <T> BaseViewModel.flowOf(
     flowTaskWrapper: FlowTaskWrapper<T>
 ): Job = viewModelScope.launch {
     withContext(dispatcher) {
-        flowTaskWrapper.task.invoke().stateIn(this@launch).collectOnMainContext {
+        flowTaskWrapper.task.invoke().collectOnMainContext {
             handleState(
                 state = it,
                 onSuccess = flowTaskWrapper.callbackWrapper.onTaskSuccess,

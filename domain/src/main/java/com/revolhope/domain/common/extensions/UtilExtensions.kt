@@ -1,6 +1,9 @@
 package com.revolhope.domain.common.extensions
 
-import java.util.UUID
+import java.util.*
 
-fun generateID() = UUID.randomUUID().toString().replace("-", "")
+fun randomId() = UUID.randomUUID().toString().replace("-", "")
 
+inline fun <reified T> T?.withDefault(defaultValue: T): T = this ?: defaultValue
+
+inline fun <reified T> T?.withDefault(crossinline block: () -> T): T = this ?: block()

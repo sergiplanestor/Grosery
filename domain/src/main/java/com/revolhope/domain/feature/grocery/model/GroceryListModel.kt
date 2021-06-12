@@ -1,7 +1,7 @@
 package com.revolhope.domain.feature.grocery.model
 
 import android.os.Parcelable
-import com.revolhope.domain.common.extensions.generateID
+import com.revolhope.domain.common.extensions.randomId
 import com.revolhope.domain.common.extensions.sumAllTotalPrices
 import com.revolhope.domain.common.extensions.sumExistingTotalPrices
 import com.revolhope.domain.common.model.DateModel
@@ -31,7 +31,7 @@ data class GroceryListModel(
 
         fun new(user: UserModel) : GroceryListModel =
                 GroceryListModel(
-                    id = generateID(),
+                    id = randomId(),
                     title = "",
                     items = mutableListOf(),
                     createdOn = DateModel.today,

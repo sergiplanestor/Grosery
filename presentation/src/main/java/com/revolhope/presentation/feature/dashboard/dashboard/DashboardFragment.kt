@@ -1,6 +1,7 @@
 package com.revolhope.presentation.feature.dashboard.dashboard
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.revolhope.domain.feature.authentication.model.UserModel
@@ -13,14 +14,21 @@ import com.revolhope.presentation.library.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DashboardFragment : BaseFragment<FragmentDashboardBinding>() {
+class DashboardFragment : BaseFragment() {
 
     private val viewModel: DashboardViewModel by viewModels()
+    private var _binding: FragmentDashboardBinding? = null
+    private val binding: FragmentDashboardBinding get() = _binding!!
 
-    override fun inflateView(
+    override fun onCreateBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentDashboardBinding = FragmentDashboardBinding.inflate(inflater, container, false)
+    ): View = FragmentDashboardBinding.inflate(inflater, container, false).run {
+        _binding = this
+        root
+    }
+
+    override fun onDestroyBinding() { _binding = null }
 
     override fun initObservers() {
         super.initObservers()

@@ -3,10 +3,11 @@ package com.revolhope.presentation.library.base
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.revolhope.domain.common.model.State
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import com.revolhope.presentation.library.extensions.collectOnMainContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseViewModel : ViewModel(), CoroutineScope {
@@ -30,18 +31,41 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
         job.cancel()
     }
 
+    internal fun <T> collectOn(
+        dispatcher: CoroutineContext = Dispatchers.IO,
+        loadingMessage: String? = null,
+        task: suspend () -> Flow<State<T>>,
+        onTaskSuccess: (data: T) -> Unit,
+        onTaskLoading: ((String?) -> Unit)? = null,
+        onTaskFailure: ((isResource: Boolean, message: String?) -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            withContext(dispatcher) {
+                task.invoke().collectOnMainContext {
+                    handleState(
+                        state = it,
+                        onSuccess = onTaskSuccess,
+                        onLoading = onTaskLoading,
+                        onLoadingFeedbackMessage = loadingMessage,
+                        onError = onTaskFailure
+                    )
+                }
+            }
+        }
+    }
+
     fun <T> handleState(
         state: State<T>,
         onSuccess: (data: T) -> Unit,
-        onLoading: (() -> Unit)? = null,
+        onLoading: ((String?) -> Unit)? = null,
         onLoadingFeedbackMessage: String? = null,
         onError: ((isResource: Boolean, message: String?) -> Unit)? = null
-    ) {
+    ) : Boolean {
         when (state) {
             is State.Success -> onSuccess.invoke(state.data)
             is State.Loading -> {
                 if (onLoading != null) {
-                    onLoading.invoke()
+                    onLoading.invoke(onLoadingFeedbackMessage)
                 } else {
                     _loadingLiveData.value = onLoadingFeedbackMessage
                 }
@@ -60,5 +84,7 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
                 }
             }
         }
+
+        return state is State.Success
     }
 }

@@ -7,7 +7,7 @@ const val DEFAULT_TAG = "Grocery"
 const val ERROR_EMPTY_THROWABLE = ""
 const val ERROR_EMPTY_MESSAGE = ""
 
-inline fun <reified T> T.logVerbose2(
+inline fun <reified T> logVerbose(
     tag: String? = T::class.simpleName,
     message: String? = null,
 ) {
@@ -31,6 +31,14 @@ fun <T : Any> T.logDebug(
 
 fun <T : Any> T.logError(
     tag: String? = this::class.simpleName,
+    message: String? = null,
+    throwable: Throwable? = null
+) {
+    log(Log.ERROR, tag, message, throwable)
+}
+
+inline fun <reified T> logError(
+    tag: String? = T::class.simpleName,
     message: String? = null,
     throwable: Throwable? = null
 ) {

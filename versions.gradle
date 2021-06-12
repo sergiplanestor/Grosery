@@ -41,6 +41,7 @@ ext {
             unitJUnit               : "4.13.2",
             instrumentalJUnit       : "1.1.2",
             instrumentalEspressoCore: "3.3.0",
-            coreTesting             : "2.0.1"
+            coreTesting             : "2.0.1",
+            hiltTest                : "2.36"
     ]
 }

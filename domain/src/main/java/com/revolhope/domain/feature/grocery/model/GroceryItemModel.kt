@@ -1,7 +1,7 @@
 package com.revolhope.domain.feature.grocery.model
 
 import android.os.Parcelable
-import com.revolhope.domain.common.extensions.generateID
+import com.revolhope.domain.common.extensions.randomId
 import com.revolhope.domain.common.model.DateModel
 import com.revolhope.domain.common.model.PriceModel
 import kotlinx.android.parcel.Parcelize
@@ -34,7 +34,7 @@ data class GroceryItemModel(
             updatedOn: DateModel? = null,
             updatedBy: UserSharedModel? = if (updatedOn != null) addedBy else null
         ) = GroceryItemModel(
-            id = generateID(),
+            id = randomId(),
             name = name,
             unitPrice = unitPrice,
             market = market,

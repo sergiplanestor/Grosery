@@ -27,3 +27,6 @@ fun Long.toDateFormat(locale: Locale = LOCALE_ES): String? =
     } catch (e: Exception) {
         null
     }
+
+fun Boolean?.orFalse(): Boolean = this.withDefault(false)
+

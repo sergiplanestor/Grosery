@@ -1,6 +1,7 @@
 package com.revolhope.presentation.feature.dashboard.profile
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,14 +17,23 @@ import com.revolhope.presentation.library.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
+class ProfileFragment : BaseFragment() {
 
     private val viewModel: ProfileViewModel by viewModels()
+    private var _binding: FragmentProfileBinding? = null
+    private val binding: FragmentProfileBinding get() = _binding!!
 
-    override fun inflateView(
+    override fun onCreateBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentProfileBinding = FragmentProfileBinding.inflate(inflater, container, false)
+    ): View = FragmentProfileBinding.inflate(inflater, container, false).run {
+        _binding = this
+        root
+    }
+
+    override fun onDestroyBinding() {
+        _binding = null
+    }
 
     override fun onLoadData() {
         super.onLoadData()

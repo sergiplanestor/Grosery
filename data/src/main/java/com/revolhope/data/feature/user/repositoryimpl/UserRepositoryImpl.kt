@@ -12,6 +12,8 @@ import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.domain.feature.authentication.repository.UserRepository
 import com.revolhope.domain.feature.authentication.request.LoginRequest
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -30,19 +32,29 @@ class UserRepositoryImpl @Inject constructor(
         pwd: String,
         isRememberMe: Boolean
     ): Flow<State<UserModel?>> =
-        runStatefulFlow {
-            networkDataSource.fetchUserDataByEmail(email)
-                ?.let { UserMapper.fromUserNetResponseToModel(it, pwd, isRememberMe) }
+        flowStateful {
+            networkDataSource.fetchUserDataByEmail(email).mapNotNull {
+                it?.let { UserMapper.fromUserNetResponseToModel(it, pwd, isRememberMe) }
+            }
         }
 
     override suspend fun registerUser(userModel: UserModel): Flow<State<Boolean>> =
-        runStatefulFlow {
+        flowStateful {
             if (userModel.pwd == null) throw UserNullPwdException()
             networkDataSource.createUserWithEmailAndPassword(
                 email = userModel.email,
                 pwd = userModel.pwd!!
             )
         }
+
+    /*override suspend fun registerUser(userModel: UserModel): Flow<State<Boolean>> =
+        runStatefulFlow {
+            if (userModel.pwd == null) throw UserNullPwdException()
+            networkDataSource.createUserWithEmailAndPassword(
+                email = userModel.email,
+                pwd = userModel.pwd!!
+            )
+        }*/
 
     override suspend fun insertLocalUser(userModel: UserModel): Flow<State<Boolean>> =
         runStatefulFlow {
@@ -52,7 +64,7 @@ class UserRepositoryImpl @Inject constructor(
         }
 
     override suspend fun insertRemoteUser(userModel: UserModel): Flow<State<Boolean>> =
-        runStatefulFlow {
+        flowStateful {
             networkDataSource.insertUser(userModel.let(UserMapper::fromUserModelToNetResponse))
         }
 
@@ -60,19 +72,29 @@ class UserRepositoryImpl @Inject constructor(
         request: LoginRequest,
         isRememberMe: Boolean
     ): Flow<State<Boolean>> =
-        runStatefulFlow {
+        flowStateful {
+            networkDataSource.signInWithEmailAndPassword(
+                email = request.email,
+                pwd = request.pwd
+            ).also { isSuccessFlow ->
+                isSuccessFlow.firstOrNull()?.takeIf { it }?.let {
+                    insertUserIfNeeded(request.email, request.pwd, isRememberMe)
+                }
+            }
+        }
+        /*runStatefulFlow {
             networkDataSource.signInWithEmailAndPassword(
                 email = request.email,
                 pwd = request.pwd
             ).also { isSuccess ->
                 if (isSuccess) insertUserIfNeeded(request.email, request.pwd, isRememberMe)
             }
-        }
+        }*/
 
     private suspend fun insertUserIfNeeded(email: String, pwd: String, isRememberMe: Boolean) {
         localDataSource.fetchUser().let { localUser ->
             if (localUser == null || localUser.email != email) {
-                networkDataSource.fetchUserDataByEmail(email)?.let { netUser ->
+                networkDataSource.fetchUserDataByEmail(email).firstOrNull { it != null }?.let { netUser ->
                     localDataSource.insertOrUpdateUser(
                         UserLocalResponse(
                             id = netUser.id,
