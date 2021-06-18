@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.domain.feature.authentication.usecase.FetchUserUseCase
 import com.revolhope.presentation.library.base.BaseViewModel
-import com.revolhope.presentation.library.extensions.flowOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -18,9 +17,9 @@ class DashboardViewModel @Inject constructor(
     val userLiveData: LiveData<UserModel> get() = _userLiveData
 
     fun fetchUser() {
-        flowOf(
-            task = fetchUserUseCase::invoke,
-            onTaskSuccess = _userLiveData::setValue
+        collectFlow(
+            flowTask = fetchUserUseCase::invoke,
+            onSuccessCollected =  { it?.let(_userLiveData::setValue) }
         )
     }
 }

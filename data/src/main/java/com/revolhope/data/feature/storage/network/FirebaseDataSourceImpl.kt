@@ -11,13 +11,10 @@ import com.revolhope.data.feature.profile.datasource.ProfileNetworkDataSource
 import com.revolhope.data.feature.profile.response.ProfileResponse
 import com.revolhope.data.feature.user.datasource.UserNetworkDataSource
 import com.revolhope.data.feature.user.response.UserNetResponse
-import com.revolhope.domain.common.extensions.FlowEmissionBehavior
 import com.revolhope.domain.common.extensions.letOrThrow
 import com.revolhope.domain.common.extensions.runOnCallbackFlow
-import com.revolhope.domain.common.extensions.runOnSuspendedOrFalse
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
-import kotlin.coroutines.resumeWithException
 
 class FirebaseDataSourceImpl @Inject constructor() : BaseDataSourceImpl(), UserNetworkDataSource,
     GroceryNetworkDataSource, ProfileNetworkDataSource {
@@ -75,52 +72,63 @@ class FirebaseDataSourceImpl @Inject constructor() : BaseDataSourceImpl(), UserN
 // GroceryNetworkDataSource
 // -------------------------------------------------------------------------------------------------
 
-    override suspend fun fetchGroceryLists(userId: String): List<GroceryListResponse> =
-        listRef(userId).fetchOnSuspendedOrDefault(default = emptyList()) { data ->
-            data.children.mapNotNull {
-                it.fetchJsonTo(GroceryListResponse::class)
+    override suspend fun fetchGroceryLists(userId: String): Flow<List<GroceryListResponse>> =
+        runOnCallbackFlow {
+            listRef(userId).offerOnSingleValue(producerScope = this) { data ->
+                data.children.mapNotNull {
+                    it.fetchJsonTo(GroceryListResponse::class)
+                }
             }
         }
 
     override suspend fun addOrUpdateGroceryList(
         userId: String,
         list: GroceryListResponse
-    ): Boolean =
-        runOnSuspendedOrFalse { cont ->
-            listRef(userId).push().insertAsJson(list).addResumeOnCompleteListener(cont)
+    ): Flow<Boolean> =
+        runOnCallbackFlow {
+            listRef(userId).pushAsJson(list).offerOnCompletedOrThrow(this)
         }
 
 // -------------------------------------------------------------------------------------------------
 // ProfileNetworkDataSource
 // -------------------------------------------------------------------------------------------------
 
-    override suspend fun fetchProfile(userId: String): ProfileResponse? =
-        profileRef(userId).fetchOnSuspendedOrNull(
-            behavior = FlowEmissionBehavior.EMIT_WITH_EXCEPTION_ON_CANCELLED
-        ) { data -> data.fetchJsonTo(ProfileResponse::class) }
+    override suspend fun fetchProfile(userId: String): Flow<ProfileResponse?> =
+        runOnCallbackFlow {
+            profileRef(userId).offerOnSingleValue(producerScope = this) { data ->
+                data.fetchJsonTo(ProfileResponse::class)
+            }
+        }
 
-    override suspend fun insertOrUpdateProfile(userId: String, profile: ProfileResponse): Boolean =
-        runOnSuspendedOrFalse { cont ->
-            profileRef(userId).addOnSingleEventListener(
-                continuation = cont,
-                behavior = FlowEmissionBehavior.EMIT_WITH_EXCEPTION_ANY_CASE,
-                onReceivedBlock = { data ->
-                    val addProfileMethod = {
-                        profileRef(userId).insertAsJson(profile).addResumeOnCompleteListener(cont)
-                    }
-                    if (data.children.count() != 0) {
-                        profileRef(userId).removeValue { error, _ ->
-                            if (error == null) {
-                                addProfileMethod.invoke()
-                            } else {
-                                cont.resumeWithException(error.toException())
-                            }
+    override suspend fun insertOrUpdateProfile(
+        userId: String,
+        profile: ProfileResponse
+    ): Flow<Boolean> =
+        runOnCallbackFlow {
+            // TODO: Refactor to new impl.
+            /*runOnSuspendedOrFalse { cont ->
+                profileRef(userId).addOnSingleEventListener(
+                    continuation = cont,
+                    behavior = FlowEmissionBehavior.EMIT_WITH_EXCEPTION_ANY_CASE,
+                    onReceivedBlock = { data ->
+                        val addProfileMethod = {
+                            profileRef(userId).insertAsJson(profile)
+                                .addResumeOnCompleteListener(cont)
                         }
-                    } else {
-                        addProfileMethod.invoke()
+                        if (data.children.count() != 0) {
+                            profileRef(userId).removeValue { error, _ ->
+                                if (error == null) {
+                                    addProfileMethod.invoke()
+                                } else {
+                                    cont.resumeWithException(error.toException())
+                                }
+                            }
+                        } else {
+                            addProfileMethod.invoke()
+                        }
+                        true // Dummy return data, it doesn't affect
                     }
-                    true // Dummy return data, it doesn't affect
-                }
-            )
+                )
+            }*/
         }
 }

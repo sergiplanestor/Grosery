@@ -7,6 +7,8 @@ const val DEFAULT_TAG = "Grocery"
 const val ERROR_EMPTY_THROWABLE = ""
 const val ERROR_EMPTY_MESSAGE = ""
 
+// TODO: When logging error -> send report to crashlytics :P
+
 inline fun <reified T> logVerbose(
     tag: String? = T::class.simpleName,
     message: String? = null,

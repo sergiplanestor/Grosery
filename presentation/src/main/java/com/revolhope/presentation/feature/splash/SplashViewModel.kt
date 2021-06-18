@@ -7,7 +7,6 @@ import com.revolhope.domain.feature.authentication.request.LoginRequest
 import com.revolhope.domain.feature.authentication.usecase.DoLoginUseCase
 import com.revolhope.domain.feature.authentication.usecase.FetchUserUseCase
 import com.revolhope.presentation.library.base.BaseViewModel
-import com.revolhope.presentation.library.extensions.flowOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -26,9 +25,9 @@ class SplashViewModel @Inject constructor(
     val user: UserModel? get() = _redirectToLoginLiveData.value
 
     fun navigate() {
-        flowOf(
-            task = fetchUserUseCase::invoke,
-            onTaskSuccess = { user ->
+        collectFlow(
+            flowTask = fetchUserUseCase::invoke,
+            onSuccessCollected = { user ->
                 when {
                     user == null || !user.isRememberMe -> {
                         _redirectToLoginLiveData.value = user
@@ -40,19 +39,16 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun doLogin(user: UserModel) {
-        flowOf(
-            task = {
-                doLoginUseCase.invoke(
-                    DoLoginUseCase.Params(
-                        request = LoginRequest(
-                            email = user.email,
-                            pwd = user.pwd!!
-                        ),
-                        isRememberMe = true
-                    )
+        collectFlow(onSuccessLiveData = _onLoginResponseLiveData) {
+            doLoginUseCase.invoke(
+                DoLoginUseCase.Params(
+                    request = LoginRequest(
+                        email = user.email,
+                        pwd = user.pwd!!
+                    ),
+                    isRememberMe = true
                 )
-            },
-            onTaskSuccess = _onLoginResponseLiveData::setValue
-        )
+            )
+        }
     }
 }

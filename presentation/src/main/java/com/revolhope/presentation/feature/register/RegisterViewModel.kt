@@ -25,22 +25,19 @@ class RegisterViewModel @Inject constructor(
         pwd: String,
         isRememberMe: Boolean
     ) {
-        collectOn(
-            task = {
-                registerUserUseCase.invoke(
-                    RegisterUserUseCase.Params(
-                        user = UserModel(
-                            id = randomId(),
-                            name = getUsername(username, email),
-                            email = email,
-                            pwd = pwd,
-                            isRememberMe = isRememberMe,
-                            lastLogin = getNewCreationLastLogin()
-                        )
+        collectFlow(onSuccessLiveData = _onRegisterResultLiveData) {
+            registerUserUseCase.invoke(
+                RegisterUserUseCase.Params(
+                    user = UserModel(
+                        id = randomId(),
+                        name = getUsername(username, email),
+                        email = email,
+                        pwd = pwd,
+                        isRememberMe = isRememberMe,
+                        lastLogin = getNewCreationLastLogin()
                     )
                 )
-            },
-            onTaskSuccess = _onRegisterResultLiveData::setValue
-        )
+            )
+        }
     }
 }

@@ -4,15 +4,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.revolhope.domain.common.extensions.collectOnMain
+import com.revolhope.domain.common.extensions.logVerbose
 import com.revolhope.domain.common.model.State
-import com.revolhope.presentation.library.extensions.collectOnMainContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseViewModel : ViewModel(), CoroutineScope {
 
-    private val job = Job()
+    companion object {
+        private const val JOB_EXECUTED_AGAIN_JOB_CANCEL_CAUSE = "Job with id: %d is currently working " +
+                "and a new call have been done. Cancelling working Job and starting new one."
+        private const val NON_LOADING_STATE_JOB_CANCEL_CAUSE = "Job with id: %d have been cancelled " +
+                "due to State object different of State.Loading have been collected."
+        private const val VIEW_MODEL_CLEARED_JOB_CANCEL_CAUSE = "ViewModel (%s) have been cleared and" +
+                "as a consequence all current jobs have been forced to be cancelled"
+    }
+
+    private val mainJob: Job = Job()
+    private val jobPool: MutableMap<Int, Job> = mutableMapOf()
 
     protected val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
@@ -24,43 +35,84 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     val loadingLiveData: LiveData<String?> get() = _loadingLiveData
 
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+        get() = Dispatchers.Main + mainJob
 
     override fun onCleared() {
         super.onCleared()
-        job.cancel()
+        jobPool.keys.forEach { cancelJobById(it, VIEW_MODEL_CLEARED_JOB_CANCEL_CAUSE) }
+        mainJob.cancel()
     }
 
-    internal fun <T> collectOn(
+    private fun cancelJobById(jobId: Int, cause: String): Boolean =
+        jobPool[jobId]?.let {
+            it.cancel()
+            jobPool.remove(jobId)
+            true
+        } ?: false
+
+    internal fun <T> collectFlow(
         dispatcher: CoroutineContext = Dispatchers.IO,
         loadingMessage: String? = null,
-        task: suspend () -> Flow<State<T>>,
-        onTaskSuccess: (data: T) -> Unit,
-        onTaskLoading: ((String?) -> Unit)? = null,
-        onTaskFailure: ((isResource: Boolean, message: String?) -> Unit)? = null
-    ) {
-        viewModelScope.launch {
-            withContext(dispatcher) {
-                task.invoke().collectOnMainContext {
-                    handleState(
-                        state = it,
-                        onSuccess = onTaskSuccess,
-                        onLoading = onTaskLoading,
-                        onLoadingFeedbackMessage = loadingMessage,
-                        onError = onTaskFailure
-                    )
-                }
+        onSuccessLiveData: MutableLiveData<T>,
+        flowTask: suspend () -> Flow<State<T>>
+    ): Int =
+        this.collectFlow(
+            dispatcher = dispatcher,
+            loadingMessage = loadingMessage,
+            flowTask = flowTask,
+            onSuccessCollected = onSuccessLiveData::setValue
+        )
+
+    internal fun <T> collectFlow(
+        dispatcher: CoroutineContext = Dispatchers.IO,
+        loadingMessage: String? = null,
+        flowTask: suspend () -> Flow<State<T>>,
+        onSuccessCollected: (data: T) -> Unit,
+        onLoadingCollected: ((String?) -> Unit)? = null,
+        onErrorCollected: ((isResource: Boolean, message: String?) -> Unit)? = null
+    ): Int {
+        // Cancel Job in case of being active
+        val jobId = flowTask.hashCode()
+        cancelJobById(jobId, JOB_EXECUTED_AGAIN_JOB_CANCEL_CAUSE)
+
+        // Create new Job which executes flowTask
+        viewModelLaunch(dispatcher) {
+            // Collect flow data on Dispatchers.Main
+            flowTask.invoke().collectOnMain {
+                // TODO: Remove Log!
+                if (it is State.Loading) logVerbose("TEEEST", "State.LOADING")
+                // Manage collected State
+                handleState(
+                    state = it,
+                    onSuccess = onSuccessCollected,
+                    onLoading = onLoadingCollected,
+                    onLoadingFeedbackMessage = loadingMessage,
+                    onError = onErrorCollected
+                )
+                // Kill job in case of State != State.Loading
+                if (it !is State.Loading) cancelJobById(jobId, NON_LOADING_STATE_JOB_CANCEL_CAUSE)
             }
-        }
+        }.also { jobPool[jobId] = it }
+        return jobId
     }
 
-    fun <T> handleState(
+    internal fun viewModelLaunch(
+        dispatcher: CoroutineContext,
+        block: suspend () -> Unit
+    ): Job =
+        viewModelScope.launch {
+            withContext(dispatcher) {
+                block.invoke()
+            }
+        }
+
+    internal fun <T> handleState(
         state: State<T>,
         onSuccess: (data: T) -> Unit,
         onLoading: ((String?) -> Unit)? = null,
         onLoadingFeedbackMessage: String? = null,
         onError: ((isResource: Boolean, message: String?) -> Unit)? = null
-    ) : Boolean {
+    ): Boolean {
         when (state) {
             is State.Success -> onSuccess.invoke(state.data)
             is State.Loading -> {

@@ -13,8 +13,6 @@ android {
     defaultConfig {
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -53,7 +51,7 @@ dependencies {
 
     // Testing TODO: Check if 'api' is needed
     // - Hilt
-    testApi "com.google.dagger:hilt-android-testing:${testing.hiltTest}"
-    androidTestApi "com.google.dagger:hilt-android-testing:${testing.hiltTest}"
+    testImplementation "com.google.dagger:hilt-android-testing:${testing.hiltTest}"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:${testing.hiltTest}"
     kaptAndroidTest "com.google.dagger:hilt-compiler:${testing.hiltTest}"
 }

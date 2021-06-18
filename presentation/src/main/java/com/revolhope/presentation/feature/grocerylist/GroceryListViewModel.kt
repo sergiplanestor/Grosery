@@ -2,12 +2,11 @@ package com.revolhope.presentation.feature.grocerylist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.domain.feature.grocery.model.GroceryItemModel
 import com.revolhope.domain.feature.grocery.model.GroceryListModel
 import com.revolhope.domain.feature.grocery.usecase.CreateGroceryListUseCase
-import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.presentation.library.base.BaseViewModel
-import com.revolhope.presentation.library.extensions.launchAsync
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -27,15 +26,9 @@ class GroceryListViewModel @Inject constructor(
     var user: UserModel? = null
 
     private fun insertNewList(list: GroceryListModel) {
-        launchAsync(
-            asyncTask = { createGroceryListUseCase.invoke(CreateGroceryListUseCase.Params(list)) },
-            onTaskCompleted = {
-                handleState(
-                    state = this,
-                    onSuccess = _onListCreatedLiveData::setValue
-                )
-            }
-        )
+        collectFlow(onSuccessLiveData = _onListCreatedLiveData) {
+            createGroceryListUseCase.invoke(CreateGroceryListUseCase.Params(list))
+        }
     }
 
     private fun updateList(list: GroceryListModel) {

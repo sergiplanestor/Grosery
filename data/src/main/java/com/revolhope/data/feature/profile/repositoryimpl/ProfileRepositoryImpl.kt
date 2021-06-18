@@ -4,14 +4,14 @@ import com.revolhope.data.common.BaseRepositoryImpl
 import com.revolhope.data.feature.profile.datasource.ProfileLocalDataSource
 import com.revolhope.data.feature.profile.datasource.ProfileNetworkDataSource
 import com.revolhope.data.feature.profile.mapper.ProfileMapper
+import com.revolhope.domain.common.extensions.asFlow
+import com.revolhope.domain.common.extensions.mapIfNotNull
+import com.revolhope.domain.common.extensions.onFirstOrNullEmittedValue
+import com.revolhope.domain.common.extensions.onFirstSuccessEmitted
 import com.revolhope.domain.common.model.State
 import com.revolhope.domain.feature.profile.model.ProfileModel
 import com.revolhope.domain.feature.profile.repository.ProfileRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
@@ -19,28 +19,29 @@ class ProfileRepositoryImpl @Inject constructor(
     private val localDataSource: ProfileLocalDataSource
 ) : BaseRepositoryImpl(), ProfileRepository {
 
-    override suspend fun fetchProfile(userId: String): State<ProfileModel?> =
-
-        launchStateful {
+    override suspend fun fetchProfile(userId: String): Flow<State<ProfileModel?>> =
+        stateful {
             localDataSource.fetchProfile().let {
                 // In case of being locally returns, if not, fetch from network and, in case of fetch
                 // returns and store it locally
-                it ?: networkDataSource.fetchProfile(userId)?.also { profile ->
-                    localDataSource.insertOrUpdateProfile(profile)
-                }
-            }?.let(ProfileMapper::fromProfileResponseToModel)
+                it?.asFlow() ?: networkDataSource.fetchProfile(userId).onFirstOrNullEmittedValue(
+                    predicate = { this != null },
+                    block = {
+                        // At this point 'this' must be always non-null
+                        this?.let { localDataSource.insertOrUpdateProfile(this) }
+                    }
+                )
+            }.mapIfNotNull(ProfileMapper::fromProfileResponseToModel)
         }
 
-    override suspend fun insertOrUpdateProfile(userId: String, profile: ProfileModel): State<Boolean> =
-        launchStateful {
+    override suspend fun insertOrUpdateProfile(
+        userId: String,
+        profile: ProfileModel
+    ): Flow<State<Boolean>> =
+        stateful {
             ProfileMapper.fromProfileModelToResponse(profile).run {
-                val networkSuccess = networkDataSource.insertOrUpdateProfile(userId, this)
-                if (networkSuccess) {
+                networkDataSource.insertOrUpdateProfile(userId, this).onFirstSuccessEmitted {
                     localDataSource.insertOrUpdateProfile(this)
-                    true
-                } else {
-                    // TODO: Exception 1
-                    throw RuntimeException("${this::class.java.simpleName} - find TODO: Exception 1")
                 }
             }
         }

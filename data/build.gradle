@@ -12,8 +12,6 @@ android {
     defaultConfig {
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
 
         buildConfigField "String", "NET_SECRET", project.property('net_secret')
         buildConfigField "String", "NET_IV", project.property('net_iv')
