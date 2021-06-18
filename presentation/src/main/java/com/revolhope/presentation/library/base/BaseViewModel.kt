@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.revolhope.domain.common.extensions.collectOnMain
-import com.revolhope.domain.common.extensions.logVerbose
 import com.revolhope.domain.common.model.State
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
@@ -78,9 +77,8 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
         // Create new Job which executes flowTask
         viewModelLaunch(dispatcher) {
             // Collect flow data on Dispatchers.Main
+            // TODO: Add logs?
             flowTask.invoke().collectOnMain {
-                // TODO: Remove Log!
-                if (it is State.Loading) logVerbose("TEEEST", "State.LOADING")
                 // Manage collected State
                 handleState(
                     state = it,

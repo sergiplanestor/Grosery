@@ -46,10 +46,15 @@ suspend inline fun <T> (suspend () -> Flow<T>).asStateFlow(
     isLoadingEnabled: Boolean = true,
     crossinline catch: (t: Throwable) -> State.Error
 ): Flow<State<T>> =
-    this.invoke()
+     mapToState(isLoadingEnabled, this).catch { cause -> emit(catch(cause)) }
+
+suspend inline fun <T> mapToState(
+    emitLoading: Boolean,
+    crossinline action: suspend () -> Flow<T>
+): Flow<State<T>> =
+    action.invoke()
         .map { State.Success(it) as State<T> }
-        .catch { cause -> emit(catch(cause)) }
-        .applyIf(isLoadingEnabled) { onStart { emit(State.Loading) } }
+        .onStart { if (emitLoading) emit(State.Loading) }
 
 suspend inline fun <T> T.asStateFlow(
     isLoadingEnabled: Boolean = true,
@@ -60,7 +65,7 @@ suspend inline fun <T> T.asStateFlow(
 // Map results -------------------------------------------------------------------------------------
 inline fun <T, R> Flow<T?>.mapIfNotNull(crossinline transform: suspend (value: T) -> R): Flow<R?> =
     transform { value ->
-        return@transform emit(value?.let { transform(it) } )
+        return@transform emit(value?.let { transform(it) })
     }
 
 suspend inline fun <T> Flow<State<T>>.collectOnMain(crossinline action: suspend (value: State<T>) -> Unit) {
