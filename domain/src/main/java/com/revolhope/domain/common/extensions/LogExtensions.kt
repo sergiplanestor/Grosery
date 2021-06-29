@@ -7,7 +7,6 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 const val DEFAULT_TAG = "Grocery"
 const val ERROR_EMPTY_THROWABLE = ""
@@ -43,22 +42,13 @@ fun <T : Any> T.debug(
     log(Log.DEBUG, tag, message, throwable)
 }
 
-fun <T : Any> T.error(
-    tag: String? = this::class.simpleName,
+fun report(
+    tag: String? = null,
     message: String? = null,
     throwable: Throwable? = null,
-    recordCrashlytics: Boolean = true
+    isReportCrashlytics: Boolean = true
 ) {
-    log(Log.ERROR, tag, message, throwable, recordCrashlytics)
-}
-
-inline fun <reified T> error(
-    tag: String? = T::class.simpleName,
-    message: String? = null,
-    throwable: Throwable? = null,
-    recordCrashlytics: Boolean = true
-) {
-    log(Log.ERROR, tag, message, throwable, recordCrashlytics)
+    log(Log.ERROR, tag, message, throwable, isReportCrashlytics)
 }
 
 fun log(
@@ -66,7 +56,7 @@ fun log(
     tag: String?,
     message: String? = null,
     throwable: Throwable? = null,
-    recordCrashlytics: Boolean = level == Log.ERROR
+    isReportCrashlytics: Boolean = level == Log.ERROR
 ) {
     if (BuildConfig.DEBUG) {
         Log.println(
@@ -75,16 +65,24 @@ fun log(
             buildMessage(isError = level == Log.ERROR, message, throwable)
         )
     }
-    if (recordCrashlytics) {
-        GlobalScope.launch(Dispatchers.Unconfined) {
-            withContext(Dispatchers.IO) {
-                ReportCrashHelper().safeUseCase?.invoke(
-                    scope = this,
+    if (isReportCrashlytics) {
+        GlobalScope.launch(Dispatchers.IO) {
+            ReportCrashHelper().safeUseCase?.run {
+                invoke(
+                    scope = this@launch,
                     requestParams = ReportCrashUseCase.RequestParams(
                         throwable = throwable ?: RuntimeException("Unknown exception...")
                     )
                 )
-            }
+            } ?: Log.println(
+                level,
+                tag ?: DEFAULT_TAG,
+                buildMessage(
+                    isError = true,
+                    "Error can not be record to firebase...",
+                    throwable
+                )
+            )
         }
     }
 }

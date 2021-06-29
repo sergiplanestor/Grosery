@@ -60,12 +60,9 @@ suspend inline fun <reified T> launchCallbackFlow(
     crossinline closure: () -> Unit
 ): Flow<T> =
     callbackFlow {
-        try {
+        safeSuspendedRun(catch = safeSuspendedCatchNoConsumed { throw this }) {
             firebaseBlock.invoke(this)
             awaitClose { closure() }
-        } catch (e: Throwable) {
-            error(throwable = e)
-            throw e
         }
     }.flowOn(Dispatchers.Main)
 

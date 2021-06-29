@@ -2,6 +2,7 @@ package com.revolhope.presentation.library.component.loader
 
 import android.content.Context
 import androidx.annotation.StringRes
+import com.revolhope.domain.common.extensions.safeRunOrDefault
 
 
 data class LoadingMessageModel(
@@ -17,19 +18,15 @@ data class LoadingMessageModel(
             messageRes?.let { context.getString(messageRes) }?.let { unformatted ->
                 when {
                     !placeholdersRes.isNullOrEmpty() -> {
-                        try {
-                            placeholdersRes.map(context::getString).toTypedArray().let {
+                        placeholdersRes.safeRunOrDefault(unformatted) {
+                            map(context::getString).toTypedArray().let {
                                 String.format(unformatted, *it)
                             }
-                        } catch (e: Exception) {
-                            unformatted
                         }
                     }
                     !placeholders.isNullOrEmpty() -> {
-                        try {
+                        placeholders.safeRunOrDefault(unformatted) {
                             String.format(unformatted, *placeholders.toTypedArray())
-                        } catch (e: Exception) {
-                            unformatted
                         }
                     }
                     else -> unformatted
@@ -42,7 +39,8 @@ data class LoadingMessageModel(
     fun messageOrEmpty(context: Context): String = message(context).orEmpty()
 
     companion object {
-        val empty: LoadingMessageModel get() =
-            LoadingMessageModel()
+        val empty: LoadingMessageModel
+            get() =
+                LoadingMessageModel()
     }
 }

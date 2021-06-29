@@ -12,24 +12,16 @@ const val DATE_FORMAT = "dd/MM/yyyy"
 val LOCALE_ES = Locale("es", "ES")
 
 inline val Float.priceFormat: String?
-    get() =
-        try {
-            DecimalFormat(CURRENCY_FORMAT).format(toDouble())
-        } catch (e: Exception) {
-            null
-        }
+    get() = safeRunOrNull { DecimalFormat(CURRENCY_FORMAT).format(toDouble()) }
 
 inline val String.priceValue: Float? get() = replace(CURRENCY_SYMBOL, EMPTY_STRING).toFloatOrNull()
 
 inline fun <T> String?.takeIfNotNullOrBlank(crossinline block: (String) -> T): T? =
     takeIf { !isNullOrBlank() }?.let(block)
 
-fun Long.toDateFormat(locale: Locale = LOCALE_ES): String? =
-    try {
-        SimpleDateFormat(DATE_FORMAT, locale).format(this)
-    } catch (e: Exception) {
-        null
-    }
+fun Long.toDateFormat(locale: Locale = LOCALE_ES): String? = safeRunOrNull {
+    SimpleDateFormat(DATE_FORMAT, locale).format(this)
+}
 
 fun Boolean?.orFalse(): Boolean = this.withDefault(false)
 

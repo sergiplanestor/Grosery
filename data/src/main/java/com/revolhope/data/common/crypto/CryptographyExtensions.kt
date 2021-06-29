@@ -5,6 +5,7 @@ import android.util.Base64
 import com.revolhope.data.BuildConfig
 import com.revolhope.data.common.extensions.asJson
 import com.revolhope.data.common.extensions.fromJsonTo
+import com.revolhope.domain.common.extensions.safe
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -36,13 +37,9 @@ fun <T : Any> String?.decrypt(clazz: KClass<T>): T? =
         cipher(Cipher.DECRYPT_MODE)?.doFinal(it)?.let { data -> String(data).fromJsonTo(clazz) }
     }
 
-fun cipher(mode: Int): Cipher? =
-    try {
-        Cipher.getInstance(TRANSFORMATION).apply { init(mode, secretSpec, ivSpec) }
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
+fun cipher(mode: Int): Cipher? = safe {
+    Cipher.getInstance(TRANSFORMATION).apply { init(mode, secretSpec, ivSpec) }
+}
 
 fun ByteArray.encode(): String = Base64.encodeToString(this, Base64.DEFAULT)
 

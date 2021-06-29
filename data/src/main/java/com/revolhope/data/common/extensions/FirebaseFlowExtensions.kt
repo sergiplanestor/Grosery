@@ -9,6 +9,7 @@ import com.revolhope.data.common.crypto.decrypt
 import com.revolhope.data.common.crypto.encrypt
 import com.revolhope.data.common.exceptions.FirebaseInnerException
 import com.revolhope.domain.common.extensions.FlowEmissionBehavior
+import com.revolhope.domain.common.extensions.safeRunNoReturn
 import kotlin.reflect.KClass
 import kotlinx.coroutines.channels.ProducerScope
 
@@ -38,16 +39,16 @@ inline fun <T> DatabaseReference.offerValueOrThrow(
     addValueEvent(
         isSingleShot = isSingleShot,
         onReceived = { snapshot ->
-            try {
+
+            val onCatch: Throwable.() -> Boolean =
+                { false.also { if (behavior.isEmitOnError) throw this } }
+
+            safeRunNoReturn(catch = onCatch) {
                 val data = onReceived.invoke(snapshot)
                 if (data != null && behavior.isEmitOnSuccess) {
                     producerScope.offer(data)
                 } else if (data == null && behavior.isEmitOnError) {
                     FirebaseInnerException.NullDataReceived.default.`throw`()
-                }
-            } catch (t: Throwable) {
-                if (behavior.isEmitOnError) {
-                    throw t
                 }
             }
         },
@@ -104,7 +105,7 @@ fun Task<*>.addOnCompleteListener(
     onCompleted: (Boolean) -> Unit,
     onFailure: (Throwable) -> Unit = { throwable -> throw throwable }
 ) {
-    addOnCompleteListener {  result ->
+    addOnCompleteListener { result ->
         if (!result.isSuccessful && result.exception != null) {
             onFailure.invoke(result.exception!!)
         } else {
