@@ -1,10 +1,12 @@
 package com.revolhope.data.injection
 
+import com.revolhope.data.feature.analytics.repositoryimpl.AnalyticsRepositoryImpl
 import com.revolhope.data.feature.grocery.repositoryimpl.GroceryRepositoryImpl
 import com.revolhope.data.feature.profile.repositoryimpl.ProfileRepositoryImpl
 import com.revolhope.data.feature.user.repositoryimpl.UserRepositoryImpl
-import com.revolhope.domain.feature.grocery.repository.GroceryRepository
+import com.revolhope.domain.feature.analytics.repository.AnalyticsRepository
 import com.revolhope.domain.feature.authentication.repository.UserRepository
+import com.revolhope.domain.feature.grocery.repository.GroceryRepository
 import com.revolhope.domain.feature.profile.repository.ProfileRepository
 import dagger.Binds
 import dagger.Module
@@ -29,5 +31,10 @@ abstract class RepositoryModule {
     abstract fun bindProfileRepository(
         profileRepositoryImpl: ProfileRepositoryImpl
     ): ProfileRepository
+
+    @Binds
+    abstract fun bindAnalyticsRepository(
+        analyticsRepositoryImpl: AnalyticsRepositoryImpl
+    ): AnalyticsRepository
 
 }

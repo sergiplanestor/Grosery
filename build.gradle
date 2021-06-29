@@ -14,6 +14,7 @@ buildscript {
         classpath "com.google.dagger:hilt-android-gradle-plugin:${classpath.hiltGradle}"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:${classpath.navigationKTX}"
         classpath "com.google.gms:google-services:${classpath.googleServices}"
+        classpath "com.google.firebase:firebase-crashlytics-gradle:${classpath.firebaseCrashlytics}"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.revolhope.domain.common.extensions.logVerbose
+import com.revolhope.domain.common.extensions.verbose
 import com.revolhope.presentation.R
 import com.revolhope.presentation.library.component.snackbar.SnackBar
 import com.revolhope.presentation.library.component.snackbar.model.SnackBarModel
@@ -77,7 +77,7 @@ abstract class BaseFragment : Fragment() {
         )
         if (error != null) {
             // TODO: Remove
-            logVerbose(error)
+            verbose(error)
         }
     }
 }

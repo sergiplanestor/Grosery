@@ -44,16 +44,21 @@ fun <T> T.asFlow(): Flow<T> = flow { emit(this@asFlow) }
 
 suspend inline fun <T> (suspend () -> Flow<T>).asStateFlow(
     isLoadingEnabled: Boolean = true,
-    crossinline catch: (t: Throwable) -> State.Error
+    crossinline catch: (t: Throwable) -> State.Error,
+    noinline onMapTransformation: ((T) -> State<T>)? = null
 ): Flow<State<T>> =
-     mapToState(isLoadingEnabled, this).catch { cause -> emit(catch(cause)) }
+    mapToState(isLoadingEnabled, this, onMapTransformation).catch { cause -> emit(catch(cause)) }
+
+suspend inline fun <T> Flow<State<T>>.firstNonLoading(): State<T>? =
+    this.firstOrNull { it !is State.Loading }
 
 suspend inline fun <T> mapToState(
     emitLoading: Boolean,
-    crossinline action: suspend () -> Flow<T>
+    crossinline action: suspend () -> Flow<T>,
+    noinline onMapTransformation: ((T) -> State<T>)? = null
 ): Flow<State<T>> =
     action.invoke()
-        .map { State.Success(it) as State<T> }
+        .map { onMapTransformation?.invoke(it) ?: State.Success(it) as State<T> }
         .onStart { if (emitLoading) emit(State.Loading) }
 
 suspend inline fun <T> T.asStateFlow(
@@ -87,9 +92,6 @@ suspend inline fun <T> Flow<State<T>>.collectOnMain(crossinline action: suspend 
 inline val <T> T.onFirstOrNullEmittedValueDefaultPredicate: Boolean
     get() =
         (this is State<*> && this !is State.Loading) || this is Boolean && this || this !is Boolean
-
-suspend inline fun <T> Flow<State<T>>.firstNotLoading(): State<T>? =
-    this.firstOrNull { it !is State.Loading }
 
 suspend inline fun Flow<Boolean>.onFirstSuccessEmitted(block: () -> Unit): Flow<Boolean> =
     this.onFirstOrNullEmittedValue(
@@ -139,6 +141,91 @@ suspend inline fun <reified T, reified R> Flow<State<T>>.onSuccessMapTo(crossinl
         }
     }
 
+
+// ------ TEST
+// Not checked!
+@Suppress("UNCHECKED_CAST")
+suspend inline fun <reified T, R : Any> Flow<State<T>>.then(
+    crossinline then: suspend () -> Flow<State<R>>,
+    crossinline thenPredicate: State<T>.() -> Boolean = { this is State.Success && data != null },
+    crossinline onPredicateFailed: State<T>.() -> State<R>? = { null }
+): Flow<State<R>> =
+    MutableStateFlow<State<R>?>(null).apply {
+        this@then.collect { originalState ->
+            when (originalState) {
+                is State.Success -> {
+                    value = if (originalState.thenPredicate()) {
+                        then.invoke().firstNonLoading()
+                        // then.invoke().collect { value = it }
+                    } else {
+                        originalState.onPredicateFailed()
+                    }
+                }
+                is State.Error -> {
+                    value = originalState
+                }
+                State.Loading -> {
+                    value = State.Loading
+                }
+            }
+        }
+    }.filterNotNull()
+
+@Suppress("UNCHECKED_CAST")
+suspend inline fun <reified T, R : Any> Flow<State<T>>.then2(
+    noinline then: suspend () -> Flow<State<R>>,
+    crossinline predicate: State<T>.() -> Boolean = { this is State.Success && data != null },
+    crossinline onPredicateFailed: State<T>.() -> State<R>? = { null }
+): Flow<State<R>> {
+    return coroutineScope {
+        this@then2.map { originalState ->
+            when (originalState) {
+                is State.Success -> {
+                    if (originalState.predicate()) {
+                        then.invoke().firstNonLoading()
+                        // then.invoke().collect { value = it }
+                    } else {
+                        originalState.onPredicateFailed()
+                    } ?: throw RuntimeException("Ooops...")
+                }
+                is State.Error -> {
+                    originalState
+                }
+                State.Loading -> {
+                    State.Loading
+                }
+            }
+        }.stateIn(this, SharingStarted.Eagerly, State.Loading)
+    }
+
+    /*val originalFlow = this@then2
+    withContext(Dispatchers.Main) {
+        originalFlow.collect { originalState ->
+            when (originalState) {
+                is State.Success -> {
+                    value = if (originalState.predicate()) {
+                        then.invoke().firstOrNull { it !is State.Loading }
+                        // then.invoke().collect { value = it }
+                    } else {
+                        originalState.onPredicateFailed()
+                    }
+                }
+                is State.Error -> {
+                    value = originalState
+                }
+                State.Loading -> {
+                    value = State.Loading
+                }
+            }
+        }
+    }
+
+    MutableStateFlow<State<R>?>(null).apply {
+
+    }.filterNotNull()*/
+}
+
+// ......
 
 @Suppress("UNCHECKED_CAST")
 suspend inline fun <T> Flow<State<T>>.onSuccessThen(

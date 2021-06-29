@@ -13,10 +13,10 @@ import com.revolhope.domain.common.model.State
 import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.domain.feature.authentication.repository.UserRepository
 import com.revolhope.domain.feature.authentication.request.LoginRequest
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapNotNull
-import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val localDataSource: UserLocalDataSource,
@@ -40,14 +40,25 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun registerUser(userModel: UserModel): Flow<State<Boolean>> =
-        stateful {
-            if (userModel.pwd == null) throw UserNullPwdException()
-            networkDataSource.createUserWithEmailAndPassword(
-                email = userModel.email,
-                pwd = userModel.pwd!!
-            )
-        }
+    override suspend fun registerUser(userModel: UserModel): Flow<State<Boolean>> {
+        return stateful(
+            isLoadingEnabled = true,
+            block = {
+                if (userModel.pwd == null) throw UserNullPwdException()
+                networkDataSource.createUserWithEmailAndPassword(
+                    email = userModel.email,
+                    pwd = userModel.pwd!!
+                )
+            }
+        )
+    }
+    /*stateful {
+        if (userModel.pwd == null) throw UserNullPwdException()
+        networkDataSource.createUserWithEmailAndPassword(
+            email = userModel.email,
+            pwd = userModel.pwd!!
+        )
+    }*/
 
     override suspend fun insertLocalUser(userModel: UserModel): Flow<State<Boolean>> =
         stateful {

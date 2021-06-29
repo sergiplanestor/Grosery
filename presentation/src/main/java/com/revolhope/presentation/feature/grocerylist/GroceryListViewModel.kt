@@ -26,9 +26,12 @@ class GroceryListViewModel @Inject constructor(
     var user: UserModel? = null
 
     private fun insertNewList(list: GroceryListModel) {
-        collectFlow(onSuccessLiveData = _onListCreatedLiveData) {
-            createGroceryListUseCase.invoke(CreateGroceryListUseCase.Params(list))
-        }
+        invokeUseCase(
+            useCase = createGroceryListUseCase,
+            request = CreateGroceryListUseCase.RequestParams(list),
+            onSuccessCollected = _onListCreatedLiveData::setValue,
+            /* Default behavior for Loading and Failure states */
+        )
     }
 
     private fun updateList(list: GroceryListModel) {

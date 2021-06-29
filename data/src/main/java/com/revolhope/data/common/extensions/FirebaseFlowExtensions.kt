@@ -9,33 +9,37 @@ import com.revolhope.data.common.crypto.decrypt
 import com.revolhope.data.common.crypto.encrypt
 import com.revolhope.data.common.exceptions.FirebaseInnerException
 import com.revolhope.domain.common.extensions.FlowEmissionBehavior
-import kotlinx.coroutines.channels.ProducerScope
 import kotlin.reflect.KClass
+import kotlinx.coroutines.channels.ProducerScope
 
 // -------------------------------------------------------------------------------------------------
 // DatabaseReference / DataSnapshot
 // -------------------------------------------------------------------------------------------------
 
-inline fun <T> DatabaseReference.offerOnSingleValue(
+inline fun <T> DatabaseReference.offerOnValue(
     producerScope: ProducerScope<T>,
+    isSingleShot: Boolean = true,
     crossinline onReceivedBlock: (DataSnapshot) -> T?
-) = offerOnSingleValueOrThrow(
-    producerScope,
-    FlowEmissionBehavior.EMIT_ALL,
-    onReceivedBlock,
-    { false }
+) = offerValueOrThrow(
+    producerScope = producerScope,
+    behavior = FlowEmissionBehavior.EMIT_ALL,
+    isSingleShot = isSingleShot,
+    onReceived = onReceivedBlock,
+    onFailure = { false }
 )
 
-inline fun <T> DatabaseReference.offerOnSingleValueOrThrow(
+inline fun <T> DatabaseReference.offerValueOrThrow(
     producerScope: ProducerScope<T>,
     behavior: FlowEmissionBehavior,
-    crossinline onReceivedBlock: (DataSnapshot) -> T?,
-    crossinline onErrorBlock: (DatabaseError) -> Boolean = { _ -> false }
+    isSingleShot: Boolean = true,
+    crossinline onReceived: (DataSnapshot) -> T?,
+    crossinline onFailure: (DatabaseError) -> Boolean = { _ -> false }
 ) {
-    addListenerForSingleValueEvent(object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
+    addValueEvent(
+        isSingleShot = isSingleShot,
+        onReceived = { snapshot ->
             try {
-                val data = onReceivedBlock.invoke(snapshot)
+                val data = onReceived.invoke(snapshot)
                 if (data != null && behavior.isEmitOnSuccess) {
                     producerScope.offer(data)
                 } else if (data == null && behavior.isEmitOnError) {
@@ -46,17 +50,38 @@ inline fun <T> DatabaseReference.offerOnSingleValueOrThrow(
                     throw t
                 }
             }
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            if (!onErrorBlock.invoke(error) && behavior.isEmitOnCancelled) {
+        },
+        onFailure = { error ->
+            if (!onFailure.invoke(error) && behavior.isEmitOnCancelled) {
                 throw error.toException()
             }
         }
-    })
+    )
 }
 
-inline fun <reified T: Any> DatabaseReference.pushAsJson(
+inline fun DatabaseReference.addValueEvent(
+    isSingleShot: Boolean = true,
+    crossinline onReceived: (DataSnapshot) -> Unit,
+    crossinline onFailure: (DatabaseError) -> Unit
+) {
+    object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            onReceived.invoke(snapshot)
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            onFailure.invoke(error)
+        }
+    }.run {
+        if (isSingleShot) {
+            addListenerForSingleValueEvent(this)
+        } else {
+            addValueEventListener(this)
+        }
+    }
+}
+
+inline fun <reified T : Any> DatabaseReference.pushAsJson(
     value: T,
     isEncrypt: Boolean = true
 ): Task<Void> =
@@ -75,13 +100,25 @@ fun <T : Any> DataSnapshot.fetchJsonTo(clazz: KClass<T>, isEncrypted: Boolean = 
 // Task
 // -------------------------------------------------------------------------------------------------
 
-fun Task<*>.offerOnCompletedOrThrow(producerScope: ProducerScope<Boolean>) {
-    addOnCompleteListener {
-        if (!it.isSuccessful && it.exception != null) {
-            // TODO: Check if this exception is being caught by [BaseRepositoryImpl]!
-            throw it.exception!!
+fun Task<*>.addOnCompleteListener(
+    onCompleted: (Boolean) -> Unit,
+    onFailure: (Throwable) -> Unit = { throwable -> throw throwable }
+) {
+    addOnCompleteListener {  result ->
+        if (!result.isSuccessful && result.exception != null) {
+            onFailure.invoke(result.exception!!)
         } else {
-            producerScope.offer(it.isSuccessful)
+            onCompleted.invoke(result.isSuccessful)
         }
     }
+}
+
+fun Task<*>.offerOnCompleted(
+    producerScope: ProducerScope<Boolean>,
+    onFailure: (Throwable) -> Unit = { throwable -> throw throwable }
+) {
+    addOnCompleteListener(
+        onCompleted = producerScope::offer,
+        onFailure = onFailure
+    )
 }

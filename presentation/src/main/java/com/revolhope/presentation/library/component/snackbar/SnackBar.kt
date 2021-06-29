@@ -3,12 +3,12 @@ package com.revolhope.presentation.library.component.snackbar
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.revolhope.domain.common.extensions.delay
 import com.revolhope.presentation.library.component.snackbar.model.SnackBarModel
 import com.revolhope.presentation.library.component.snackbar.view.SnackBarErrorView
 import com.revolhope.presentation.library.component.snackbar.view.SnackBarView
 import com.revolhope.presentation.library.extensions.dp
 import com.revolhope.presentation.library.extensions.findSuitableParent
-import com.revolhope.presentation.library.extensions.runOn
 
 class SnackBar(
     parent: ViewGroup,
@@ -58,11 +58,7 @@ class SnackBar(
                     model.onClick?.invoke()
                     dismiss()
                 }
-            }.also {
-                runOn(delay = DURATION) {
-                    it.dismiss()
-                }
-            }.show()
+            }.also { delay(duration = DURATION, action = it::dismiss) }.show()
         }
     }
 }

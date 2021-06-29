@@ -8,6 +8,7 @@ import android.util.Base64
 import android.util.TypedValue
 import androidx.annotation.StringRes
 import com.revolhope.domain.common.extensions.EMPTY_STRING
+import com.revolhope.domain.common.extensions.error
 
 // -------------------------------------------------------------------------------------------------
 // Int
@@ -19,6 +20,14 @@ inline val Int.dp: Int
     ).toInt()
 
 fun Int.percent(value: Int): Int = (this * value) / 100
+
+fun Int.stringResource(context: Context): String? =
+    try {
+        context.getString(this)
+    } catch (t: Throwable) {
+        error(throwable = t)
+        null
+    }
 
 // -------------------------------------------------------------------------------------------------
 // String

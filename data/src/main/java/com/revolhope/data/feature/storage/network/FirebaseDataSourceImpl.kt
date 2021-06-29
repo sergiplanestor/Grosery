@@ -2,7 +2,6 @@ package com.revolhope.data.feature.storage.network
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.revolhope.data.common.base.BaseDataSourceImpl
 import com.revolhope.data.common.exceptions.NoEmailException
 import com.revolhope.data.common.extensions.*
 import com.revolhope.data.feature.grocery.datasource.GroceryNetworkDataSource
@@ -11,12 +10,12 @@ import com.revolhope.data.feature.profile.datasource.ProfileNetworkDataSource
 import com.revolhope.data.feature.profile.response.ProfileResponse
 import com.revolhope.data.feature.user.datasource.UserNetworkDataSource
 import com.revolhope.data.feature.user.response.UserNetResponse
+import com.revolhope.domain.common.extensions.launchCallbackFlow
 import com.revolhope.domain.common.extensions.letOrThrow
-import com.revolhope.domain.common.extensions.runOnCallbackFlow
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class FirebaseDataSourceImpl @Inject constructor() : BaseDataSourceImpl(), UserNetworkDataSource,
+class FirebaseDataSourceImpl @Inject constructor() : UserNetworkDataSource,
     GroceryNetworkDataSource, ProfileNetworkDataSource {
 
     companion object {
@@ -43,28 +42,37 @@ class FirebaseDataSourceImpl @Inject constructor() : BaseDataSourceImpl(), UserN
 // -------------------------------------------------------------------------------------------------
 
     override suspend fun createUserWithEmailAndPassword(email: String, pwd: String): Flow<Boolean> =
-        runOnCallbackFlow {
-            auth.createUserWithEmailAndPassword(email, pwd).offerOnCompletedOrThrow(this)
+        launchCallbackFlow {
+            auth.createUserWithEmailAndPassword(email, pwd)
+                .offerOnCompleted(this)
         }
 
+        /*runOnCallbackFlow {
+            auth.createUserWithEmailAndPassword(email, pwd)
+                .addOnCompleteListener {
+
+                }
+                //.offerOnCompletedOrThrow(this)
+        }*/
+
     override suspend fun signInWithEmailAndPassword(email: String, pwd: String): Flow<Boolean> =
-        runOnCallbackFlow {
-            auth.signInWithEmailAndPassword(email, pwd).offerOnCompletedOrThrow(this)
+        launchCallbackFlow {
+            auth.signInWithEmailAndPassword(email, pwd).offerOnCompleted(this)
         }
 
     override suspend fun fetchUserDataByEmail(email: String): Flow<UserNetResponse?> =
-        runOnCallbackFlow {
-            userRef.child(email.sha1).offerOnSingleValue(producerScope = this) { data ->
+        launchCallbackFlow {
+            userRef.child(email.sha1).offerOnValue(producerScope = this) { data ->
                 data.fetchJsonTo(UserNetResponse::class)
             }
         }
 
     override suspend fun insertUser(userNetResponse: UserNetResponse): Flow<Boolean> =
-        runOnCallbackFlow {
+        launchCallbackFlow {
             userNetResponse.email.letOrThrow(NoEmailException()) {
                 userRef.child(it.sha1)
                     .insertAsJson(userNetResponse)
-                    .offerOnCompletedOrThrow(this)
+                    .offerOnCompleted(this)
             }
         }
 
@@ -73,8 +81,8 @@ class FirebaseDataSourceImpl @Inject constructor() : BaseDataSourceImpl(), UserN
 // -------------------------------------------------------------------------------------------------
 
     override suspend fun fetchGroceryLists(userId: String): Flow<List<GroceryListResponse>> =
-        runOnCallbackFlow {
-            listRef(userId).offerOnSingleValue(producerScope = this) { data ->
+        launchCallbackFlow {
+            listRef(userId).offerOnValue(producerScope = this) { data ->
                 data.children.mapNotNull {
                     it.fetchJsonTo(GroceryListResponse::class)
                 }
@@ -85,8 +93,8 @@ class FirebaseDataSourceImpl @Inject constructor() : BaseDataSourceImpl(), UserN
         userId: String,
         list: GroceryListResponse
     ): Flow<Boolean> =
-        runOnCallbackFlow {
-            listRef(userId).pushAsJson(list).offerOnCompletedOrThrow(this)
+        launchCallbackFlow {
+            listRef(userId).pushAsJson(list).offerOnCompleted(this)
         }
 
 // -------------------------------------------------------------------------------------------------
@@ -94,8 +102,8 @@ class FirebaseDataSourceImpl @Inject constructor() : BaseDataSourceImpl(), UserN
 // -------------------------------------------------------------------------------------------------
 
     override suspend fun fetchProfile(userId: String): Flow<ProfileResponse?> =
-        runOnCallbackFlow {
-            profileRef(userId).offerOnSingleValue(producerScope = this) { data ->
+        launchCallbackFlow {
+            profileRef(userId).offerOnValue(producerScope = this) { data ->
                 data.fetchJsonTo(ProfileResponse::class)
             }
         }
@@ -104,7 +112,7 @@ class FirebaseDataSourceImpl @Inject constructor() : BaseDataSourceImpl(), UserN
         userId: String,
         profile: ProfileResponse
     ): Flow<Boolean> =
-        runOnCallbackFlow {
+        launchCallbackFlow {
             // TODO: Refactor to new impl.
             /*runOnSuspendedOrFalse { cont ->
                 profileRef(userId).addOnSingleEventListener(

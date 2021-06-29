@@ -1,38 +1,58 @@
 package com.revolhope.domain.feature.authentication.usecase
 
-import com.revolhope.domain.common.extensions.onSuccessThen
+import android.util.Log
+import com.revolhope.domain.common.base.UseCase
 import com.revolhope.domain.common.model.State
+import com.revolhope.domain.common.model.dataAsBooleanStateOrFalse
 import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.domain.feature.authentication.repository.UserRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class RegisterUserUseCase @Inject constructor(
     private val userRepository: UserRepository
-) {
-    suspend operator fun invoke(params: Params): Flow<State<Boolean>> {
-        return userRepository.registerUser(params.user).onSuccessThen(
-            { userRepository.insertRemoteUser(params.user) },
-            { userRepository.insertLocalUser(params.user) }
-        )
+) : UseCase<RegisterUserUseCase.RequestParams, Boolean>() {
 
-        /*.map { registerState ->
-            if (registerState is State.Success) {
-                userRepository.insertRemoteUser(params.user)
-                    .firstOrNull { it !is State.Loading }?.let { remoteState ->
-                        if (remoteState is State.Success) {
-                            userRepository.insertLocalUser(params.user).firstOrNull {
-                                it !is State.Loading
-                            } ?: State.Error("Error insert local user")
-                        } else {
-                            remoteState
-                        }
-                    } ?: State.Error("Error insert remote user")
-            } else {
-                registerState
+    override suspend fun build(
+        scope: CoroutineScope,
+        requestParams: RequestParams
+    ): UseCaseParams<RequestParams, Boolean> =
+        UseCaseParams { userRepository.registerUser(it.user) }
+
+    // TODO: Remove LOGS
+
+    override suspend fun execute(
+        scope: CoroutineScope,
+        replay: Int,
+        params: RequestParams,
+        request: suspend (RequestParams) -> Flow<State<Boolean>>
+    ): Flow<State<Boolean>> =
+        request.invoke(params)
+            .map { registerState ->
+                if (registerState.dataAsBooleanStateOrFalse()) {
+                    userRepository.insertRemoteUser(params.user)
+                        .firstOrNull {
+                            it !is State.Loading
+                        }?.let { remoteState ->
+                            if (remoteState.dataAsBooleanStateOrFalse()) {
+                                userRepository.insertLocalUser(params.user)
+                                    .firstOrNull {
+                                        it !is State.Loading
+                                    }?.also { Log.v("TEEEST", "insertLocalUser Worked -> $it") }
+                            } else {
+                                remoteState
+                            }
+                        }?.also { Log.v("TEEEST", "insertRemoteUser Worked -> $it") }
+                        ?: throw RuntimeException("RuntimeException - RegisterUseCase")
+                } else {
+                    registerState
+                }.also {
+                    Log.v("TEEEST", "mapping: $registerState")
+                }
             }
-        }*/
-    }
 
-    data class Params(val user: UserModel)
+    data class RequestParams(val user: UserModel)
 }

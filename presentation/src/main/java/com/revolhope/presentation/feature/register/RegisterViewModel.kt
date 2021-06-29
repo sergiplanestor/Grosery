@@ -7,7 +7,9 @@ import com.revolhope.domain.common.extensions.getUsername
 import com.revolhope.domain.common.extensions.randomId
 import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.domain.feature.authentication.usecase.RegisterUserUseCase
+import com.revolhope.presentation.R
 import com.revolhope.presentation.library.base.BaseViewModel
+import com.revolhope.presentation.library.component.loader.LoadingMessageModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -25,19 +27,23 @@ class RegisterViewModel @Inject constructor(
         pwd: String,
         isRememberMe: Boolean
     ) {
-        collectFlow(onSuccessLiveData = _onRegisterResultLiveData) {
-            registerUserUseCase.invoke(
-                RegisterUserUseCase.Params(
-                    user = UserModel(
-                        id = randomId(),
-                        name = getUsername(username, email),
-                        email = email,
-                        pwd = pwd,
-                        isRememberMe = isRememberMe,
-                        lastLogin = getNewCreationLastLogin()
-                    )
+        invokeUseCase(
+            useCase = registerUserUseCase,
+            request = RegisterUserUseCase.RequestParams(
+                user = UserModel(
+                    id = randomId(),
+                    name = getUsername(username, email),
+                    email = email,
+                    pwd = pwd,
+                    isRememberMe = isRememberMe,
+                    lastLogin = getNewCreationLastLogin()
                 )
-            )
-        }
+            ),
+            loadingModel = LoadingMessageModel(
+                messageRes = R.string.feedback_register_progress
+            ),
+            onSuccessCollected = _onRegisterResultLiveData::setValue
+            /* Default behavior for Loading and Failure states */
+        )
     }
 }

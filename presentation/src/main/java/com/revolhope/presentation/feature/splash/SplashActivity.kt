@@ -2,16 +2,18 @@ package com.revolhope.presentation.feature.splash
 
 import android.view.View
 import androidx.activity.viewModels
+import androidx.lifecycle.LiveData
+import com.revolhope.domain.common.extensions.delay
 import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.presentation.databinding.ActivitySplashBinding
 import com.revolhope.presentation.feature.dashboard.DashboardActivity
 import com.revolhope.presentation.feature.login.LoginActivity
 import com.revolhope.presentation.library.base.BaseActivity
+import com.revolhope.presentation.library.component.loader.LoadingMessageModel
 import com.revolhope.presentation.library.extensions.alphaAnimator
 import com.revolhope.presentation.library.extensions.animationListenerWith
 import com.revolhope.presentation.library.extensions.isVisibleAnimated
 import com.revolhope.presentation.library.extensions.observe
-import com.revolhope.presentation.library.extensions.runOn
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,8 +22,14 @@ class SplashActivity : BaseActivity() {
     private lateinit var binding: ActivitySplashBinding
     private val viewModel: SplashViewModel by viewModels()
 
+    override val onLoadingLiveData: LiveData<Pair<Boolean, LoadingMessageModel?>>
+        get() = viewModel.loadingLiveData
+    override val onErrorLiveData: LiveData<String>
+        get() = viewModel.errorLiveData
+
     companion object {
         const val ALPHA_ANIM = 700L
+        const val NAVIGATION_DELAY = 500L
     }
 
     override fun inflateView(): View =
@@ -49,8 +57,8 @@ class SplashActivity : BaseActivity() {
 
     override fun initObservers() {
         super.initObservers()
-        observe(viewModel.errorLiveData, ::onErrorFeedback)
-        observe(viewModel.errorResLiveData) { onErrorFeedback(getString(it)) }
+        observe(viewModel.errorLiveData, ::onErrorReceived)
+        observe(viewModel.errorResLiveData) { onErrorReceived(getString(it)) }
         observe(viewModel.redirectToLoginLiveData, ::navigateToLogin)
         observe(viewModel.onLoginResponseLiveData, ::onLoginResponse)
     }
@@ -65,18 +73,19 @@ class SplashActivity : BaseActivity() {
             DashboardActivity.start(this)
             finish()
         } else {
-            onErrorFeedback(/* default error */)
+            onErrorReceived(/* default error */)
         }
     }
 
-    private fun onErrorFeedback(message: String? = null) {
-        onErrorReceived(
-            error = message,
-            onDismiss = {
-                runOn(delay = 500L) {
-                    navigateToLogin(viewModel.user)
-                }
+    override fun onErrorReceived(
+        error: String?,
+        onClick: (() -> Unit)?,
+        onDismiss: (() -> Unit)?
+    ) {
+        super.onErrorReceived(error, onClick) {
+            delay(NAVIGATION_DELAY) {
+                navigateToLogin(viewModel.user)
             }
-        )
+        }
     }
 }

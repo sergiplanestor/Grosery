@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import com.revolhope.domain.common.extensions.logVerbose
+import androidx.lifecycle.LiveData
 import com.revolhope.presentation.R
+import com.revolhope.presentation.library.component.loader.LoaderData
+import com.revolhope.presentation.library.component.loader.LoaderView
+import com.revolhope.presentation.library.component.loader.LoadingMessageModel
 import com.revolhope.presentation.library.component.snackbar.SnackBar
 import com.revolhope.presentation.library.component.snackbar.model.SnackBarModel
+import com.revolhope.presentation.library.extensions.observe
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -43,6 +47,11 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private lateinit var root: View
+    private val loaderView: LoaderView? by lazy { root.findViewById(R.id.loader_view) }
+
+    internal open val onLoadingLiveData: LiveData<Pair<Boolean, LoadingMessageModel?>>? = null
+    internal open val onErrorResLiveData: LiveData<Int>? = null
+    internal open val onErrorLiveData: LiveData<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +67,13 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun initObservers() {
-        // Nothing to do here
+        onLoadingLiveData?.let { observe(it, ::onLoadingReceived) }
+        onErrorResLiveData?.let { observe(it) { res -> onErrorReceived(error = getString(res)) } }
+        onErrorLiveData?.let { observe(it, ::onErrorReceived) }
+    }
+
+    protected open fun onLoadingReceived(loaderData: LoaderData) {
+        loaderView?.onLoaderDataReceived = loaderData
     }
 
     protected open fun onErrorReceived(
@@ -74,17 +89,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 onDismiss = onDismiss
             )
         )
-        if (error != null) {
-            // TODO: Remove
-            logVerbose(error)
-        }
     }
-
-    /*protected fun onLoaderVisibilityChanges(show: Boolean) {
-        findViewById<LoaderView?>(R.id.loader_view)?.let {
-            if (show) it.show() else it.hide()
-        }
-    }*/
 
     override fun onBackPressed() {
         super.onBackPressed()

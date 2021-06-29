@@ -6,7 +6,9 @@ import com.revolhope.domain.feature.authentication.model.UserModel
 import com.revolhope.domain.feature.authentication.request.LoginRequest
 import com.revolhope.domain.feature.authentication.usecase.DoLoginUseCase
 import com.revolhope.domain.feature.authentication.usecase.FetchUserUseCase
+import com.revolhope.presentation.R
 import com.revolhope.presentation.library.base.BaseViewModel
+import com.revolhope.presentation.library.component.loader.LoadingMessageModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -25,30 +27,40 @@ class SplashViewModel @Inject constructor(
     val user: UserModel? get() = _redirectToLoginLiveData.value
 
     fun navigate() {
-        collectFlow(
-            flowTask = fetchUserUseCase::invoke,
-            onSuccessCollected = { user ->
-                when {
-                    user == null || !user.isRememberMe -> {
-                        _redirectToLoginLiveData.value = user
-                    }
-                    user.isRememberMe -> doLogin(user)
-                }
-            }
+        invokeUseCase(
+            useCase = fetchUserUseCase,
+            request = FetchUserUseCase.RequestParams,
+            loadingModel = null,
+            onSuccessCollected = ::onUserFetched
+            /* Default behavior for Loading and Failure states */
         )
     }
 
-    private fun doLogin(user: UserModel) {
-        collectFlow(onSuccessLiveData = _onLoginResponseLiveData) {
-            doLoginUseCase.invoke(
-                DoLoginUseCase.Params(
-                    request = LoginRequest(
-                        email = user.email,
-                        pwd = user.pwd!!
-                    ),
-                    isRememberMe = true
-                )
-            )
+    private fun onUserFetched(user: UserModel?) {
+        when {
+            user == null || !user.isRememberMe -> {
+                _redirectToLoginLiveData.value = user
+            }
+            user.isRememberMe -> doLogin(user)
         }
+    }
+
+    private fun doLogin(user: UserModel) {
+        invokeUseCase(
+            useCase = doLoginUseCase,
+            request = DoLoginUseCase.RequestParams(
+                request = LoginRequest(
+                    email = user.email,
+                    pwd = user.pwd.orEmpty()
+                ),
+                isRememberMe = user.isRememberMe
+            ),
+            loadingModel = LoadingMessageModel(
+                messageRes = R.string.feedback_login_with_username_progress,
+                placeholders = listOf(user.name)
+            ),
+            onSuccessLiveData = _onLoginResponseLiveData
+            /* Default behavior for Loading and Failure states */
+        )
     }
 }

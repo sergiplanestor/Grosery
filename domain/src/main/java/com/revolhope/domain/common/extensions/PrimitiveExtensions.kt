@@ -2,7 +2,7 @@ package com.revolhope.domain.common.extensions
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 const val EMPTY_STRING = ""
 const val SPACE_STRING = " "
@@ -20,6 +20,9 @@ inline val Float.priceFormat: String?
         }
 
 inline val String.priceValue: Float? get() = replace(CURRENCY_SYMBOL, EMPTY_STRING).toFloatOrNull()
+
+inline fun <T> String?.takeIfNotNullOrBlank(crossinline block: (String) -> T): T? =
+    takeIf { !isNullOrBlank() }?.let(block)
 
 fun Long.toDateFormat(locale: Locale = LOCALE_ES): String? =
     try {

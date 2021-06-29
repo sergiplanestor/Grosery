@@ -20,17 +20,18 @@ class LoginViewModel @Inject constructor(private val doLoginUseCase: DoLoginUseC
         pwd: String,
         isRememberMe: Boolean
     ) {
-        collectFlow(onSuccessLiveData = _loginResponseLiveData) {
-            doLoginUseCase.invoke(
-                DoLoginUseCase.Params(
-                    request = LoginRequest(
-                        email = email,
-                        pwd = pwd
-                    ),
-                    isRememberMe = isRememberMe
-                )
-            )
-        }
+        invokeUseCase(
+            useCase = doLoginUseCase,
+            request = DoLoginUseCase.RequestParams(
+                request = LoginRequest(
+                    email = email,
+                    pwd = pwd
+                ),
+                isRememberMe = isRememberMe
+            ),
+            loadingModel = null,
+            onSuccessLiveData = _loginResponseLiveData
+        )
     }
 
 }

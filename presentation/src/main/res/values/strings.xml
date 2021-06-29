@@ -56,6 +56,14 @@
     <string name="form_error_field_email_pattern">Invalid email format</string>
     <string name="form_error_field_number_pattern">Invalid number format</string>
 
+    <!-- Loading feedback messages -->
+    <string name="feedback_fetch_local_user_progress">Fetching user from local…</string>
+    <string name="feedback_fetch_remote_user_progress">Fetching user from remote…</string>
+    <string name="feedback_fetch_save_user_progress">Saving user…</string>
+    <string name="feedback_login_progress">Authenticating…</string>
+    <string name="feedback_login_with_username_progress">Authenticating as %s …</string>
+    <string name="feedback_register_progress">Registering user…</string>
+
     <!-- Navigation titles -->
     <string name="title_profile">Profile</string>
     <string name="title_dashboard">Dashboard</string>

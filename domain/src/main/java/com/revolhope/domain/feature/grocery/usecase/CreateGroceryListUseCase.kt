@@ -1,16 +1,22 @@
 package com.revolhope.domain.feature.grocery.usecase
 
-import com.revolhope.domain.common.model.State
+import com.revolhope.domain.common.base.UseCase
 import com.revolhope.domain.feature.grocery.model.GroceryListModel
 import com.revolhope.domain.feature.grocery.repository.GroceryRepository
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 class CreateGroceryListUseCase @Inject constructor(
     private val groceryRepository: GroceryRepository,
-) {
-    suspend operator fun invoke(params: Params): Flow<State<Boolean>> =
-        groceryRepository.insertGroceryList(params.list)
+) : UseCase<CreateGroceryListUseCase.RequestParams, Boolean>() {
 
-    data class Params(val list: GroceryListModel)
+    override suspend fun build(
+        scope: CoroutineScope,
+        requestParams: RequestParams
+    ): UseCaseParams<RequestParams, Boolean> =
+        UseCaseParams {
+            groceryRepository.insertGroceryList(requestParams.list)
+        }
+
+    data class RequestParams(val list: GroceryListModel)
 }

@@ -18,7 +18,14 @@ abstract class BaseRepositoryImpl {
     ): Flow<State<T>> =
         block.asStateFlow(isLoadingEnabled, ::catchDelegate)
 
-    private fun <T : Throwable> catchDelegate(e: T): State.Error =
+    internal suspend inline fun <T> stateful(
+        isLoadingEnabled: Boolean = true,
+        crossinline block: suspend () -> Flow<T>,
+        noinline onMapTransformation: ((T) -> State<T>)? = null
+    ): Flow<State<T>> =
+        block.asStateFlow(isLoadingEnabled, ::catchDelegate, onMapTransformation)
+
+    internal fun <T : Throwable> catchDelegate(e: T): State.Error =
         e.asStateError {
             var message: String? = null
             var messageRes: Int? = null

@@ -11,11 +11,12 @@ ext {
     ]
 
     classpath = [
-            gradle        : "4.1.2",
-            kotlinGradle  : "1.4.31",
-            hiltGradle    : "2.28-alpha",
-            googleServices: "4.3.5",
-            navigationKTX : "2.3.5"
+            gradle             : "4.1.2",
+            kotlinGradle       : "1.4.31",
+            hiltGradle         : "2.28-alpha",
+            googleServices     : "4.3.5",
+            navigationKTX      : "2.3.5",
+            firebaseCrashlytics: "2.7.1"
     ]
 
     lib = [

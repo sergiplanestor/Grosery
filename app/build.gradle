@@ -5,11 +5,12 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.revolhope.grocery"
@@ -51,7 +52,4 @@ dependencies {
 
     // App compat
     implementation "androidx.appcompat:appcompat:${lib.appCompat}"
-
-    // TODO: CHECK if should be in this MODULE
-    implementation 'com.google.firebase:firebase-analytics-ktx'
 }

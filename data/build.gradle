@@ -7,7 +7,7 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         minSdkVersion 26
@@ -54,4 +54,6 @@ dependencies {
     api platform("com.google.firebase:firebase-bom:${lib.firebaseBOM}")
     implementation "com.google.firebase:firebase-auth:${lib.firebaseAuth}"
     implementation "com.google.firebase:firebase-database-ktx:${lib.firebaseDatabase}"
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }

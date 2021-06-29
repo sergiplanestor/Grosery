@@ -17,9 +17,12 @@ class DashboardViewModel @Inject constructor(
     val userLiveData: LiveData<UserModel> get() = _userLiveData
 
     fun fetchUser() {
-        collectFlow(
-            flowTask = fetchUserUseCase::invoke,
-            onSuccessCollected =  { it?.let(_userLiveData::setValue) }
+        invokeUseCase(
+            useCase = fetchUserUseCase,
+            request = FetchUserUseCase.RequestParams,
+            loadingModel = null,
+            onSuccessCollected = { it?.let(_userLiveData::setValue) }
+            /* Default behavior for Loading and Failure states */
         )
     }
 }

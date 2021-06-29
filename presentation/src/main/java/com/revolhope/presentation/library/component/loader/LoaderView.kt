@@ -8,8 +8,8 @@ import androidx.core.view.isVisible
 import com.revolhope.presentation.databinding.ComponentLoaderViewBinding
 import com.revolhope.presentation.library.extensions.inflater
 import com.revolhope.presentation.library.extensions.isVisibleAnimated
-import com.revolhope.presentation.library.extensions.textOrEmpty
-import com.revolhope.presentation.library.extensions.textOrNull
+
+typealias LoaderData = Pair<Boolean, LoadingMessageModel?>
 
 class LoaderView @JvmOverloads constructor(
     context: Context,
@@ -23,16 +23,21 @@ class LoaderView @JvmOverloads constructor(
         true
     )
 
-    var message: String?
-        get () = binding.loaderInfoTextView.textOrNull
+    var onLoaderDataReceived: LoaderData? = null
         set(value) {
-            if (value.isNullOrBlank()) {
-                binding.loaderInfoTextView.isVisible = false
-            } else {
-                binding.loaderInfoTextView.text = value
-                binding.loaderInfoTextView.isVisibleAnimated = true
-            }
+            value.also { field = value }?.let(::onDataChanged)
         }
+
+    private fun onDataChanged(loaderData: LoaderData) {
+        val info = loaderData.second?.messageOrEmpty(context)
+        if (info.isNullOrBlank()) {
+            binding.loaderInfoTextView.isVisible = false
+        } else {
+            binding.loaderInfoTextView.text = info
+            binding.loaderInfoTextView.isVisibleAnimated = true
+        }
+        isVisible = loaderData.first
+    }
 
     override fun setVisibility(visibility: Int) {
         super.setVisibility(visibility)

@@ -1,6 +1,6 @@
 package com.revolhope.data.common.exceptions
 
-import com.revolhope.domain.common.extensions.logError
+import com.revolhope.domain.common.extensions.error
 
 sealed class FirebaseInnerException(
     open val customTag: String? = null,
@@ -17,7 +17,7 @@ sealed class FirebaseInnerException(
         Throwable(
             message = "$tag: $message",
             cause = throwable
-        ).also { logError(tag = tag, message = message, throwable = throwable) }
+        ).also { error(tag = tag, message = message, throwable = throwable) }
 
     fun `throw`() { throw this.toThrowable() }
 
