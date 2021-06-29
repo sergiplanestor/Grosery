@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.util.Base64
 import android.util.TypedValue
 import androidx.annotation.StringRes
@@ -21,7 +22,23 @@ inline val Int.dp: Int
 
 fun Int.percent(value: Int): Int = (this * value) / 100
 
-fun Int.stringRes(context: Context): String? = safeRunOrNull(block = context::getString)
+inline fun <reified T> Int.resolveRes(context: Context): T? = safeRunOrNull {
+    when (T::class.qualifiedName) {
+        String::class.qualifiedName -> {
+            context.getString(this)
+        }
+        Drawable::class.qualifiedName -> {
+            context.drawableOf(this)
+        }
+        Float::class.qualifiedName -> {
+            context.dimensionOf(this)
+        }
+        Int::class.qualifiedName -> {
+            context.colorOf(this)
+        }
+        else -> null
+    } as? T
+}
 
 // -------------------------------------------------------------------------------------------------
 // String
@@ -38,6 +55,15 @@ fun String?.toBitmap(): Bitmap? =
     Base64.decode(this, Base64.DEFAULT)?.let {
         BitmapFactory.decodeByteArray(it, 0, it.size)
     }
+
+inline fun <reified T> String.resolveResourceId(context: Context): T? = safeRunOrNull {
+    context.resources.getIdentifier(
+        this,
+        "string",
+        context.packageName
+    ).resolveRes(context)
+}
+
 
 fun String.remove(toRemove: String?): String = toRemove?.let { replace(it, EMPTY_STRING) } ?: this
 
