@@ -13,6 +13,8 @@ import com.revolhope.presentation.library.component.loader.LoadingMessageModel
 import com.revolhope.presentation.library.component.snackbar.SnackBar
 import com.revolhope.presentation.library.component.snackbar.model.SnackBarModel
 import com.revolhope.presentation.library.extensions.observe
+import com.revolhope.presentation.utils.LifecycleEvent
+import com.revolhope.presentation.utils.logLifecycle
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -55,9 +57,35 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        logLifecycle(LifecycleEvent.ON_CREATE)
         setContentView(inflateView().also { root = it })
         bindViews()
         initObservers()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        logLifecycle(LifecycleEvent.ON_START)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        logLifecycle(LifecycleEvent.ON_RESUME)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        logLifecycle(LifecycleEvent.ON_PAUSE)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        logLifecycle(LifecycleEvent.ON_STOP)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        logLifecycle(LifecycleEvent.ON_DESTROY)
     }
 
     abstract fun inflateView(): View
