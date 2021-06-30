@@ -1,5 +1,6 @@
 package com.revolhope.presentation.library.base
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,8 @@ import com.revolhope.domain.common.extensions.verbose
 import com.revolhope.presentation.R
 import com.revolhope.presentation.library.component.snackbar.SnackBar
 import com.revolhope.presentation.library.component.snackbar.model.SnackBarModel
+import com.revolhope.presentation.utils.LifecycleEvent
+import com.revolhope.presentation.utils.logLifecycle
 
 abstract class BaseFragment : Fragment() {
 
@@ -23,27 +26,54 @@ abstract class BaseFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = onCreateBinding(inflater, container).also { rootView = it }
+    ): View? {
+        logLifecycle(LifecycleEvent.ON_CREATE)
+        return onCreateBinding(inflater, container).also { rootView = it }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        logLifecycle(LifecycleEvent.ON_VIEW_CREATED)
         bindViews()
         initObservers()
     }
 
     override fun onStart() {
         super.onStart()
+        logLifecycle(LifecycleEvent.ON_START)
         onLoadData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        logLifecycle(LifecycleEvent.ON_RESUME)
     }
 
     override fun onPause() {
         super.onPause()
+        logLifecycle(LifecycleEvent.ON_PAUSE)
         onSaveData()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        logLifecycle(LifecycleEvent.ON_STOP)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        logLifecycle(LifecycleEvent.ON_DESTROY)
         onDestroyBinding()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        logLifecycle(LifecycleEvent.ON_ATTACH)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        logLifecycle(LifecycleEvent.ON_ATTACH)
     }
 
     open fun bindViews() {

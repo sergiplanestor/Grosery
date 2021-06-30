@@ -21,17 +21,31 @@ inline fun delay(
     ).postDelayed(delayInMillis = duration, action = action)
 }
 
-suspend fun safeSuspendedCatchNoConsumed(
+suspend fun catchWrapper(
+    isConsumed: Boolean = true,
+    isReportEnabled: Boolean = isConsumed,
+    isPropagationEnabled: Boolean = false,
     catch: (suspend Throwable.() -> Unit)? = null
-): suspend (Throwable.() -> Boolean) = {
+): suspend Throwable.() -> Boolean = {
+    // Report to crashlytics
+    if (isReportEnabled) {
+        report(throwable = this)
+    }
+    // Invoke custom block
     catch?.invoke(this)
-    false
+    // Throw exception if desired, otherwise return [isConsumed] or [isReportEnabled], the second operator
+    // is because if report have been already send, event in fact is already consumed.
+    if (isPropagationEnabled) {
+        throw this
+    } else {
+        isConsumed || isReportEnabled
+    }
 }
 
-suspend inline fun safeSuspendedRun(
-    noinline catch: suspend Throwable.() -> Boolean = { false },
-    noinline finally: suspend () -> Unit = {},
-    crossinline block: suspend () -> Unit
+suspend fun safeSuspendedRun(
+    catch: suspend Throwable.() -> Boolean = { false },
+    finally: suspend () -> Unit = {},
+    block: suspend () -> Unit
 ) {
     try {
         block.invoke()
